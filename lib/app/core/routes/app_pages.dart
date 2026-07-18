@@ -1,5 +1,9 @@
+import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/binder/register_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/view/register_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/binder/login_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/view/login_sceen-view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/otp_screen/binder/otp_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/otp_screen/view/otp_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_screen/loading_screen_1/binder/loading_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_screen/loading_screen_1/view/loading_screen_1.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_screen/loading_screen_3.dart';
@@ -34,11 +38,17 @@ class AppPages {
       page: () => const Login1Screen(),
       binding: Login1Binding(),
     ),
-    // GetPage(
-    //   name: _Paths.MAIN_LAYOUT,
-    //   page: () => MainLayoutView(),
-    //   binding: MainLayoutBinding(),
-    // ),
+    GetPage(
+      name: _Paths.REGISTER,
+      page: () => const RegisterScreen(),
+      binding: RegisterBinding(),
+    ),
+
+    GetPage(
+      name: _Paths.OTP,
+      page: () => const VerificationScreen(),
+      binding: OtpBinder(),
+    ),
     // GetPage(
     //   name: _Paths.NOTIFICATION,
     //   page: () => const NotificationView(),

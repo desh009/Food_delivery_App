@@ -23,6 +23,8 @@ abstract class Routes {
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
 
   static const LOGIN = _Paths.LOGIN;
+  static const REGISTER = _Paths.REGISTER;
+  static const OTP = _Paths.OTP;
 }
 
 abstract class _Paths {
@@ -46,4 +48,6 @@ abstract class _Paths {
   static const FORGOT_PASSWORD = '/forgot-password';
   static const CHANGE_PASSWORD = '/change-password';
   static const LOGIN = '/login';
+  static const REGISTER = '/register';
+  static const OTP = '/otp';
 }

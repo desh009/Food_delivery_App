@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/view/register_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/controller/login_screen_controller.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/controller/Register_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
+import 'package:food_hjoiopk/app/core/widgets/custom_textfield/custom_texfield.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-class Login1Screen extends GetView<Login1Controller> {
-  const Login1Screen({super.key});
+class RegisterScreen extends GetView<RegisterController> {
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +21,14 @@ class Login1Screen extends GetView<Login1Controller> {
           borderRadius: BorderRadius.circular(24.0),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            vertical: 24.0,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
           child: Column(
             children: [
               const Spacer(flex: 2),
 
-              // Title: Login
+
               const Text(
-                "Login",
+                "Register",
                 style: TextStyle(
                   color: AppColors.tomato,
                   fontSize: 32,
@@ -75,8 +72,7 @@ class Login1Screen extends GetView<Login1Controller> {
                 ),
                 initialCountryCode: 'GB',
                 onChanged: (phone) {
-                  controller.completePhoneNumber.value =
-                      phone.completeNumber;
+                  controller.completePhoneNumber.value = phone.completeNumber;
                 },
                 dropdownIconPosition: IconPosition.trailing,
                 dropdownIcon: const Icon(
@@ -88,8 +84,40 @@ class Login1Screen extends GetView<Login1Controller> {
               ),
 
               const SizedBox(height: 24),
+              CustomTextField(
+                controller: controller.emailController,
+                hintText: '.Email',
+
+                prefixIcon: Icons.email,
+                textInputAction: TextInputAction.next,
+                keybordType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!value.contains('@') || !value.contains('.')) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 24),
+              CustomTextField(
+                controller: controller.nameController,
+                hintText: 'Name',
+                prefixIcon: Icons.person,
+                textInputAction: TextInputAction.next,
+                keybordType: TextInputType.name,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
 
               // Remember Me Checkbox Row
+              SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -121,7 +149,7 @@ class Login1Screen extends GetView<Login1Controller> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 20),
                   const Text(
                     "Remember me",
                     style: TextStyle(
@@ -132,6 +160,7 @@ class Login1Screen extends GetView<Login1Controller> {
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
 
               const Spacer(flex: 5),
 
@@ -141,9 +170,12 @@ class Login1Screen extends GetView<Login1Controller> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: controller.isLoading.value
-                        ? null
-                        : () => controller.signIn(),
+                    // ✅ শুধুমাত্র Remember Me চেক করা থাকলেই onPressed কাজ করবে
+                    onPressed:
+                        controller.isRememberMeChecked.value &&
+                            !controller.isLoading.value
+                        ? () => controller.register()
+                        : null, // ❌ Remember Me চেক না করলে null - বাটন ডিজেবল থাকবে
                     style: ElevatedButton.styleFrom(
                       backgroundColor: controller.isRememberMeChecked.value
                           ? AppColors.tomato
@@ -177,7 +209,7 @@ class Login1Screen extends GetView<Login1Controller> {
                             ),
                           )
                         : Text(
-                            "Sign in",
+                            "Register",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -192,7 +224,6 @@ class Login1Screen extends GetView<Login1Controller> {
 
               const SizedBox(height: 24),
 
-              // "Or sign in with" Divider
               Row(
                 children: [
                   const Expanded(
@@ -263,7 +294,7 @@ class Login1Screen extends GetView<Login1Controller> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed(Routes.REGISTER);
+                      // Get.toNamed(Routes.OTP);
                     },
                     child: const Text(
                       "Register",
