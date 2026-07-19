@@ -39,7 +39,7 @@ class RegisterController extends GetxController {
     }
   }
 
-  // ✅ Check if button is active
+  //  Check if button is active
   bool get isButtonActive {
     return isRememberMeChecked.value &&
         phoneController.text.isNotEmpty &&
@@ -48,7 +48,6 @@ class RegisterController extends GetxController {
         nameController.text.isNotEmpty;
   }
 
-  // ✅ Register Method (সঠিকভাবে সাজানো)
   void register() {
     print('Register button pressed!');
     print('Phone: ${phoneController.text}');
@@ -56,7 +55,6 @@ class RegisterController extends GetxController {
     print('Name: ${nameController.text}');
     print('Remember Me: ${isRememberMeChecked.value}');
 
-    // ✅ প্রথমে isButtonActive চেক করুন
     if (!isButtonActive) {
       print('Button is not active!');
       Get.snackbar(
@@ -133,14 +131,14 @@ class RegisterController extends GetxController {
       return;
     }
 
-    // ✅ Show loading
+    //  Show loading
     isLoading.value = true;
 
     // Simulate API call
     Future.delayed(const Duration(seconds: 2), () {
       isLoading.value = false;
 
-      // ✅ Navigate to OTP Screen with data
+      //  Navigate to OTP Screen with data
       Get.toNamed(
         Routes.OTP,
         arguments: {
@@ -163,7 +161,7 @@ class RegisterController extends GetxController {
     });
   }
 
-  // ✅ Sign In Method
+  //  Sign In Method
   void signIn() {
     if (phoneController.text.isEmpty) {
       Get.snackbar(

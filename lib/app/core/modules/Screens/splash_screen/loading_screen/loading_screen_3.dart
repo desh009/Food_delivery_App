@@ -56,7 +56,6 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1E1E1E),
-      // ✅ SafeArea এবং Padding সরিয়ে ফেলুন
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -110,7 +109,6 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                                 fontSize: 16,
                               ),
                             ),
-                            // শেষ পেজে বাটন দুটি
                             if (index == 3) ...[
                               const SizedBox(height: 20),
                               SizedBox(
@@ -171,7 +169,6 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                 ),
               ),
 
-              // ডটস
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
@@ -194,7 +191,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                 ),
               ),
 
-              // Next/Skip বাটন
+              // Next
               if (_currentPage != 3)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),

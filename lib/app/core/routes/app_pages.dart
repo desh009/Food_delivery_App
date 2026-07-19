@@ -1,5 +1,11 @@
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/binder/register_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/view/register_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/binder/special_offer_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/view/special_offer_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/binder/home_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/view/home_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/binder/login_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/view/login_sceen-view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/otp_screen/binder/otp_binder.dart';
@@ -8,7 +14,6 @@ import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_scre
 import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_screen/loading_screen_1/view/loading_screen_1.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_screen/loading_screen_3.dart';
 import 'package:get/get.dart';
-
 
 part 'app_routes.dart';
 
@@ -49,16 +54,30 @@ class AppPages {
       page: () => const VerificationScreen(),
       binding: OtpBinder(),
     ),
-    // GetPage(
-    //   name: _Paths.NOTIFICATION,
-    //   page: () => const NotificationView(),
-    //   binding: NotificationBinding(),
-    // ),
-    // GetPage(
-    //   name: _Paths.HISTORY,
-    //   page: () => const HistoryView(),
-    //   binding: HistoryBinding(),
-    // ),
+
+    GetPage(
+      name: _Paths.HOME,
+      page: () => const HomeScreen(),
+      binding: HomeBinder(),
+    ),
+
+
+    GetPage(
+      name: _Paths.PRODUCT_LIST,
+      page: () => const ProductListScreen(),
+      binding: ProductListBinding()
+    ),
+
+     GetPage(
+      name: _Paths.PRODUCT_DETAILS,
+      page: () => const ProductListScreen(),
+      binding: ProductListBinding()
+    ),
+    GetPage(
+      name: _Paths.SPECIAL_OFFER,
+      page: () => const SpecialOffersScreen(),
+      binding: SpecialOffersBinding()
+    ),
     // GetPage(
     //   name: _Paths.SETTINGS,
     //   page: () => const SettingsView(),

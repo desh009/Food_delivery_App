@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
+import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
+import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 import 'package:get/get.dart';
-import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart'; // আপনার প্রোজেক্টের কালার থিম
+import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     final controller = Get.put(HomeController());
 
     final List<Map<String, String>> categories = [
@@ -26,6 +29,9 @@ class HomeScreen extends GetView<HomeController> {
       {'name': 'More', 'icon': '👀'},
     ];
 
+    final RxBool isFood1Favorite = false.obs;
+    final RxBool isFood2Favorite = false.obs;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
@@ -35,13 +41,13 @@ class HomeScreen extends GetView<HomeController> {
             // ========== Main Content (Scrollable) ==========
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 100), // বটম নেভিগেশনের জন্য এক্সট্রা স্পেস
+              padding: const EdgeInsets.only(bottom: 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  
-                  // ১. Header Section (Location & Cart)
+
+                  // ১. Header Section
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
@@ -54,14 +60,25 @@ class HomeScreen extends GetView<HomeController> {
                               children: [
                                 const Text(
                                   "Deliver to",
-                                  style: TextStyle(color: Colors.black54, fontSize: 14),
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
+                                  ),
                                 ),
                                 const SizedBox(width: 4),
-                                const Icon(Icons.arrow_forward, size: 14, color: Colors.black54),
+                                const Icon(
+                                  Icons.arrow_forward,
+                                  size: 14,
+                                  color: Colors.black54,
+                                ),
                                 const SizedBox(width: 4),
                                 const Text(
                                   "Home",
-                                  style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 14),
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ],
                             ),
@@ -77,7 +94,11 @@ class HomeScreen extends GetView<HomeController> {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                Icon(Icons.keyboard_arrow_down, color: AppColors.tomato, size: 24),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.tomato,
+                                  size: 24,
+                                ),
                               ],
                             ),
                           ],
@@ -93,10 +114,14 @@ class HomeScreen extends GetView<HomeController> {
                                 color: Colors.black.withOpacity(0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
-                              )
+                              ),
                             ],
                           ),
-                          child: const Icon(Icons.shopping_bag_outlined, color: Colors.black87, size: 24),
+                          child: const Icon(
+                            Icons.shopping_bag_outlined,
+                            color: Colors.black87,
+                            size: 24,
+                          ),
                         ),
                       ],
                     ),
@@ -109,8 +134,12 @@ class HomeScreen extends GetView<HomeController> {
                     height: 150,
                     child: PageView.builder(
                       itemCount: 3,
-                      onPageChanged: (index) => controller.currentBannerIndex.value = index,
-                      controller: PageController(viewportFraction: 0.85, initialPage: 2),
+                      onPageChanged: (index) =>
+                          controller.currentBannerIndex.value = index,
+                      controller: PageController(
+                        viewportFraction: 0.85,
+                        initialPage: 2,
+                      ),
                       itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -132,22 +161,34 @@ class HomeScreen extends GetView<HomeController> {
                                   children: [
                                     const Text(
                                       "GREEN DAY",
-                                      style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(height: 4),
-                                    Text(
+                                    const Text(
                                       "UP TO\n60% OFF",
-                                      style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w900, height: 1.1),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w900,
+                                        height: 1.1,
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       "Salad Category",
-                                      style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12, fontWeight: FontWeight.w500),
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              // ব্যানার ফুড ইমেজ মক (ডান পাশে সেট করার জন্য)
                               Positioned(
                                 right: -10,
                                 bottom: -10,
@@ -175,7 +216,8 @@ class HomeScreen extends GetView<HomeController> {
                     () => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(3, (index) {
-                        bool isActive = controller.currentBannerIndex.value == index;
+                        bool isActive =
+                            controller.currentBannerIndex.value == index;
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.symmetric(horizontal: 3),
@@ -209,7 +251,10 @@ class HomeScreen extends GetView<HomeController> {
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Search",
-                                hintStyle: TextStyle(color: Colors.black38, fontSize: 16),
+                                hintStyle: TextStyle(
+                                  color: Colors.black38,
+                                  fontSize: 16,
+                                ),
                                 border: InputBorder.none,
                               ),
                             ),
@@ -222,58 +267,72 @@ class HomeScreen extends GetView<HomeController> {
 
                   const SizedBox(height: 24),
 
-                  // ৪. Categories Grid (4 Columns)
+                  // ৪. Categories Grid
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: categories.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 0.85,
-                      ),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.02),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              )
-                            ],
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 0.85,
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                categories[index]['icon']!,
-                                style: const TextStyle(fontSize: 28),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                categories[index]['name']!,
-                                style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              () => const ProductListScreen(),
+                              binding: ProductListBinding(),
+                              arguments: {
+                                'name': categories[index]['name'],
+                                'icon': categories[index]['icon'],
+                              },
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.02),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  categories[index]['icon']!,
+                                  style: const TextStyle(fontSize: 28),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  categories[index]['name']!,
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
 
+
+
                   const SizedBox(height: 28),
 
-                  // ৫. Special Offers Header
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
@@ -281,17 +340,31 @@ class HomeScreen extends GetView<HomeController> {
                       children: [
                         const Text(
                           "Special Offers",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(Routes.SPECIAL_OFFER);
+                          },
                           child: Row(
                             children: [
                               Text(
                                 "View All",
-                                style: TextStyle(color: AppColors.tomato, fontSize: 15, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: AppColors.tomato,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.tomato),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 14,
+                                color: AppColors.tomato,
+                              ),
                             ],
                           ),
                         ),
@@ -301,7 +374,7 @@ class HomeScreen extends GetView<HomeController> {
 
                   const SizedBox(height: 16),
 
-                  // ৬. Special Offers Product List (Horizontal/Vertical Grid)
+                  // ৬. Special Offers Product Grid
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: GridView.count(
@@ -312,8 +385,15 @@ class HomeScreen extends GetView<HomeController> {
                       crossAxisSpacing: 16,
                       childAspectRatio: 0.9,
                       children: [
-                        _buildFoodCard('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500'),
-                        _buildFoodCard('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500'),
+                        // 🛠️ ২য় প্যারামিটার হিসেবে RxBool ভেরিয়েবল পাস করা হলো
+                        _buildFoodCard(
+                          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500',
+                          isFood1Favorite,
+                        ),
+                        _buildFoodCard(
+                          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500',
+                          isFood2Favorite,
+                        ),
                       ],
                     ),
                   ),
@@ -336,7 +416,7 @@ class HomeScreen extends GetView<HomeController> {
                       color: Colors.black.withOpacity(0.06),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ],
                 ),
                 child: Obx(
@@ -344,10 +424,24 @@ class HomeScreen extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildNavItem(0, Icons.home_filled, "Home", controller),
-                      _buildNavItem(1, Icons.assignment_outlined, "Orders", controller),
-                      _buildNavItem(2, Icons.favorite_border, "Favorites", controller),
-                      _buildNavItem(3, Icons.notifications_none_rounded, "Alerts", controller),
-                      // Profile Pic Item
+                      _buildNavItem(
+                        1,
+                        Icons.assignment_outlined,
+                        "Orders",
+                        controller,
+                      ),
+                      _buildNavItem(
+                        2,
+                        Icons.favorite_border,
+                        "Favorites",
+                        controller,
+                      ),
+                      _buildNavItem(
+                        3,
+                        Icons.notifications_none_rounded,
+                        "Alerts",
+                        controller,
+                      ),
                       GestureDetector(
                         onTap: () => controller.currentNavIndex.value = 4,
                         child: Container(
@@ -356,11 +450,15 @@ class HomeScreen extends GetView<HomeController> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: controller.currentNavIndex.value == 4 ? AppColors.tomato : Colors.transparent,
+                              color: controller.currentNavIndex.value == 4
+                                  ? AppColors.tomato
+                                  : Colors.transparent,
                               width: 2,
                             ),
                             image: const DecorationImage(
-                              image: NetworkImage('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200'),
+                              image: NetworkImage(
+                                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -377,8 +475,7 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  // স্পেশাল অফার ফুড কার্ড উইজেট
-  Widget _buildFoodCard(String imageUrl) {
+  Widget _buildFoodCard(String imageUrl, RxBool isFavorite) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -388,7 +485,7 @@ class HomeScreen extends GetView<HomeController> {
             color: Colors.black.withOpacity(0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Stack(
@@ -399,8 +496,13 @@ class HomeScreen extends GetView<HomeController> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                    image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -409,36 +511,55 @@ class HomeScreen extends GetView<HomeController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Cheese Burger", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(
+                      "Cheese Burger",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
                     SizedBox(height: 2),
                     Row(
                       children: [
                         Icon(Icons.star, color: Colors.amber, size: 14),
-                        Text(" 4.8", style: TextStyle(fontSize: 12, color: Colors.black54)),
+                        Text(
+                          " 4.8",
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
-          // Heart Icon (Top Right)
+
+          // Heart Icon (Top Right) - 🛠️ বানান ঠিক করা হয়েছে
           Positioned(
             top: 10,
             right: 10,
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-              child: const Icon(Icons.favorite, color: Colors.red, size: 16),
+            child: Obx(
+              () => AnimatedFavoriteButton(
+                isFavorite: isFavorite.value,
+                size: 16,
+                onTap: (newValue) {
+                  isFavorite.value = newValue;
+                },
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   // বটম নেভিগেশন বার আইটেম বিল্ডার
-  Widget _buildNavItem(int index, IconData icon, String label, HomeController controller) {
+  Widget _buildNavItem(
+    int index,
+    IconData icon,
+    String label,
+    HomeController controller,
+  ) {
     bool isActive = controller.currentNavIndex.value == index;
     return GestureDetector(
       onTap: () => controller.currentNavIndex.value = index,
@@ -462,9 +583,13 @@ class HomeScreen extends GetView<HomeController> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(color: AppColors.tomato, fontSize: 11, fontWeight: FontWeight.bold),
-            )
-          ]
+              style: TextStyle(
+                color: AppColors.tomato,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ],
       ),
     );

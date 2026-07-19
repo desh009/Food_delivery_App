@@ -170,12 +170,11 @@ class RegisterScreen extends GetView<RegisterController> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    // ✅ শুধুমাত্র Remember Me চেক করা থাকলেই onPressed কাজ করবে
                     onPressed:
                         controller.isRememberMeChecked.value &&
                             !controller.isLoading.value
                         ? () => controller.register()
-                        : null, // ❌ Remember Me চেক না করলে null - বাটন ডিজেবল থাকবে
+                        : null, 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: controller.isRememberMeChecked.value
                           ? AppColors.tomato

@@ -109,7 +109,7 @@ class VerificationController extends GetxController {
 
       // Navigate to Home or Login
       Future.delayed(const Duration(seconds: 1), () {
-        Get.offAllNamed(Routes.LOGIN);
+        Get.offAllNamed(Routes.HOME);
       });
     });
   }

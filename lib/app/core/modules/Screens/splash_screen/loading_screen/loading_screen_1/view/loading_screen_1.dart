@@ -43,7 +43,7 @@ class _TomatoSplashScreenState extends State<TomatoSplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.tomato, // ✅ Scaffold-এর color Tomato করুন
+      backgroundColor: AppColors.tomato, 
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

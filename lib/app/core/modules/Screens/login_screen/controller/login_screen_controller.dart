@@ -6,7 +6,7 @@ class Login1Controller extends GetxController {
   // Observable variables
   final isRememberMeChecked = false.obs;
   final isLoading = false.obs;
-  final isRegisterMode = false.obs; // ✅ এই ভেরিয়েবল ব্যবহার করুন
+  final isRegisterMode = false.obs; 
   final phoneController = TextEditingController();
   final completePhoneNumber = ''.obs;
   final isValidPhone = false.obs;

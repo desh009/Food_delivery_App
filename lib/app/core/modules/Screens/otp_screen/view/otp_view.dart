@@ -12,7 +12,7 @@ class VerificationScreen extends GetView<VerificationController> {
     final controller = Get.put(VerificationController());
 
     return Scaffold(
-      backgroundColor: AppColors.tomato, // ✅ Scaffold-এর color Tomato করুন
+      backgroundColor: AppColors.tomato, 
       body: Container(
         width: double.infinity,
         height: double.infinity,
