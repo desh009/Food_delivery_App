@@ -12,6 +12,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      unknownRoute: GetPage(name: '/not-found', page: () => const Scaffold(
+        body: Center(
+          child: Text('Page not found'),
+        ),
+      )),
     );
   }
 }

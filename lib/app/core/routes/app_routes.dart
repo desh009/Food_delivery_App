@@ -28,6 +28,10 @@ abstract class Routes {
   static const PRODUCT_LIST = _Paths.PRODUCT_LIST;
   static const PRODUCT_DETAILS_ = _Paths.PRODUCT_LIST;
   static const SPECIAL_OFFER = _Paths.SPECIAL_OFFER;
+  static const CART_ITEM = _Paths.CART_ITEM;
+  static const REVIEW_ITEM = _Paths.REVIEW_ITEM;
+    static const PAYMENT_METHOD = _Paths.PAYMENT_METHOD;
+
 }
 
 abstract class _Paths {
@@ -57,4 +61,9 @@ abstract class _Paths {
   static const PRODUCT_DETAILS = '/product_details';
 
   static const SPECIAL_OFFER = '/special_offer';
+  static const CART_ITEM = '/cart-item';
+
+  static const REVIEW_ITEM = '/review-item';
+    static const  PAYMENT_METHOD = '/payment-method';
+
 }

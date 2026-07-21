@@ -1,9 +1,15 @@
+import 'package:food_hjoiopk/app/core/modules/Screens/Payment_method_screen/binder/payment_method_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Payment_method_screen/view/payment_method_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/binder/register_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/view/register_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Review_Screen/binder/Review_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Review_Screen/view/review_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/binder/special_offer_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/view/special_offer_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/binder/add_to_cart_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/view/add_to_cart_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/binder/home_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/view/home_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/binder/login_screen_binder.dart';
@@ -78,20 +84,20 @@ class AppPages {
       page: () => const SpecialOffersScreen(),
       binding: SpecialOffersBinding()
     ),
+    GetPage(
+      name: _Paths.CART_ITEM,
+      page: () => const MyBasketScreen(),
+      binding: AddToCartBinder(),
+    ),
+    GetPage(
+      name: _Paths.REVIEW_ITEM,
+      page: () => const ProductReviewsScreen(),
+      binding: ProductReviewsBinding(),
+    ),
     // GetPage(
-    //   name: _Paths.SETTINGS,
-    //   page: () => const SettingsView(),
-    //   binding: SettingsBinding(),
-    // ),
-    // GetPage(
-    //   name: _Paths.MY_ACCOUNT,
-    //   page: () => const MyAccountView(),
-    //   binding: MyAccountBinding(),
-    // ),
-    // GetPage(
-    //   name: _Paths.CAR_BOOKING,
-    //   page: () => const CarBookingView(),
-    //   binding: CarBookingBinding(),
+    //   name: _Paths.PAYMENT_METHOD,
+    //   page: () => const PaymentMethodsScreen(),
+    //   binding: PaymentMethodsBinding(),
     // ),
     // GetPage(
     //   name: _Paths.CAR_RENTAL,

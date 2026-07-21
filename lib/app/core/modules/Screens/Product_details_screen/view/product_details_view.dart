@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/controller/product_details_controller.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/controller/add_to-cart_controller.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/view/add_to_cart_view.dart';
+import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 
+// ignore: must_be_immutable
 class ProductDetailsScreen extends GetView<ProductDetailsController> {
   ProductDetailsScreen({super.key});
 
   final GlobalKey _cartKey = GlobalKey();
+  bool _isAddingToCart = false;
 
-  void _runFlyToCartAnimation(BuildContext context) {
+  // ========== CartController Getter ==========
+  CartController get _cartController => CartController.instance;
+
+  // ========== Fly to Cart Animation ==========
+  void _runFlyToCartAnimation(BuildContext context, VoidCallback onComplete) {
     final RenderBox? cartBox =
         _cartKey.currentContext?.findRenderObject() as RenderBox?;
-    if (cartBox == null) return;
-    final Offset cartOffset = cartBox.localToGlobal(Offset.zero);
+    if (cartBox == null) {
+      onComplete();
+      return;
+    }
 
+    final Offset cartOffset = cartBox.localToGlobal(Offset.zero);
     final Size screenSize = MediaQuery.of(context).size;
+
     final Offset startOffset = Offset(
       screenSize.width / 2 - 25,
       screenSize.height - 100,
@@ -30,6 +43,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
         tween: Tween<double>(begin: 0.0, end: 1.0),
         onEnd: () {
           overlayEntry.remove();
+          onComplete();
         },
         builder: (context, value, child) {
           final Offset currentOffset = Offset.lerp(
@@ -38,13 +52,14 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             value,
           )!;
           final double currentScale = 1.0 - (value * 0.7);
+          final double opacity = 1.0 - (value * 0.3);
 
           return Positioned(
             left: currentOffset.dx,
             top: currentOffset.dy,
             child: Transform.scale(
               scale: currentScale,
-              child: Opacity(opacity: 1.0 - (value * 0.3), child: child),
+              child: Opacity(opacity: opacity, child: child),
             ),
           );
         },
@@ -74,13 +89,63 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     Overlay.of(context).insert(overlayEntry);
   }
 
+
+  // ========== Add to Cart with Animation & Navigation ==========
+  void _addToCartWithAnimation(BuildContext context) {
+    if (_isAddingToCart) return;
+    _isAddingToCart = true;
+
+    // 1. Cart Controller এ Add করুন
+    final cartController = _cartController;
+
+    List<Map<String, dynamic>> selectedAddOns = [];
+    if (controller.addCheese.value) {
+      selectedAddOns.add({"name": "Add Cheese", "price": 0.50});
+    }
+    if (controller.addBacon.value) {
+      selectedAddOns.add({"name": "Add Bacon", "price": 1.00});
+    }
+    if (controller.addMeat.value) {
+      selectedAddOns.add({"name": "Add Meat (Extra Patty)", "price": 2.00});
+    }
+
+    cartController.addToCart(
+      name: controller.product.name,
+      imageUrl: controller.product.imageUrl,
+      price: controller.product.price,
+      oldPrice: controller.product.oldPrice,
+      quantity: controller.quantity.value,
+      addOns: selectedAddOns,
+    );
+
+    // 2. Fly Animation চালান
+    _runFlyToCartAnimation(context, () {
+      _isAddingToCart = false;
+      // Cart Screen এ Navigate করুন
+      Get.to(
+        () => const MyBasketScreen(),
+        transition: Transition.rightToLeft,
+        duration: const Duration(milliseconds: 300),
+      );
+    });
+  }
+
+  // ========== Navigate to Cart ==========
+  void _navigateToCart() {
+    Get.to(
+      () => const MyBasketScreen(),
+      transition: Transition.rightToLeft,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // ========== ১. Scrollable Content (Top Image & Details) ==========
+          // ========== Scrollable Content ==========
           SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 110),
@@ -101,7 +166,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                         ),
                       ),
                     ),
-                    // Back Button (Top Left)
+                    // Back Button
                     Positioned(
                       top: 44,
                       left: 20,
@@ -121,8 +186,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       ),
                     ),
 
-                    // Wishlist Heart Button (Bottom Right of Image)
-                    // 🛠️ এখানে পরিবর্তন করা হয়েছে: সাধারণ Icon বদলে AnimatedFavoriteButton দেওয়া হয়েছে
+                    // Wishlist Button
                     Positioned(
                       bottom: 16,
                       right: 20,
@@ -131,8 +195,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                           isFavorite: controller.isFavorite.value,
                           size: 24,
                           onTap: (newValue) {
-                            controller.isFavorite.value =
-                                newValue; // কন্ট্রোলারের স্টেট আপডেট এবং অ্যানিমেশন ট্রিগার
+                            controller.isFavorite.value = newValue;
                           },
                         ),
                       ),
@@ -163,21 +226,46 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             ),
                           ),
 
-                          // Add to Cart Icon Box
-                          Container(
-                            key: _cartKey,
-                            decoration: BoxDecoration(
-                              color: AppColors.tomato,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                // সরাসরি কার্ট স্ক্রিনে যাওয়ার লজিক
-                              },
-                              icon: const Icon(
-                                Icons.shopping_cart_outlined,
-                                color: Colors.white,
-                                size: 24,
+                          // ========== Cart Icon ==========
+                          GestureDetector(
+                            onTap: _navigateToCart,
+                            child: Container(
+                              key: _cartKey,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.tomato,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Obx(
+                                () => Stack(
+                                  children: [
+                                    const Icon(
+                                      Icons.shopping_cart_outlined,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                    if (_cartController.cartItems.isNotEmpty)
+                                      Positioned(
+                                        right: -4,
+                                        top: -4,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            '${_cartController.totalItems}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -223,13 +311,17 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             ),
                           ),
                           const Spacer(),
-                          Text(
-                            "See all reviews",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.tomato,
-                              decoration: TextDecoration.underline,
+                          GestureDetector(
+
+                            onTap: () => Get.toNamed(Routes.REVIEW_ITEM),
+                            child: Text(
+                              "See all reviews",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.tomato,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ],
@@ -259,7 +351,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       const Divider(color: Colors.black12),
                       const SizedBox(height: 10),
 
-                      // Additional Options Header
+                      // Additional Options
                       const Text(
                         "Additional Options :",
                         style: TextStyle(
@@ -301,7 +393,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             ),
           ),
 
-          // ========== ২. Pinned Bottom Navigation Bar (Counter & Add to Basket) ==========
+          // ========== Pinned Bottom Navigation Bar ==========
           Positioned(
             bottom: 20,
             left: 20,
@@ -322,6 +414,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               ),
               child: Row(
                 children: [
+                  // Quantity Selector
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF5F5F5),
@@ -354,33 +447,37 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                   // Add to Basket Button
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        _runFlyToCartAnimation(context);
-
-                        Get.snackbar(
-                          "Success",
-                          "${controller.product.name} added to basket!",
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          duration: const Duration(seconds: 2),
-                        );
-                      },
+                      onPressed: _isAddingToCart
+                          ? null
+                          : () => _addToCartWithAnimation(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.tomato,
+                        backgroundColor: _isAddingToCart
+                            ? Colors.grey
+                            : AppColors.tomato,
                         minimumSize: const Size(double.infinity, 54),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
                         elevation: 0,
                       ),
-                      icon: const Icon(
-                        Icons.shopping_bag_outlined,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        "Add to Basket",
-                        style: TextStyle(
+                      icon: _isAddingToCart
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : const Icon(
+                              Icons.shopping_bag_outlined,
+                              color: Colors.white,
+                            ),
+                      label: Text(
+                        _isAddingToCart ? "Adding..." : "Add to Basket",
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
