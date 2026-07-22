@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "256810190012",
+    "project_id": "food-app-firri",
+    "storage_bucket": "food-app-firri.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256810190012:android:cfeb9ac326bc4e77f3fcb9",
+        "android_client_info": {
+          "package_name": "com.example.food_hjoiopk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkn1AFlVL8MFP0SiCUFiM1bugxfPmSQik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

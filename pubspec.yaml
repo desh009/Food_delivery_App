@@ -38,6 +38,11 @@ dependencies:
   intl_phone_field: ^3.2.0
   image_picker: ^1.2.3
   shared_preferences: ^2.5.5
+  firebase_core: ^4.12.1
+  firebase_auth: ^6.5.6
+  cloud_firestore: ^6.7.1
+  email_otp: ^3.2.0
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:

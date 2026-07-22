@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
+import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 
@@ -15,212 +16,214 @@ class ProfileScreen extends StatelessWidget {
     final ProfileController controller = Get.put(ProfileController());
     final HomeController homeController = Get.find<HomeController>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          children: [
-            // ========== Main Content (Scrollable) ==========
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
-              child: Column(
-                children: [
-                  // ========== Top Header Bar ==========
-                  _buildTopHeader(),
-                  const SizedBox(height: 20),
-
-                  // ========== User Profile Header ==========
-                  _buildUserProfileHeader(controller),
-                  const SizedBox(height: 20),
-
-                  // ========== Logout Button ==========
-                  _buildLogoutButton(controller),
-                  const SizedBox(height: 24),
-
-                  // ========== Primary Navigation Items ==========
-                  _buildListTile(Icons.location_on_outlined, "My Locations"),
-                  _buildListTile(
-                    Icons.confirmation_number_outlined,
-                    "My Promotions",
-                  ),
-                  _buildListTile(
-                    Icons.account_balance_wallet_outlined,
-                    "Payment Methods",
-                  ),
-                  _buildListTile(Icons.chat_bubble_outline_rounded, "Messages"),
-                  _buildListTile(
-                    Icons.people_outline_rounded,
-                    "Invite Friends",
-                  ),
-                  _buildListTile(Icons.shield_outlined, "Security"),
-                  _buildListTile(Icons.help_outline_rounded, "Help Center"),
-
-                  const SizedBox(height: 8),
-                  const Divider(color: Color(0xFFEEEEEE), thickness: 1),
-                  const SizedBox(height: 8),
-
-                  // ========== Preferences / Settings ==========
-                  _buildLanguageDropdown(controller),
-                  _buildSwitchTile(
-                    "Push Notification",
-                    controller.pushNotification,
-                  ),
-                  _buildSwitchTile("Dark Mode", controller.darkMode),
-                  _buildSwitchTile("Sound", controller.sound),
-                  _buildSwitchTile(
-                    "Automatically Updated",
-                    controller.automaticallyUpdated,
-                  ),
-
-                  const SizedBox(height: 8),
-                  const Divider(color: Color(0xFFEEEEEE), thickness: 1),
-                  const SizedBox(height: 8),
-
-                  // ========== Secondary Items ==========
-                  _buildListTile(null, "Term of Service"),
-                  _buildListTile(null, "Privacy Policy"),
-                  _buildListTile(null, "About App"),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-
-            // ========== Custom Floating Bottom Navigation Bar ==========
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Container(
-                height: 72,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
+    return ResponsiveWrapper(
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFAFAFA),
+        body: SafeArea(
+          bottom: false,
+          child: Stack(
+            children: [
+              // ========== Main Content (Scrollable) ==========
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
+                child: Column(
+                  children: [
+                    // ========== Top Header Bar ==========
+                    _buildTopHeader(),
+                    const SizedBox(height: 20),
+      
+                    // ========== User Profile Header ==========
+                    _buildUserProfileHeader(controller),
+                    const SizedBox(height: 20),
+      
+                    // ========== Logout Button ==========
+                    _buildLogoutButton(controller),
+                    const SizedBox(height: 24),
+      
+                    // ========== Primary Navigation Items ==========
+                    _buildListTile(Icons.location_on_outlined, "My Locations"),
+                    _buildListTile(
+                      Icons.confirmation_number_outlined,
+                      "My Promotions",
                     ),
+                    _buildListTile(
+                      Icons.account_balance_wallet_outlined,
+                      "Payment Methods",
+                    ),
+                    _buildListTile(Icons.chat_bubble_outline_rounded, "Messages"),
+                    _buildListTile(
+                      Icons.people_outline_rounded,
+                      "Invite Friends",
+                    ),
+                    _buildListTile(Icons.shield_outlined, "Security"),
+                    _buildListTile(Icons.help_outline_rounded, "Help Center"),
+      
+                    const SizedBox(height: 8),
+                    const Divider(color: Color(0xFFEEEEEE), thickness: 1),
+                    const SizedBox(height: 8),
+      
+                    // ========== Preferences / Settings ==========
+                    _buildLanguageDropdown(controller),
+                    _buildSwitchTile(
+                      "Push Notification",
+                      controller.pushNotification,
+                    ),
+                    _buildSwitchTile("Dark Mode", controller.darkMode),
+                    _buildSwitchTile("Sound", controller.sound),
+                    _buildSwitchTile(
+                      "Automatically Updated",
+                      controller.automaticallyUpdated,
+                    ),
+      
+                    const SizedBox(height: 8),
+                    const Divider(color: Color(0xFFEEEEEE), thickness: 1),
+                    const SizedBox(height: 8),
+      
+                    // ========== Secondary Items ==========
+                    _buildListTile(null, "Term of Service"),
+                    _buildListTile(null, "Privacy Policy"),
+                    _buildListTile(null, "About App"),
+                    const SizedBox(height: 20),
                   ],
                 ),
-                child: Obx(() {
-                  // প্রোফাইল কন্ট্রোলার চেক করুন
-                  final ProfileController? profileController =
-                      Get.isRegistered<ProfileController>()
-                      ? Get.find<ProfileController>()
-                      : null;
-
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildNavItem(
-                        0,
-                        Icons.home_filled,
-                        "Home",
-                        homeController,
-                        onTap: () {
-                          homeController.currentNavIndex.value = 0;
-                          Get.back(); // Profile Screen থেকে Home এ ফিরে যান
-                        },
-                      ),
-                      _buildNavItem(
-                        1,
-                        Icons.assignment_outlined,
-                        "Orders",
-                        homeController,
-                        onTap: () {
-                          homeController.currentNavIndex.value = 1;
-                          Get.snackbar(
-                            'Orders',
-                            'Coming soon!',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.blue,
-                            colorText: Colors.white,
-                          );
-                        },
-                      ),
-                      _buildNavItem(
-                        2,
-                        Icons.favorite_border,
-                        "Favorites",
-                        homeController,
-                        onTap: () {
-                          homeController.currentNavIndex.value = 2;
-                          Get.snackbar(
-                            'Favorites',
-                            'Coming soon!',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.blue,
-                            colorText: Colors.white,
-                          );
-                        },
-                      ),
-                      _buildNavItem(
-                        3,
-                        Icons.notifications_none_rounded,
-                        "Alerts",
-                        homeController,
-                        onTap: () {
-                          homeController.currentNavIndex.value = 3;
-                          Get.snackbar(
-                            'Alerts',
-                            'Coming soon!',
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.blue,
-                            colorText: Colors.white,
-                          );
-                        },
-                      ),
-                      // Profile Avatar with Dynamic Image
-                      GestureDetector(
-                        onTap: () {
-                          homeController.currentNavIndex.value = 4;
-                          // ইতিমধ্যে Profile Screen এ আছেন
-                        },
-                        child: Container(
-                          width: 38,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: homeController.currentNavIndex.value == 4
-                                  ? AppColors.tomato
-                                  : Colors.transparent,
-                              width: 2,
-                            ),
-                            image:
-                                profileController != null &&
-                                    profileController
-                                        .profileImagePath
-                                        .value
-                                        .isNotEmpty
-                                ? DecorationImage(
-                                    image: FileImage(
-                                      File(
-                                        profileController
-                                            .profileImagePath
-                                            .value,
-                                      ),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                : const DecorationImage(
-                                    image: NetworkImage(
-                                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
+              ),
+      
+              // ========== Custom Floating Bottom Navigation Bar ==========
+              Positioned(
+                bottom: 20,
+                left: 20,
+                right: 20,
+                child: Container(
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.06),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
                       ),
                     ],
-                  );
-                }),
+                  ),
+                  child: Obx(() {
+                    // প্রোফাইল কন্ট্রোলার চেক করুন
+                    final ProfileController? profileController =
+                        Get.isRegistered<ProfileController>()
+                        ? Get.find<ProfileController>()
+                        : null;
+      
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildNavItem(
+                          0,
+                          Icons.home_filled,
+                          "Home",
+                          homeController,
+                          onTap: () {
+                            homeController.currentNavIndex.value = 0;
+                            Get.back(); // Profile Screen থেকে Home এ ফিরে যান
+                          },
+                        ),
+                        _buildNavItem(
+                          1,
+                          Icons.assignment_outlined,
+                          "Orders",
+                          homeController,
+                          onTap: () {
+                            homeController.currentNavIndex.value = 1;
+                            Get.snackbar(
+                              'Orders',
+                              'Coming soon!',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.blue,
+                              colorText: Colors.white,
+                            );
+                          },
+                        ),
+                        _buildNavItem(
+                          2,
+                          Icons.favorite_border,
+                          "Favorites",
+                          homeController,
+                          onTap: () {
+                            homeController.currentNavIndex.value = 2;
+                            Get.snackbar(
+                              'Favorites',
+                              'Coming soon!',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.blue,
+                              colorText: Colors.white,
+                            );
+                          },
+                        ),
+                        _buildNavItem(
+                          3,
+                          Icons.notifications_none_rounded,
+                          "Alerts",
+                          homeController,
+                          onTap: () {
+                            homeController.currentNavIndex.value = 3;
+                            Get.snackbar(
+                              'Alerts',
+                              'Coming soon!',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.blue,
+                              colorText: Colors.white,
+                            );
+                          },
+                        ),
+                        // Profile Avatar with Dynamic Image
+                        GestureDetector(
+                          onTap: () {
+                            homeController.currentNavIndex.value = 4;
+                            // ইতিমধ্যে Profile Screen এ আছেন
+                          },
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: homeController.currentNavIndex.value == 4
+                                    ? AppColors.tomato
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                              image:
+                                  profileController != null &&
+                                      profileController
+                                          .profileImagePath
+                                          .value
+                                          .isNotEmpty
+                                  ? DecorationImage(
+                                      image: FileImage(
+                                        File(
+                                          profileController
+                                              .profileImagePath
+                                              .value,
+                                        ),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const DecorationImage(
+                                      image: NetworkImage(
+                                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

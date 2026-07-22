@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Review_Screen/controller/review-screen_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
@@ -10,79 +11,81 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
   Widget build(BuildContext context) {
   
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ১. টপ অ্যাপ বার
-            _buildAppBar(),
-
-            Expanded(
-              child: Obx(
-                () {
-                  if (controller.isLoading.value) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.tomato,
-                      ),
-                    );
-                  }
-                  return SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 12),
-
-                        // ২. ওভারঅল রেটিং
-                        _buildRatingOverview(),
-                        const SizedBox(height: 24),
-
-                        // ৩. ফিল্টার চিপস
-                        _buildFilterChips(),
-                        const SizedBox(height: 24),
-
-                        // ৪. রিভিউ লিস্ট
-                        Obx(
-                          () {
-                            if (controller.filteredReviews.isEmpty) {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 40.0),
-                                  child: Text(
-                                    "No reviews found",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black45,
+    return ResponsiveWrapper(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // ১. টপ অ্যাপ বার
+              _buildAppBar(),
+      
+              Expanded(
+                child: Obx(
+                  () {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.tomato,
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 12),
+      
+                          // ২. ওভারঅল রেটিং
+                          _buildRatingOverview(),
+                          const SizedBox(height: 24),
+      
+                          // ৩. ফিল্টার চিপস
+                          _buildFilterChips(),
+                          const SizedBox(height: 24),
+      
+                          // ৪. রিভিউ লিস্ট
+                          Obx(
+                            () {
+                              if (controller.filteredReviews.isEmpty) {
+                                return const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 40.0),
+                                    child: Text(
+                                      "No reviews found",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black45,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }
-                            return ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: controller.filteredReviews.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 20),
-                              itemBuilder: (context, index) {
-                                return _buildReviewCard(
-                                  controller.filteredReviews[index],
                                 );
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  );
-                },
+                              }
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: controller.filteredReviews.length,
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 20),
+                                itemBuilder: (context, index) {
+                                  return _buildReviewCard(
+                                    controller.filteredReviews[index],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
