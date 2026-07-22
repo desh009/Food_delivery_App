@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/controller/add_to-cart_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/add_new_card/add_new_card.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
@@ -170,7 +171,10 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ========== ✅ Payment Method Tile (Opens BottomSheet) ==========
-  Widget _buildPaymentMethodTile(BuildContext context, CartController controller) {
+  Widget _buildPaymentMethodTile(
+    BuildContext context,
+    CartController controller,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -210,10 +214,7 @@ class MyBasketScreen extends StatelessWidget {
             controller.selectedPaymentMethod.value.isEmpty
                 ? "Select Payment Method"
                 : controller.selectedPaymentMethod.value,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black38,
-            ),
+            style: const TextStyle(fontSize: 12, color: Colors.black38),
           ),
         ),
         trailing: const Icon(
@@ -225,165 +226,283 @@ class MyBasketScreen extends StatelessWidget {
     );
   }
 
-  // ========== 🟢 Bottom Sheet for Payment Selection ==========
-  void _showPaymentBottomSheet(BuildContext context, CartController controller) {
+  // ========== 🟢 Bottom Sheet for Payment Selection (Pixel Perfect UI) ==========
+  void _showPaymentBottomSheet(
+    BuildContext context,
+    CartController controller,
+  ) {
+    // Temp variable to hold user selection before clicking 'Apply'
+    final RxString tempSelected =
+        (controller.selectedPaymentMethod.value.isEmpty
+                ? 'Cash'
+                : controller.selectedPaymentMethod.value)
+            .obs;
+
     Get.bottomSheet(
       Container(
-        padding: const EdgeInsets.all(20),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Handle Bar
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Top Bar Header
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 20,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    child: Text(
+                      "Payment Methods",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 36), // Alignment Balance
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Payment Options
+              Obx(
+                () => Column(
+                  children: [
+                    _buildBottomSheetOptionItem(
+                      title: "Cash",
+                      iconWidget: const Icon(
+                        Icons.payments_rounded,
+                        color: Colors.green,
+                        size: 22,
+                      ),
+                      value: "Cash",
+                      groupValue: tempSelected.value,
+                      onSelect: (val) => tempSelected.value = val,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBottomSheetOptionItem(
+                      title: "PayPal",
+                      iconWidget: const Icon(
+                        Icons.account_balance_wallet_rounded,
+                        color: Colors.blue,
+                        size: 22,
+                      ),
+                      value: "PayPal",
+                      groupValue: tempSelected.value,
+                      onSelect: (val) => tempSelected.value = val,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBottomSheetOptionItem(
+                      title: "Google Pay",
+                      iconWidget: const Icon(
+                        Icons.g_mobiledata_rounded,
+                        color: Colors.deepOrange,
+                        size: 28,
+                      ),
+                      value: "Google Pay",
+                      groupValue: tempSelected.value,
+                      onSelect: (val) => tempSelected.value = val,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBottomSheetOptionItem(
+                      title: "Apple Pay",
+                      iconWidget: const Icon(
+                        Icons.apple_rounded,
+                        color: Colors.black,
+                        size: 24,
+                      ),
+                      value: "Apple Pay",
+                      groupValue: tempSelected.value,
+                      onSelect: (val) => tempSelected.value = val,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBottomSheetOptionItem(
+                      title: "**** **** **** 0895",
+                      iconWidget: const Icon(
+                        Icons.credit_card_rounded,
+                        color: Colors.indigo,
+                        size: 22,
+                      ),
+                      value: "**** **** **** 0895",
+                      groupValue: tempSelected.value,
+                      onSelect: (val) => tempSelected.value = val,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBottomSheetOptionItem(
+                      title: "**** **** **** 2259",
+                      iconWidget: const Icon(
+                        Icons.credit_card_rounded,
+                        color: Colors.orange,
+                        size: 22,
+                      ),
+                      value: "**** **** **** 2259",
+                      groupValue: tempSelected.value,
+                      onSelect: (val) => tempSelected.value = val,
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const Text(
-              "Select Payment Method",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
 
-            // Payment Options List
-            _buildPaymentOptionItem(
-              title: "Cash on Delivery",
-              subtitle: "Pay cash upon order delivery",
-              icon: Icons.payments_rounded,
-              controller: controller,
-            ),
-            const SizedBox(height: 12),
-            _buildPaymentOptionItem(
-              title: "Credit / Debit Card",
-              subtitle: "Visa, Mastercard, etc.",
-              icon: Icons.credit_card_rounded,
-              controller: controller,
-            ),
-            const SizedBox(height: 12),
-            _buildPaymentOptionItem(
-              title: "bKash / Mobile Banking",
-              subtitle: "Instant digital payment",
-              icon: Icons.account_balance_wallet_rounded,
-              controller: controller,
-            ),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 16),
+
+              // Add New Card Button
+              InkWell(
+                onTap: () {
+                  Get.back();
+                  AddNewCardBottomSheet.show(context);
+                },
+                borderRadius: BorderRadius.circular(14),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    color: AppColors.tomato.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add, color: AppColors.tomato, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Add New Card",
+                        style: TextStyle(
+                          color: AppColors.tomato,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Apply Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.selectedPaymentMethod.value = tempSelected.value;
+                    controller.update();
+                    Get.back();
+
+                    Get.snackbar(
+                      'Success',
+                      'Payment method set to ${tempSelected.value}',
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 2),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.tomato,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  child: const Text(
+                    "Apply",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
       isScrollControlled: true,
     );
   }
 
-  // Option Item Builder
-  Widget _buildPaymentOptionItem({
+  // ========== Bottom Sheet Option Tile Builder ==========
+  Widget _buildBottomSheetOptionItem({
     required String title,
-    required String subtitle,
-    required IconData icon,
-    required CartController controller,
+    required Widget iconWidget,
+    required String value,
+    required String groupValue,
+    required Function(String) onSelect,
   }) {
-    return Obx(() {
-      final isSelected = controller.selectedPaymentMethod.value == title;
-      return InkWell(
-        onTap: () {
-          controller.selectedPaymentMethod.value = title;
-          controller.update();
-          Get.back(); // Bottom Sheet বন্ধ করবে
-          
-          Get.snackbar(
-            'Success',
-            'Payment method set to $title',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            duration: const Duration(seconds: 2),
-          );
-        },
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.tomato.withOpacity(0.06) : Colors.grey[50],
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: isSelected ? AppColors.tomato : Colors.grey[200]!,
-              width: isSelected ? 1.5 : 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.tomato.withOpacity(0.1) : Colors.grey[200],
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  color: isSelected ? AppColors.tomato : Colors.grey[600],
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: isSelected ? AppColors.tomato : Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-              Radio<String>(
-                value: title,
-                groupValue: controller.selectedPaymentMethod.value,
-                activeColor: AppColors.tomato,
-                onChanged: (value) {
-                  if (value != null) {
-                    controller.selectedPaymentMethod.value = value;
-                    controller.update();
-                    Get.back();
-                    Get.snackbar(
-                      'Success',
-                      'Payment method set to $value',
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: Colors.green,
-                      colorText: Colors.white,
-                      duration: const Duration(seconds: 2),
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
+    final isSelected = groupValue == value;
+
+    return GestureDetector(
+      onTap: () => onSelect(value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.grey.shade200, width: 1),
         ),
-      );
-    });
+        child: Row(
+          children: [
+            SizedBox(width: 30, height: 30, child: Center(child: iconWidget)),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            // Custom Radio Circle
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? AppColors.tomato : Colors.grey.shade300,
+                  width: isSelected ? 6 : 1.5,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // ========== Info Tile ==========
@@ -631,7 +750,10 @@ class MyBasketScreen extends StatelessWidget {
           isBold: true,
         ),
         const SizedBox(height: 8),
-        _buildBillRow("Delivery Fee", controller.selectedPaymentMethod.value.isEmpty ? "—" : "£ 0.00"),
+        _buildBillRow(
+          "Delivery Fee",
+          controller.selectedPaymentMethod.value.isEmpty ? "—" : "£ 0.00",
+        ),
         const SizedBox(height: 8),
         _buildBillRow("Discount", "—"),
         const Padding(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/view/register_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/controller/login_screen_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:get/get.dart';

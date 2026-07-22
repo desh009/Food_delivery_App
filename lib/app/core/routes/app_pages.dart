@@ -1,7 +1,7 @@
-import 'package:food_hjoiopk/app/core/modules/Screens/Payment_method_screen/binder/payment_method_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Payment_method_screen/view/payment_method_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/binder/profile_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/view/profile_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/binder/register_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/view/register_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Review_Screen/binder/Review_screen_binder.dart';
@@ -67,22 +67,21 @@ class AppPages {
       binding: HomeBinder(),
     ),
 
-
     GetPage(
       name: _Paths.PRODUCT_LIST,
       page: () => const ProductListScreen(),
-      binding: ProductListBinding()
+      binding: ProductListBinding(),
     ),
 
-     GetPage(
+    GetPage(
       name: _Paths.PRODUCT_DETAILS,
       page: () => const ProductListScreen(),
-      binding: ProductListBinding()
+      binding: ProductListBinding(),
     ),
     GetPage(
       name: _Paths.SPECIAL_OFFER,
       page: () => const SpecialOffersScreen(),
-      binding: SpecialOffersBinding()
+      binding: SpecialOffersBinding(),
     ),
     GetPage(
       name: _Paths.CART_ITEM,
@@ -94,11 +93,11 @@ class AppPages {
       page: () => const ProductReviewsScreen(),
       binding: ProductReviewsBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.PAYMENT_METHOD,
-    //   page: () => const PaymentMethodsScreen(),
-    //   binding: PaymentMethodsBinding(),
-    // ),
+    GetPage(
+      name: _Paths.MY_ACCOUNT,
+      page: () => const ProfileScreen(),
+      binding: ProfileBinder(),
+    ),
     // GetPage(
     //   name: _Paths.CAR_RENTAL,
     //   page: () => const CarRentalView(),

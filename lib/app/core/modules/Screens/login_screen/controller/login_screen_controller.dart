@@ -1,15 +1,19 @@
 // login_screen_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 
 class Login1Controller extends GetxController {
-  // Observable variables
+  final phoneController = TextEditingController();
   final isRememberMeChecked = false.obs;
   final isLoading = false.obs;
-  final isRegisterMode = false.obs; 
-  final phoneController = TextEditingController();
   final completePhoneNumber = ''.obs;
-  final isValidPhone = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    print('🔵 LoginController initialized');
+  }
 
   @override
   void onClose() {
@@ -17,63 +21,104 @@ class Login1Controller extends GetxController {
     super.onClose();
   }
 
-  // Toggle Remember Me
   void toggleRememberMe() {
     isRememberMeChecked.toggle();
   }
 
-  // ✅ Toggle Register Mode
+  // ✅ Sign In - শুধু Phone Number দিয়ে
+  void signIn() async {
+    print('🟢 Sign In button pressed');
+    print('📱 Phone: ${phoneController.text}');
 
-
-  void validatePhone(String phoneNumber) {
-    if (phoneNumber.length >= 10) {
-      isValidPhone.value = true;
-    } else {
-      isValidPhone.value = false;
-    }
-  }
-
-  bool get isButtonActive {
-    return isRememberMeChecked.value &&
-        phoneController.text.isNotEmpty &&
-        phoneController.text.length >= 10;
-  }
-
-  bool get isFormValid {
-    return phoneController.text.isNotEmpty && phoneController.text.length >= 10;
-  }
-
-  void signIn() {
-    if (isButtonActive) {
-      return;
-    }
+    // Phone Validation
     if (phoneController.text.isEmpty) {
       Get.snackbar(
         'Error',
         'Please enter your phone number',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 3),
       );
       return;
     }
 
-    isLoading.value = true;
-
-    Future.delayed(const Duration(seconds: 2), () {
-      isLoading.value = false;
-
+    if (phoneController.text.length < 10) {
       Get.snackbar(
-        'Success',
-        isRegisterMode.value
-            ? 'Registration Successful!\nPhone: $completePhoneNumber'
-            : 'Login Successful!\nPhone: $completePhoneNumber',
+        'Error',
+        'Please enter a valid phone number (min 10 digits)',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
       );
-    });
+      return;
+    }
+
+    // Start loading
+    isLoading.value = true;
+
+    try {
+      print('🔵 Processing login...');
+
+      // Simulate network delay (2 seconds)
+      await Future.delayed(const Duration(seconds: 2));
+
+      // ✅ Navigate to Home Screen
+      Get.offAllNamed(Routes.HOME);
+
+      // Success message
+      Get.snackbar(
+        'Success',
+        'Welcome back! 👋',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } catch (e) {
+      print('❌ Login error: $e');
+      Get.snackbar(
+        'Error',
+        'Login failed. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Social Login Methods
+  void signInWithGoogle() {
+    Get.snackbar(
+      'Info',
+      'Google Sign-in coming soon!',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.blue,
+      colorText: Colors.white,
+    );
+  }
+
+  void signInWithFacebook() {
+    Get.snackbar(
+      'Info',
+      'Facebook Sign-in coming soon!',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.blue,
+      colorText: Colors.white,
+    );
+  }
+
+  void signInWithApple() {
+    Get.snackbar(
+      'Info',
+      'Apple Sign-in coming soon!',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.blue,
+      colorText: Colors.white,
+    );
   }
 }

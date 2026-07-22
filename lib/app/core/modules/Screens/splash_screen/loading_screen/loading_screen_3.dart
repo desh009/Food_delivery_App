@@ -16,7 +16,8 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
 
   final List<Map<String, String>> _pages = [
     {
-      "image": "assets/images/Default_Create_an_image_of_a_small_3D_style_rocket_Has_white_b_2 1.png",
+      "image":
+          "assets/images/Default_Create_an_image_of_a_small_3D_style_rocket_Has_white_b_2 1.png",
       "title": "Wide Selection",
       "desc": "More than 400 restaurants nationwide.",
     },
@@ -110,7 +111,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                               ),
                             ),
                             if (index == 3) ...[
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 280),
                               SizedBox(
                                 width: double.infinity,
                                 height: 50,
@@ -229,10 +230,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                         },
                         child: const Text(
                           "Skip",
-                          style: TextStyle(
-                            color: Colors.black38,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(color: Colors.black38, fontSize: 16),
                         ),
                       ),
                     ],
