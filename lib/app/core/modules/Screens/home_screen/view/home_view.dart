@@ -17,10 +17,113 @@ import 'dart:io';
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
+  // Banner data with different images and offers
+  final List<Map<String, dynamic>> bannerData = const [
+    {
+      'title': 'GREEN DAY',
+      'subtitle': 'UP TO\n60% OFF',
+      'category': 'Salad Category',
+      'image':
+          'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=500&auto=format&fit=crop',
+      'gradient': [Color(0xFF0F7A54), Color(0xFF1BA375)],
+    },
+    {
+      'title': 'BURGER FEST',
+      'subtitle': 'GET\n20% OFF',
+      'category': 'Burger Category',
+      'image':
+          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500&auto=format&fit=crop',
+      'gradient': [Color(0xFFD35400), Color(0xFFE67E22)],
+    },
+    {
+      'title': 'PIZZA DEAL',
+      'subtitle': 'BUY 1\nGET 1 FREE',
+      'category': 'Pizza Category',
+      'image':
+          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500&auto=format&fit=crop',
+      'gradient': [Color(0xFF8B0000), Color(0xFFC0392B)],
+    },
+    {
+      'title': 'DRINKS SPECIAL',
+      'subtitle': 'UP TO\n50% OFF',
+      'category': 'Drinks Category',
+      'image':
+          'https://images.unsplash.com/photo-1543854932-4d2e5d5fe46b?q=80&w=500&auto=format&fit=crop',
+      'gradient': [Color(0xFF1A237E), Color(0xFF283593)],
+    },
+  ];
+
+  // Special offers data with more items
+  final List<Map<String, dynamic>> specialOffers = const [
+    {
+      'title': 'Cheese Burger',
+      'image':
+          'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500',
+      'rating': '4.8',
+      'price': '\$12.99',
+      'discount': '20% OFF',
+    },
+    {
+      'title': 'Pepperoni Pizza',
+      'image':
+          'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500',
+      'rating': '4.9',
+      'price': '\$15.99',
+      'discount': '15% OFF',
+    },
+    {
+      'title': 'Caesar Salad',
+      'image':
+          'https://images.unsplash.com/photo-1546793665-c74683f339c1?q=80&w=500',
+      'rating': '4.6',
+      'price': '\$9.99',
+      'discount': '10% OFF',
+    },
+    {
+      'title': 'Chicken Tacos',
+      'image':
+          'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=500',
+      'rating': '4.7',
+      'price': '\$11.99',
+      'discount': '25% OFF',
+    },
+    {
+      'title': 'Margarita Pizza',
+      'image':
+          'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?q=80&w=500',
+      'rating': '4.5',
+      'price': '\$14.99',
+      'discount': '18% OFF',
+    },
+    {
+      'title': 'Veggie Burger',
+      'image':
+          'https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=500',
+      'rating': '4.3',
+      'price': '\$10.99',
+      'discount': '12% OFF',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // Get the controller (already injected via binding)
     final controller = Get.find<HomeController>();
+    final PageController pageController = PageController();
+
+    // Start auto-sliding after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Make sure the page controller has clients before starting
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (pageController.hasClients) {
+          controller.onPageViewReady();
+        } else {
+          // If still no clients, try again
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.onPageViewReady();
+          });
+        }
+      });
+    });
 
     final List<Map<String, String>> categories = [
       {'name': 'Burger', 'icon': '🍔'},
@@ -37,8 +140,11 @@ class HomeScreen extends GetView<HomeController> {
       {'name': 'More', 'icon': '👀'},
     ];
 
-    final RxBool isFood1Favorite = false.obs;
-    final RxBool isFood2Favorite = false.obs;
+    // Create observables for favorite states
+    final List<RxBool> favoriteStates = List.generate(
+      specialOffers.length,
+      (index) => false.obs,
+    );
 
     return ResponsiveWrapper(
       child: Scaffold(
@@ -143,81 +249,111 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 20),
 
-                    // Promo Banner Slider
+                    // Auto-sliding Promo Banner Slider
                     SizedBox(
                       height: 150,
                       child: PageView.builder(
-                        itemCount: 3,
-                        onPageChanged: (index) =>
-                            controller.currentBannerIndex.value = index,
-                        controller: PageController(
-                          viewportFraction: 0.85,
-                          initialPage: 2,
-                        ),
+                        itemCount: bannerData.length,
+                        onPageChanged: (index) {
+                          controller.onBannerPageChanged(index);
+                        },
+                        controller: controller
+                            .pageController, // Use controller's pageController
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF0F7A54), Color(0xFF1BA375)],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
+                          final banner = bannerData[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0,
                             ),
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        "GREEN DAY",
-                                        style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      const Text(
-                                        "UP TO\n60% OFF",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w900,
-                                          height: 1.1,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        "Salad Category",
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.9),
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
+                            child: GestureDetector(
+                              onTap: () {
+                                // Navigate to special offer screen when banner is tapped
+                                Get.toNamed(Routes.SPECIAL_OFFER);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      banner['gradient'][0],
+                                      banner['gradient'][1],
                                     ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
                                   ),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                Positioned(
-                                  right: -10,
-                                  bottom: -10,
-                                  top: -10,
-                                  child: Opacity(
-                                    opacity: 0.9,
-                                    child: Image.network(
-                                      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=500&auto=format&fit=crop',
-                                      width: 160,
-                                      fit: BoxFit.cover,
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            banner['title'],
+                                            style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            banner['subtitle'],
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w900,
+                                              height: 1.1,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            banner['category'],
+                                            style: TextStyle(
+                                              color: Colors.white.withOpacity(
+                                                0.9,
+                                              ),
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      right: -10,
+                                      bottom: -10,
+                                      top: -10,
+                                      child: Opacity(
+                                        opacity: 0.9,
+                                        child: Image.network(
+                                          banner['image'],
+                                          width: 160,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                return Container(
+                                                  width: 160,
+                                                  color: Colors.grey[300],
+                                                  child: const Icon(
+                                                    Icons.image_not_supported,
+                                                    size: 40,
+                                                  ),
+                                                );
+                                              },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -230,7 +366,7 @@ class HomeScreen extends GetView<HomeController> {
                     Obx(
                       () => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(3, (index) {
+                        children: List.generate(bannerData.length, (index) {
                           bool isActive =
                               controller.currentBannerIndex.value == index;
                           return AnimatedContainer(
@@ -249,6 +385,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
+                    // Rest of your view code remains the same...
                     const SizedBox(height: 20),
 
                     // Search & Filter Bar
@@ -518,30 +655,37 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 16),
 
-                    // Special Offers Product Grid
+                    // Special Offers Grid with More Items
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: GridView.count(
-                        crossAxisCount: 2,
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.8,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 0.9,
-                        children: [
-                          _buildFoodCard(
-                            'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500',
-                            'Cheese Burger',
-                            '4.8',
-                            isFood1Favorite,
-                          ),
-                          _buildFoodCard(
-                            'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500',
-                            'Pepperoni Pizza',
-                            '4.9',
-                            isFood2Favorite,
-                          ),
-                        ],
+                        itemCount: specialOffers.length,
+                        itemBuilder: (context, index) {
+                          final offer = specialOffers[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigate to product detail or special offer detail
+                              Get.toNamed(Routes.SPECIAL_OFFER);
+                            },
+                            child: _buildSpecialOfferCard(
+                              imageUrl: offer['image'],
+                              title: offer['title'],
+                              rating: offer['rating'],
+                              price: offer['price'],
+                              discount: offer['discount'],
+                              isFavorite: favoriteStates[index],
+                            ),
+                          );
+                        },
                       ),
                     ),
 
@@ -687,20 +831,22 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  // ========== Food Card Widget ==========
-  Widget _buildFoodCard(
-    String imageUrl,
-    String title,
-    String rating,
-    RxBool isFavorite,
-  ) {
+  // ========== Special Offer Card Widget ==========
+  Widget _buildSpecialOfferCard({
+    required String imageUrl,
+    required String title,
+    required String rating,
+    required String price,
+    required String discount,
+    required RxBool isFavorite,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -711,18 +857,59 @@ class HomeScreen extends GetView<HomeController> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image
+              // Image with Discount Badge
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                        image: DecorationImage(
+                          image: NetworkImage(imageUrl),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
+                    // Discount Badge
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.tomato,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          discount,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    // Favorite Button
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Obx(
+                        () => AnimatedFavoriteButton(
+                          isFavorite: isFavorite.value,
+                          size: 16,
+                          onTap: (newValue) {
+                            isFavorite.value = newValue;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               // Details
@@ -736,7 +923,9 @@ class HomeScreen extends GetView<HomeController> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      maxLines: 1,
                     ),
                     const SizedBox(height: 2),
                     Row(
@@ -749,26 +938,21 @@ class HomeScreen extends GetView<HomeController> {
                             color: Colors.black54,
                           ),
                         ),
+                        const Spacer(),
+                        Text(
+                          price,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.tomato,
+                          ),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
             ],
-          ),
-          // Favorite Button
-          Positioned(
-            top: 10,
-            right: 10,
-            child: Obx(
-              () => AnimatedFavoriteButton(
-                isFavorite: isFavorite.value,
-                size: 16,
-                onTap: (newValue) {
-                  isFavorite.value = newValue;
-                },
-              ),
-            ),
           ),
         ],
       ),
