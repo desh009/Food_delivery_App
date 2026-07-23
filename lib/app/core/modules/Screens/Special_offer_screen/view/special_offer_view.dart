@@ -13,19 +13,19 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
 
-              // অ্যাপ বার
+              // ========== অ্যাপ বার ==========
               Row(
                 children: [
                   GestureDetector(
                     onTap: () => Get.back(),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(10),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -40,7 +40,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                       child: const Icon(
                         Icons.arrow_back,
                         color: Colors.black87,
-                        size: 22,
+                        size: 20,
                       ),
                     ),
                   ),
@@ -49,24 +49,24 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                       child: Text(
                         "Special Offers",
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 46),
+                  const SizedBox(width: 40),
                 ],
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // সার্চ বার
+              // ========== সার্চ বার (Filter সহ) ==========
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F3F4),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextField(
                   onChanged: controller.updateSearch,
@@ -74,29 +74,78 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                     hintText: "Search",
                     hintStyle: const TextStyle(
                       color: Colors.black38,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                     prefixIcon: const Icon(
                       Icons.search,
                       color: Colors.black38,
-                      size: 24,
+                      size: 20,
                     ),
+                    // ✅ Filter Icon - BottomSheet Call করবে
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.tune, color: Colors.black87),
                       onPressed: controller.onFilterTap,
                     ),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
+              // ========== Products Grid ==========
               Expanded(
                 child: Obx(() {
+                  // 🔥 Loading State
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.tomato),
+                    );
+                  }
+
+                  // 🔥 Error State
+                  if (controller.errorMessage.isNotEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 60,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            controller.errorMessage.value,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => controller.loadProducts(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.tomato,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Retry',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   final products = controller.filteredProducts;
 
+                  // 🔥 Empty State
                   if (products.isEmpty) {
                     return const Center(
                       child: Column(
@@ -104,17 +153,14 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                         children: [
                           Icon(
                             Icons.search_off,
-
-                            size: 80,
+                            size: 60,
                             color: Colors.black26,
                           ),
-                          SizedBox(height: 16),
-
+                          SizedBox(height: 12),
                           Text(
                             'No products found',
-
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black38,
                             ),
                           ),
@@ -122,15 +168,17 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                       ),
                     );
                   }
+
+                  // 🔥 Products Grid
                   return GridView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: products.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.82,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.68,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                         ),
                     itemBuilder: (context, index) {
                       final product = products[index];
@@ -139,7 +187,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(14),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.03),
@@ -151,31 +199,43 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // ===== Image =====
                               Stack(
                                 children: [
                                   ClipRRect(
                                     borderRadius: const BorderRadius.vertical(
-                                      top: Radius.circular(18),
+                                      top: Radius.circular(14),
                                     ),
                                     child: Image.network(
-                                      product['image'],
-                                      height: 110,
+                                      product['image'] ?? '',
+                                      height: 85,
                                       width: double.infinity,
                                       fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Container(
+                                              height: 85,
+                                              color: Colors.grey[200],
+                                              child: const Icon(
+                                                Icons.broken_image,
+                                                color: Colors.grey,
+                                              ),
+                                            );
+                                          },
                                     ),
                                   ),
                                   Positioned(
-                                    top: 8,
-                                    right: 8,
+                                    top: 6,
+                                    right: 6,
                                     child: AnimatedFavoriteButton(
-                                      isFavorite: product['isFavorite'] ?? false,
-                                      size: 16,
+                                      isFavorite:
+                                          product['isFavorite'] ?? false,
+                                      size: 14,
                                       onTap: (newValue) {
-                                        // কন্ট্রোলারের মাধ্যমে আপডেট
                                         final originalIndex = controller
                                             .specialProducts
                                             .indexWhere(
-                                              (p) => p['name'] == product['name'],
+                                              (p) => p['id'] == product['id'],
                                             );
                                         if (originalIndex != -1) {
                                           controller.toggleFavorite(
@@ -188,57 +248,63 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                   ),
                                 ],
                               ),
+
+                              // ===== Product Info =====
                               Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      product['name'],
+                                      product['name'] ?? 'Unknown',
                                       style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black87,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 3),
+
+                                    // Rating
                                     Row(
                                       children: [
                                         const Icon(
                                           Icons.star,
                                           color: Colors.amber,
-                                          size: 14,
+                                          size: 12,
                                         ),
-                                        const SizedBox(width: 4),
+                                        const SizedBox(width: 3),
                                         Text(
-                                          product['rating'],
+                                          product['rating'] ?? '0.0',
                                           style: const TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 10,
                                             color: Colors.black54,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 6),
+                                    const SizedBox(height: 4),
+
+                                    // Price
                                     Row(
                                       children: [
                                         Text(
-                                          "£ ${product['oldPrice'].toStringAsFixed(2)}",
+                                          "£ ${(product['oldPrice'] ?? 0.0).toStringAsFixed(2)}",
                                           style: const TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 10,
                                             color: Colors.black38,
                                             decoration:
                                                 TextDecoration.lineThrough,
                                           ),
                                         ),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: 5),
                                         Text(
-                                          "£ ${product['newPrice'].toStringAsFixed(2)}",
+                                          "£ ${(product['newPrice'] ?? 0.0).toStringAsFixed(2)}",
                                           style: const TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                             color: AppColors.tomato,
                                           ),

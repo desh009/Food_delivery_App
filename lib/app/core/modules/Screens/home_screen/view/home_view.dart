@@ -1,3 +1,5 @@
+// app/core/modules/Screens/home_screen/view/home_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
@@ -17,7 +19,8 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HomeController());
+    // Get the controller (already injected via binding)
+    final controller = Get.find<HomeController>();
 
     final List<Map<String, String>> categories = [
       {'name': 'Burger', 'icon': '🍔'},
@@ -44,7 +47,7 @@ class HomeScreen extends GetView<HomeController> {
           bottom: false,
           child: Stack(
             children: [
-              // ========== Main Content (Scrollable) ==========
+              // Main Content (Scrollable)
               SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 100),
@@ -52,8 +55,8 @@ class HomeScreen extends GetView<HomeController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
-      
-                    // ========== ১. Header Section ==========
+
+                    // Header Section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -137,10 +140,10 @@ class HomeScreen extends GetView<HomeController> {
                         ],
                       ),
                     ),
-      
+
                     const SizedBox(height: 20),
-      
-                    // ========== ২. Promo Banner Slider ==========
+
+                    // Promo Banner Slider
                     SizedBox(
                       height: 150,
                       child: PageView.builder(
@@ -167,7 +170,8 @@ class HomeScreen extends GetView<HomeController> {
                                 Padding(
                                   padding: const EdgeInsets.all(20.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const Text(
@@ -219,10 +223,10 @@ class HomeScreen extends GetView<HomeController> {
                         },
                       ),
                     ),
-      
+
                     const SizedBox(height: 12),
-      
-                    // ========== Banner Indicator Dots ==========
+
+                    // Banner Indicator Dots
                     Obx(
                       () => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -235,17 +239,19 @@ class HomeScreen extends GetView<HomeController> {
                             height: 6,
                             width: isActive ? 18 : 6,
                             decoration: BoxDecoration(
-                              color: isActive ? AppColors.tomato : Colors.black12,
+                              color: isActive
+                                  ? AppColors.tomato
+                                  : Colors.black12,
                               borderRadius: BorderRadius.circular(3),
                             ),
                           );
                         }),
                       ),
                     ),
-      
+
                     const SizedBox(height: 20),
-      
-                    // ========== ৩. Search & Filter Bar ==========
+
+                    // Search & Filter Bar
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Container(
@@ -336,8 +342,8 @@ class HomeScreen extends GetView<HomeController> {
                         ),
                       ),
                     ),
-      
-                    // ========== Active Filters Chips ==========
+
+                    // Active Filters Chips
                     Obx(
                       () => controller.isFilterApplied.value
                           ? Padding(
@@ -349,7 +355,6 @@ class HomeScreen extends GetView<HomeController> {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    // Category Chip
                                     if (controller.selectedCategory.value !=
                                         'All')
                                       _buildFilterChip(
@@ -361,7 +366,6 @@ class HomeScreen extends GetView<HomeController> {
                                           controller.checkFilterStatus();
                                         },
                                       ),
-                                    // Sort Chip
                                     if (controller.selectedSortBy.value !=
                                         'Popular')
                                       _buildFilterChip(
@@ -373,7 +377,6 @@ class HomeScreen extends GetView<HomeController> {
                                           controller.checkFilterStatus();
                                         },
                                       ),
-                                    // Price Chip
                                     if (controller.minPrice.value > 0 ||
                                         controller.maxPrice.value < 100)
                                       _buildFilterChip(
@@ -385,7 +388,6 @@ class HomeScreen extends GetView<HomeController> {
                                           controller.checkFilterStatus();
                                         },
                                       ),
-                                    // Search Chip
                                     if (controller.searchText.value.isNotEmpty)
                                       _buildFilterChip(
                                         label:
@@ -394,7 +396,6 @@ class HomeScreen extends GetView<HomeController> {
                                           controller.clearSearch();
                                         },
                                       ),
-                                    // Clear All Chip
                                     _buildFilterChip(
                                       label: 'Clear All',
                                       isClearAll: true,
@@ -408,10 +409,10 @@ class HomeScreen extends GetView<HomeController> {
                             )
                           : const SizedBox.shrink(),
                     ),
-      
+
                     const SizedBox(height: 24),
-      
-                    // ========== ৪. Categories Grid ==========
+
+                    // Categories Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: GridView.builder(
@@ -472,10 +473,10 @@ class HomeScreen extends GetView<HomeController> {
                         },
                       ),
                     ),
-      
+
                     const SizedBox(height: 28),
-      
-                    // ========== ৫. Special Offers Header ==========
+
+                    // Special Offers Header
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -514,10 +515,10 @@ class HomeScreen extends GetView<HomeController> {
                         ],
                       ),
                     ),
-      
+
                     const SizedBox(height: 16),
-      
-                    // ========== ৬. Special Offers Product Grid ==========
+
+                    // Special Offers Product Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: GridView.count(
@@ -543,13 +544,13 @@ class HomeScreen extends GetView<HomeController> {
                         ],
                       ),
                     ),
-      
+
                     const SizedBox(height: 30),
                   ],
                 ),
               ),
-      
-              // ========== Custom Floating Bottom Navigation Bar ==========
+
+              // Custom Floating Bottom Navigation Bar
               Positioned(
                 bottom: 20,
                 left: 20,
@@ -568,12 +569,11 @@ class HomeScreen extends GetView<HomeController> {
                     ],
                   ),
                   child: Obx(() {
-                    // প্রোফাইল কন্ট্রোলার চেক করুন
                     final ProfileController? profileController =
                         Get.isRegistered<ProfileController>()
                         ? Get.find<ProfileController>()
                         : null;
-      
+
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

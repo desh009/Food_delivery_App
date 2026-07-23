@@ -32,6 +32,8 @@ abstract class Routes {
   static const REVIEW_ITEM = _Paths.REVIEW_ITEM;
     static const PAYMENT_METHOD = _Paths.PAYMENT_METHOD;
 
+    static const HELP_CENTER = _Paths.HELP_CENTER;
+
 }
 
 abstract class _Paths {
@@ -65,5 +67,8 @@ abstract class _Paths {
 
   static const REVIEW_ITEM = '/review-item';
     static const  PAYMENT_METHOD = '/payment-method';
+
+      static const String HELP_CENTER = '/help-center';
+
 
 }

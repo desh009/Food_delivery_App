@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/binder/product_details_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/view/product_details_view.dart';
-import 'package:get/get.dart';
+import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
 class SpecialOffersController extends GetxController {
-  // ✅ Observable Lists
-  final specialProducts = <Map<String, dynamic>>[].obs;
-  final filteredProducts = <Map<String, dynamic>>[].obs;
-  final searchText = ''.obs;
-  
-  // ✅ Loading State যোগ করুন
-  final isLoading = false.obs;
-  
-  // ✅ Error State যোগ করুন
-  final errorMessage = ''.obs;
+  var specialProducts = <Map<String, dynamic>>[].obs;
+  var filteredProducts = <Map<String, dynamic>>[].obs;
+  var searchText = ''.obs;
+  var selectedFilter = 'All'.obs;
+  var isLoading = false.obs;
+  var errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -21,16 +18,13 @@ class SpecialOffersController extends GetxController {
     loadProducts();
   }
 
-  // ✅ Async করে দিন (Future ব্যবহার করুন)
-  Future<void> loadProducts() async {
+  void loadProducts() async {
+    isLoading.value = true;
+    errorMessage.value = '';
+
     try {
-      isLoading.value = true;
-      errorMessage.value = '';
-      
-      // 🔥 Simulate Network Delay (যদি API Call থাকে)
       await Future.delayed(const Duration(milliseconds: 500));
-      
-      // আপনার Data Load
+
       specialProducts.value = [
         {
           "id": "1",
@@ -41,7 +35,8 @@ class SpecialOffersController extends GetxController {
           "oldPrice": 10.00,
           "newPrice": 6.00,
           "isFavorite": true,
-          "description": "Delicious chicken burger with fresh lettuce and special sauce.",
+          "description":
+              "Delicious chicken burger with fresh lettuce and special sauce.",
         },
         {
           "id": "2",
@@ -52,7 +47,8 @@ class SpecialOffersController extends GetxController {
           "oldPrice": 12.00,
           "newPrice": 10.00,
           "isFavorite": false,
-          "description": "Juicy beef burger with cheese and caramelized onions.",
+          "description":
+              "Juicy beef burger with cheese and caramelized onions.",
         },
         {
           "id": "3",
@@ -99,120 +95,199 @@ class SpecialOffersController extends GetxController {
           "description": "Pasta rotini with creamy sauce and herbs.",
         },
       ];
-      
-      // ✅ filteredProducts-ও আপডেট করুন
+
       filteredProducts.value = specialProducts.value;
-      
     } catch (e) {
       errorMessage.value = 'Failed to load products: $e';
-      Get.snackbar(
-        'Error',
-        'Failed to load products',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     } finally {
       isLoading.value = false;
     }
   }
 
-  // ✅ Toggle Favorite (Improved)
   void toggleFavorite(int index, bool newValue) {
     if (index >= specialProducts.length) return;
-    
-    // specialProducts আপডেট
+
     final productId = specialProducts[index]['id'];
     specialProducts[index]['isFavorite'] = newValue;
-    
-    // filteredProducts আপডেট (id দিয়ে খুঁজুন)
+
     final filteredIndex = filteredProducts.indexWhere(
       (p) => p['id'] == productId,
     );
     if (filteredIndex != -1) {
       filteredProducts[filteredIndex]['isFavorite'] = newValue;
     }
-    
-    // UI রিফ্রেশ (শুধু Refresh করলেই হবে)
+
     specialProducts.refresh();
     filteredProducts.refresh();
   }
 
-  // ✅ সার্চ আপডেট (Optimized)
   void updateSearch(String value) {
     searchText.value = value;
-    _filterProducts(value);
+    _applySearchAndFilter();
   }
 
-  // ✅ প্রোডাক্ট ফিল্টার করা (Optimized)
-  void _filterProducts(String query) {
-    if (query.isEmpty) {
-      filteredProducts.value = specialProducts.value;
+  void _applySearchAndFilter() {
+    print('Applying search and filter...'); // Debug
+    print('Search text: ${searchText.value}'); // Debug
+    print('Selected filter: ${selectedFilter.value}'); // Debug
+
+    List<Map<String, dynamic>> baseList;
+    if (searchText.value.isEmpty) {
+      baseList = List.from(specialProducts.value); // ✅ Copy তৈরি করুন
     } else {
-      final lowerQuery = query.toLowerCase();
-      filteredProducts.value = specialProducts
+      final lowerQuery = searchText.value.toLowerCase();
+      baseList = specialProducts
           .where(
-            (product) => product['name']
-                .toString()
-                .toLowerCase()
-                .contains(lowerQuery),
+            (product) =>
+                product['name'].toString().toLowerCase().contains(lowerQuery),
           )
           .toList();
     }
+
+    print('Base list length: ${baseList.length}'); // Debug
+
+    _applyFilterToBaseList(baseList);
   }
 
-  // ✅ ফিল্টার বাটন অ্যাকশন
+  void _applyFilterToBaseList(List<Map<String, dynamic>> baseList) {
+    print('Applying filter: ${selectedFilter.value}'); // Debug
+
+    switch (selectedFilter.value) {
+      case 'Low to High':
+        baseList.sort((a, b) {
+          final priceA = (a['newPrice'] as num).toDouble();
+          final priceB = (b['newPrice'] as num).toDouble();
+          return priceA.compareTo(priceB);
+        });
+        break;
+
+      case 'High to Low':
+        baseList.sort((a, b) {
+          final priceA = (a['newPrice'] as num).toDouble();
+          final priceB = (b['newPrice'] as num).toDouble();
+          return priceB.compareTo(priceA);
+        });
+        break;
+
+      case 'Top Rated':
+        baseList.sort((a, b) {
+          final ratingA = double.parse(a['rating'].toString());
+          final ratingB = double.parse(b['rating'].toString());
+          return ratingB.compareTo(ratingA);
+        });
+        break;
+
+      default:
+        break;
+    }
+
+    // ✅ Observable Update - এভাবেই করতে হবে
+    filteredProducts.assignAll(baseList);
+    print('Filtered products count: ${filteredProducts.length}'); // Debug
+    print(
+      'Filtered prices: ${filteredProducts.map((e) => e['newPrice']).toList()}',
+    ); // Debug
+  }
+
   void onFilterTap() {
-    Get.snackbar(
-      "Filter",
-      "Filter feature coming soon!",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color(0xFF1E1E1E),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
+    print('Filter button tapped!'); // Debug
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Filter Products',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            _buildFilterOption('All'),
+            _buildFilterOption('Low to High'),
+            _buildFilterOption('High to Low'),
+            _buildFilterOption('Top Rated'),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  print('Clear filter tapped!'); // Debug
+                  selectedFilter.value = 'All';
+                  _applySearchAndFilter();
+                  Get.back();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.tomato,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Clear Filter',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
     );
   }
 
-  // ✅ Product Details Navigation (Error Handle সহ)
+  Widget _buildFilterOption(String option) {
+    return ListTile(
+      title: Text(
+        option,
+        style: TextStyle(
+          fontWeight: selectedFilter.value == option
+              ? FontWeight.bold
+              : FontWeight.normal,
+          color: selectedFilter.value == option
+              ? AppColors.tomato
+              : Colors.black87,
+        ),
+      ),
+      leading: Radio<String>(
+        value: option,
+        groupValue: selectedFilter.value,
+        onChanged: (value) {
+          print('Option selected: $value'); // Debug
+          selectedFilter.value = value!;
+          print('Selected filter updated: ${selectedFilter.value}'); // Debug
+          _applySearchAndFilter();
+          Get.back();
+        },
+        activeColor: AppColors.tomato,
+      ),
+    );
+  }
+
   void goToProductDetails(Map<String, dynamic> product) {
     try {
       if (product.isEmpty) {
-        Get.snackbar(
-          'Error',
-          'Product data is empty',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        Get.snackbar('Error', 'Product data is empty');
         return;
       }
-      
-      print('🛒 Product Clicked: ${product['name']}');
-      print('📦 Product Data: $product');
-      
+
       Get.to(
-        () =>  ProductDetailsScreen(), // ← const যোগ করুন
+        () => ProductDetailsScreen(),
         binding: ProductDetailsBinding(),
         arguments: product,
-        // ✅ Navigation Error Handle
-        preventDuplicates: true,
       );
     } catch (e) {
-      print('❌ Navigation Error: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to navigate to product details',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      Get.snackbar('Error', 'Failed to navigate');
     }
   }
 
-  // ✅ Dispose Method (Memory Leak Prevent)
   @override
   void onClose() {
-    // Clean up resources if any
     super.onClose();
   }
 }

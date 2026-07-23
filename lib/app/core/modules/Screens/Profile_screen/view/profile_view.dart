@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'dart:io';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -26,43 +27,119 @@ class ProfileScreen extends StatelessWidget {
               // ========== Main Content (Scrollable) ==========
               SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: 100,
+                ),
                 child: Column(
                   children: [
                     // ========== Top Header Bar ==========
                     _buildTopHeader(),
                     const SizedBox(height: 20),
-      
+
                     // ========== User Profile Header ==========
                     _buildUserProfileHeader(controller),
                     const SizedBox(height: 20),
-      
+
                     // ========== Logout Button ==========
                     _buildLogoutButton(controller),
                     const SizedBox(height: 24),
-      
+
                     // ========== Primary Navigation Items ==========
-                    _buildListTile(Icons.location_on_outlined, "My Locations"),
+                    _buildListTile(
+                      Icons.location_on_outlined,
+                      "My Locations",
+                      onTap: () {
+                        Get.snackbar(
+                          'My Locations',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
+                    ),
                     _buildListTile(
                       Icons.confirmation_number_outlined,
                       "My Promotions",
+                      onTap: () {
+                        Get.snackbar(
+                          'My Promotions',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
                     ),
                     _buildListTile(
                       Icons.account_balance_wallet_outlined,
-                      "Payment Methods",
+                      "Vouchers",
+                      onTap: () {
+                        Get.snackbar(
+                          'Payment Methods',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
                     ),
-                    _buildListTile(Icons.chat_bubble_outline_rounded, "Messages"),
+                    _buildListTile(
+                      Icons.chat_bubble_outline_rounded,
+                      "Messages",
+                      onTap: () {
+                        Get.snackbar(
+                          'Messages',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
+                    ),
                     _buildListTile(
                       Icons.people_outline_rounded,
                       "Invite Friends",
+                      onTap: () {
+                        Get.snackbar(
+                          'Invite Friends',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
                     ),
-                    _buildListTile(Icons.shield_outlined, "Security"),
-                    _buildListTile(Icons.help_outline_rounded, "Help Center"),
-      
+                    _buildListTile(
+                      Icons.shield_outlined,
+                      "Security",
+                      onTap: () {
+                        Get.snackbar(
+                          'Security',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      Icons.help_outline_rounded,
+                      "Help Center",
+                      onTap: () {
+                        Get.to(
+                          () => const HelpCenterScreen(),
+                          binding: HelpCenterBinding(),
+                        );
+                      },
+                    ),
+
                     const SizedBox(height: 8),
                     const Divider(color: Color(0xFFEEEEEE), thickness: 1),
                     const SizedBox(height: 8),
-      
+
                     // ========== Preferences / Settings ==========
                     _buildLanguageDropdown(controller),
                     _buildSwitchTile(
@@ -75,20 +152,56 @@ class ProfileScreen extends StatelessWidget {
                       "Automatically Updated",
                       controller.automaticallyUpdated,
                     ),
-      
+
                     const SizedBox(height: 8),
                     const Divider(color: Color(0xFFEEEEEE), thickness: 1),
                     const SizedBox(height: 8),
-      
+
                     // ========== Secondary Items ==========
-                    _buildListTile(null, "Term of Service"),
-                    _buildListTile(null, "Privacy Policy"),
-                    _buildListTile(null, "About App"),
+                    _buildListTile(
+                      null,
+                      "Term of Service",
+                      onTap: () {
+                        Get.snackbar(
+                          'Term of Service',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      null,
+                      "Privacy Policy",
+                      onTap: () {
+                        Get.snackbar(
+                          'Privacy Policy',
+                          'Coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
+                    ),
+                    _buildListTile(
+                      null,
+                      "About App",
+                      onTap: () {
+                        Get.snackbar(
+                          'About App',
+                          'Version 1.0.0',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                        );
+                      },
+                    ),
                     const SizedBox(height: 20),
                   ],
                 ),
               ),
-      
+
               // ========== Custom Floating Bottom Navigation Bar ==========
               Positioned(
                 bottom: 20,
@@ -108,12 +221,11 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                   child: Obx(() {
-                    // প্রোফাইল কন্ট্রোলার চেক করুন
                     final ProfileController? profileController =
                         Get.isRegistered<ProfileController>()
                         ? Get.find<ProfileController>()
                         : null;
-      
+
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -124,7 +236,7 @@ class ProfileScreen extends StatelessWidget {
                           homeController,
                           onTap: () {
                             homeController.currentNavIndex.value = 0;
-                            Get.back(); // Profile Screen থেকে Home এ ফিরে যান
+                            Get.back();
                           },
                         ),
                         _buildNavItem(
@@ -175,11 +287,10 @@ class ProfileScreen extends StatelessWidget {
                             );
                           },
                         ),
-                        // Profile Avatar with Dynamic Image
+                        // Profile Avatar
                         GestureDetector(
                           onTap: () {
                             homeController.currentNavIndex.value = 4;
-                            // ইতিমধ্যে Profile Screen এ আছেন
                           },
                           child: Container(
                             width: 38,
@@ -324,7 +435,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(width: 14),
 
-        // Text Info (Name, Phone, Email)
+        // Text Info
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,7 +495,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
 
-        // Round Edit Pencil Button
+        // Edit Button
         GestureDetector(
           onTap: () {
             Get.snackbar(
@@ -458,7 +569,6 @@ class ProfileScreen extends StatelessWidget {
                     color: Colors.blue,
                     onTap: () {
                       Navigator.pop(context);
-                      // controller.pickImageFromGallery();
                     },
                   ),
                   _buildImagePickerOption(
@@ -467,7 +577,6 @@ class ProfileScreen extends StatelessWidget {
                     color: Colors.green,
                     onTap: () {
                       Navigator.pop(context);
-                      // controller.pickImageFromCamera();
                     },
                   ),
                   _buildImagePickerOption(
@@ -563,80 +672,76 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ========== Logout Dialog ==========
-  // Profile Screen এর _showLogoutDialog মেথড আপডেট করুন
-
-void _showLogoutDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: const Text(
-          "Logout",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        content: const Text(
-          "Are you sure you want to logout?",
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(color: Colors.black54),
-            ),
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              
-              // ✅ Clear SharedPreferences
-              try {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.clear(); // সব ডাটা Clear
-                
-                // ✅ Navigate to Login
-                Get.offAllNamed('/login');
-                
-                Get.snackbar(
-                  'Success',
-                  'Logged out successfully',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.green,
-                  colorText: Colors.white,
-                );
-              } catch (e) {
-                Get.snackbar(
-                  'Error',
-                  'Failed to logout',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          title: const Text(
+            "Logout",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            "Are you sure you want to logout?",
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.black54),
               ),
             ),
-            child: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      );
-    },
-  );
-}
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
 
-  // ========== Standard List Tile Item ==========
-  Widget _buildListTile(IconData? icon, String title) {
+                try {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.clear();
+
+                  Get.offAllNamed('/login');
+
+                  Get.snackbar(
+                    'Success',
+                    'Logged out successfully',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                  );
+                } catch (e) {
+                  Get.snackbar(
+                    'Error',
+                    'Failed to logout',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                "Logout",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // ========== Standard List Tile Item (Updated with onTap) ==========
+  Widget _buildListTile(IconData? icon, String title, {VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(
@@ -658,7 +763,7 @@ void _showLogoutDialog(BuildContext context) {
           size: 14,
           color: Colors.black45,
         ),
-        onTap: () {},
+        onTap: onTap ?? () {},
       ),
     );
   }
