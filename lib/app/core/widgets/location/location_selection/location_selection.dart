@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-// import 'package:geocoding/geocoding.dart';  // ← এই লাইনটি ডিলিট করুন
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +17,7 @@ class _LocationPickerState extends State<LocationPicker> {
   String _currentAddress = "লোকেশন নির্বাচন করুন";
   bool _isLoading = false;
   LatLng? _selectedLocation;
-  late GoogleMapController _mapController;
+  GoogleMapController? _mapController;
 
   @override
   void initState() {
@@ -26,9 +25,11 @@ class _LocationPickerState extends State<LocationPicker> {
     _getCurrentLocation();
   }
 
+  // ========== কারেন্ট লোকেশন বের করা ==========
   Future<void> _getCurrentLocation() async {
     setState(() => _isLoading = true);
 
+    // পারমিশন চেক
     var status = await Permission.location.status;
     if (status.isDenied) {
       status = await Permission.location.request();
@@ -39,13 +40,25 @@ class _LocationPickerState extends State<LocationPicker> {
         Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
         );
-        _selectedLocation = LatLng(position.latitude, position.longitude);
         
-        // geocoding ছাড়া সরাসরি লোকেশন দেখান
         setState(() {
+          _selectedLocation = LatLng(position.latitude, position.longitude);
           _currentAddress = 
               "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
         });
+
+        // ম্যাপের ক্যামেরা মুভ করুন
+        if (_mapController != null) {
+          _mapController!.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: _selectedLocation!,
+                zoom: 16,
+              ),
+            ),
+          );
+        }
+
       } catch (e) {
         print("Location error: $e");
         setState(() {
@@ -60,12 +73,24 @@ class _LocationPickerState extends State<LocationPicker> {
     setState(() => _isLoading = false);
   }
 
-  void _openLocationPicker() async {
+  // ========== ম্যাপে ট্যাপ করলে ==========
+  void _onMapTapped(LatLng tappedLocation) {
+    setState(() {
+      _selectedLocation = tappedLocation;
+      _currentAddress = 
+          "Lat: ${tappedLocation.latitude.toStringAsFixed(6)}, Lng: ${tappedLocation.longitude.toStringAsFixed(6)}";
+    });
+    
+    print("Selected Location: ${tappedLocation.latitude}, ${tappedLocation.longitude}");
+  }
+
+  // ========== ম্যাপ ডায়ালগ ওপেন ==========
+  void _openLocationPicker() {
     Get.dialog(
       Dialog(
         insetPadding: const EdgeInsets.all(10),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.85,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -93,6 +118,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   ],
                 ),
               ),
+              
               // Address Bar
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -126,36 +152,48 @@ class _LocationPickerState extends State<LocationPicker> {
                 ),
               ),
               const SizedBox(height: 12),
-              // Google Map
+              
+              // ========== Google Map ==========
               Expanded(
                 child: GoogleMap(
                   onMapCreated: (controller) {
                     _mapController = controller;
+                    
+                    // ম্যাপ তৈরি হলে কারেন্ট লোকেশনে ক্যামেরা মুভ করুন
+                    if (_selectedLocation != null) {
+                      controller.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target: _selectedLocation!,
+                            zoom: 16,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   initialCameraPosition: CameraPosition(
                     target: _selectedLocation ?? const LatLng(23.8103, 90.4125),
                     zoom: 14,
                   ),
-                  onTap: (LatLng tappedLocation) async {
-                    setState(() {
-                      _selectedLocation = tappedLocation;
-                      _currentAddress = 
-                          "Lat: ${tappedLocation.latitude.toStringAsFixed(6)}, Lng: ${tappedLocation.longitude.toStringAsFixed(6)}";
-                    });
-                  },
+                  onTap: _onMapTapped,  // ← ম্যাপে ট্যাপ করলে লোকেশন সিলেক্ট হবে
                   myLocationEnabled: true,
                   myLocationButtonEnabled: true,
+                  mapType: MapType.hybrid,  // ← স্যাটেলাইট ছবি
                   markers: _selectedLocation != null
                       ? {
                           Marker(
                             markerId: const MarkerId("selected"),
                             position: _selectedLocation!,
-                            infoWindow: const InfoWindow(title: "আপনার লোকেশন"),
+                            infoWindow: const InfoWindow(
+                              title: "আপনার লোকেশন",
+                              snippet: "এখানে ডেলিভারি নিন",
+                            ),
                           ),
                         }
                       : {},
                 ),
               ),
+              
               // Confirm Button
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -171,6 +209,22 @@ class _LocationPickerState extends State<LocationPicker> {
                           );
                         }
                         Get.back();
+                        Get.snackbar(
+                          '✅ লোকেশন সেভ হয়েছে',
+                          _currentAddress,
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.green,
+                          colorText: Colors.white,
+                          duration: const Duration(seconds: 3),
+                        );
+                      } else {
+                        Get.snackbar(
+                          '⚠️ সতর্কতা',
+                          'দয়া করে একটি লোকেশন নির্বাচন করুন',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.orange,
+                          colorText: Colors.white,
+                        );
                       }
                     },
                     icon: const Icon(Icons.check_circle),
@@ -192,6 +246,7 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
         ),
       ),
+      barrierDismissible: false,
     );
   }
 
