@@ -1,5 +1,3 @@
-// app/core/modules/Screens/home_screen/view/home_view.dart
-
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
@@ -10,6 +8,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/hom
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 import 'package:food_hjoiopk/app/core/widgets/location/location_selection/location_selection.dart';
+import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
 import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -18,7 +18,7 @@ import 'dart:io';
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
-  // Banner data with different images and offers
+  // Banner data
   final List<Map<String, dynamic>> bannerData = const [
     {
       'title': 'GREEN DAY',
@@ -54,7 +54,7 @@ class HomeScreen extends GetView<HomeController> {
     },
   ];
 
-  // Special offers data with more items
+  // Special offers data
   final List<Map<String, dynamic>> specialOffers = const [
     {
       'title': 'Cheese Burger',
@@ -110,6 +110,15 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
 
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+    try {
+      BottomNavController.to.changeIndex(0);
+    } catch (e) {
+      // Ignore
+    }
+  });
+
     final List<Map<String, String>> categories = [
       {'name': 'Burger', 'icon': '🍔'},
       {'name': 'Taco', 'icon': '🌮'},
@@ -147,23 +156,19 @@ class HomeScreen extends GetView<HomeController> {
                   children: [
                     const SizedBox(height: 16),
 
-                    // ========== FIXED HEADER SECTION ==========
+                    // ========== HEADER ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Location Picker - Expanded to take available space
                           const Expanded(
-                            child: LocationPicker(
-                              onLocationSelected: null,
-                            ),
+                            child: LocationPicker(onLocationSelected: null),
                           ),
                           const SizedBox(width: 12),
-                          // Profile Button
                           GestureDetector(
                             onTap: () {
-                              Get.to(() => const ProfileScreen());
+                              Get.toNamed('/profile');
                             },
                             child: Container(
                               padding: const EdgeInsets.all(12),
@@ -191,7 +196,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 20),
 
-                    // Auto-sliding Promo Banner Slider
+                    // ========== BANNER SLIDER ==========
                     SizedBox(
                       height: 150,
                       child: PageView.builder(
@@ -203,17 +208,13 @@ class HomeScreen extends GetView<HomeController> {
                         itemBuilder: (context, index) {
                           final banner = bannerData[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4.0,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: GestureDetector(
                               onTap: () {
                                 Get.toNamed(Routes.SPECIAL_OFFER);
                               },
                               child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
+                                margin: const EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
@@ -230,10 +231,8 @@ class HomeScreen extends GetView<HomeController> {
                                     Padding(
                                       padding: const EdgeInsets.all(20.0),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             banner['title'],
@@ -257,9 +256,7 @@ class HomeScreen extends GetView<HomeController> {
                                           Text(
                                             banner['category'],
                                             style: TextStyle(
-                                              color: Colors.white.withOpacity(
-                                                0.9,
-                                              ),
+                                              color: Colors.white.withOpacity(0.9),
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -277,17 +274,16 @@ class HomeScreen extends GetView<HomeController> {
                                           banner['image'],
                                           width: 160,
                                           fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                                return Container(
-                                                  width: 160,
-                                                  color: Colors.grey[300],
-                                                  child: const Icon(
-                                                    Icons.image_not_supported,
-                                                    size: 40,
-                                                  ),
-                                                );
-                                              },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Container(
+                                              width: 160,
+                                              color: Colors.grey[300],
+                                              child: const Icon(
+                                                Icons.image_not_supported,
+                                                size: 40,
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -315,9 +311,7 @@ class HomeScreen extends GetView<HomeController> {
                             height: 6,
                             width: isActive ? 18 : 6,
                             decoration: BoxDecoration(
-                              color: isActive
-                                  ? AppColors.tomato
-                                  : Colors.black12,
+                              color: isActive ? AppColors.tomato : Colors.black12,
                               borderRadius: BorderRadius.circular(3),
                             ),
                           );
@@ -327,7 +321,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 20),
 
-                    // Search & Filter Bar
+                    // ========== SEARCH & FILTER ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Container(
@@ -338,11 +332,7 @@ class HomeScreen extends GetView<HomeController> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Row(
                           children: [
-                            const Icon(
-                              Icons.search,
-                              color: Colors.black38,
-                              size: 26,
-                            ),
+                            const Icon(Icons.search, color: Colors.black38, size: 26),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Obx(
@@ -376,7 +366,7 @@ class HomeScreen extends GetView<HomeController> {
                                 ),
                               ),
                             ),
-                            // Filter Button with Badge
+                            // Filter Button
                             Stack(
                               children: [
                                 IconButton(
@@ -430,33 +420,26 @@ class HomeScreen extends GetView<HomeController> {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    if (controller.selectedCategory.value !=
-                                        'All')
+                                    if (controller.selectedCategory.value != 'All')
                                       _buildFilterChip(
-                                        label:
-                                            'Category: ${controller.selectedCategory.value}',
+                                        label: 'Category: ${controller.selectedCategory.value}',
                                         onDelete: () {
-                                          controller.selectedCategory.value =
-                                              'All';
+                                          controller.selectedCategory.value = 'All';
                                           controller.checkFilterStatus();
                                         },
                                       ),
-                                    if (controller.selectedSortBy.value !=
-                                        'Popular')
+                                    if (controller.selectedSortBy.value != 'Popular')
                                       _buildFilterChip(
-                                        label:
-                                            'Sort: ${controller.selectedSortBy.value}',
+                                        label: 'Sort: ${controller.selectedSortBy.value}',
                                         onDelete: () {
-                                          controller.selectedSortBy.value =
-                                              'Popular';
+                                          controller.selectedSortBy.value = 'Popular';
                                           controller.checkFilterStatus();
                                         },
                                       ),
                                     if (controller.minPrice.value > 0 ||
                                         controller.maxPrice.value < 100)
                                       _buildFilterChip(
-                                        label:
-                                            'Price: £${controller.minPrice.value.toInt()} - £${controller.maxPrice.value.toInt()}',
+                                        label: 'Price: £${controller.minPrice.value.toInt()} - £${controller.maxPrice.value.toInt()}',
                                         onDelete: () {
                                           controller.minPrice.value = 0;
                                           controller.maxPrice.value = 100;
@@ -465,8 +448,7 @@ class HomeScreen extends GetView<HomeController> {
                                       ),
                                     if (controller.searchText.value.isNotEmpty)
                                       _buildFilterChip(
-                                        label:
-                                            'Search: ${controller.searchText.value}',
+                                        label: 'Search: ${controller.searchText.value}',
                                         onDelete: () {
                                           controller.clearSearch();
                                         },
@@ -487,20 +469,19 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 24),
 
-                    // Categories Grid
+                    // ========== CATEGORIES ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: categories.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: 0.85,
-                            ),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
@@ -551,7 +532,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 28),
 
-                    // Special Offers Header
+                    // ========== SPECIAL OFFERS ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -593,17 +574,16 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 16),
 
-                    // Special Offers Grid with More Items
+                    // Special Offers Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.8,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                            ),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.8,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: specialOffers.length,
@@ -631,135 +611,12 @@ class HomeScreen extends GetView<HomeController> {
                 ),
               ),
 
-              // Custom Floating Bottom Navigation Bar
+              // ========== BOTTOM NAVIGATION ==========
               Positioned(
                 bottom: 20,
                 left: 20,
                 right: 20,
-                child: Container(
-                  height: 72,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
-                        blurRadius: 20,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Obx(() {
-                    final ProfileController? profileController =
-                        Get.isRegistered<ProfileController>()
-                        ? Get.find<ProfileController>()
-                        : null;
-
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildNavItem(
-                          0,
-                          Icons.home_filled,
-                          "Home",
-                          controller,
-                          onTap: () {
-                            controller.currentNavIndex.value = 0;
-                          },
-                        ),
-                        _buildNavItem(
-                          1,
-                          Icons.assignment_outlined,
-                          "Orders",
-                          controller,
-                          onTap: () {
-                            controller.currentNavIndex.value = 1;
-                            Get.snackbar(
-                              'Orders',
-                              'Coming soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                        _buildNavItem(
-                          2,
-                          Icons.favorite_border,
-                          "Favorites",
-                          controller,
-                          onTap: () {
-                            controller.currentNavIndex.value = 2;
-                            Get.snackbar(
-                              'Favorites',
-                              'Coming soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                        _buildNavItem(
-                          3,
-                          Icons.notifications_none_rounded,
-                          "Alerts",
-                          controller,
-                          onTap: () {
-                            controller.currentNavIndex.value = 3;
-                            Get.snackbar(
-                              'Alerts',
-                              'Coming soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            controller.currentNavIndex.value = 4;
-                            Get.to(() => const ProfileScreen());
-                          },
-                          child: Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: controller.currentNavIndex.value == 4
-                                    ? AppColors.tomato
-                                    : Colors.transparent,
-                                width: 2,
-                              ),
-                              image:
-                                  profileController != null &&
-                                      profileController
-                                          .profileImagePath
-                                          .value
-                                          .isNotEmpty
-                                  ? DecorationImage(
-                                      image: FileImage(
-                                        File(
-                                          profileController
-                                              .profileImagePath
-                                              .value,
-                                        ),
-                                      ),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : const DecorationImage(
-                                      image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
+                child: const BottomNavigationWidget(),
               ),
             ],
           ),
@@ -768,7 +625,7 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  // ========== Special Offer Card Widget ==========
+  // ========== Special Offer Card ==========
   Widget _buildSpecialOfferCard({
     required String imageUrl,
     required String title,
@@ -896,7 +753,7 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  // ========== Filter Chip Builder ==========
+  // ========== Filter Chip ==========
   Widget _buildFilterChip({
     required String label,
     bool isClearAll = false,
@@ -935,49 +792,6 @@ class HomeScreen extends GetView<HomeController> {
               color: isClearAll ? Colors.red : AppColors.tomato,
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  // ========== Bottom Navigation Item Builder ==========
-  Widget _buildNavItem(
-    int index,
-    IconData icon,
-    String label,
-    HomeController controller, {
-    required VoidCallback onTap,
-  }) {
-    bool isActive = controller.currentNavIndex.value == index;
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: EdgeInsets.all(isActive ? 10 : 0),
-            decoration: BoxDecoration(
-              color: isActive ? AppColors.tomato : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: isActive ? Colors.white : Colors.black38,
-              size: 26,
-            ),
-          ),
-          if (isActive) ...[
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: AppColors.tomato,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
         ],
       ),
     );

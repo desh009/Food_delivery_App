@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
+import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
 import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -13,9 +14,20 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final ProfileController controller = Get.put(ProfileController());
-    final HomeController homeController = Get.find<HomeController>();
+Widget build(BuildContext context) {
+  final ProfileController controller = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
+  
+  // 🔥 Profile Screen এ index 3 set করুন (Alerts সরানোর পর)
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    try {
+      print('ProfileScreen Loaded - Setting index to 3');
+      BottomNavController.to.changeIndex(3);  // এখন Profile index 3
+    } catch (e) {
+      print('Error: $e');
+    }
+  });
 
     return ResponsiveWrapper(
       child: Scaffold(
@@ -202,136 +214,12 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
 
-              // ========== Custom Floating Bottom Navigation Bar ==========
+              // ========== Global Bottom Navigation Bar ==========
               Positioned(
                 bottom: 20,
                 left: 20,
                 right: 20,
-                child: Container(
-                  height: 72,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
-                        blurRadius: 20,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Obx(() {
-                    final ProfileController? profileController =
-                        Get.isRegistered<ProfileController>()
-                        ? Get.find<ProfileController>()
-                        : null;
-
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildNavItem(
-                          0,
-                          Icons.home_filled,
-                          "Home",
-                          homeController,
-                          onTap: () {
-                            homeController.currentNavIndex.value = 0;
-                            Get.back();
-                          },
-                        ),
-                        _buildNavItem(
-                          1,
-                          Icons.assignment_outlined,
-                          "Orders",
-                          homeController,
-                          onTap: () {
-                            homeController.currentNavIndex.value = 1;
-                            Get.snackbar(
-                              'Orders',
-                              'Coming soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                        _buildNavItem(
-                          2,
-                          Icons.favorite_border,
-                          "Favorites",
-                          homeController,
-                          onTap: () {
-                            homeController.currentNavIndex.value = 2;
-                            Get.snackbar(
-                              'Favorites',
-                              'Coming soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                        _buildNavItem(
-                          3,
-                          Icons.notifications_none_rounded,
-                          "Alerts",
-                          homeController,
-                          onTap: () {
-                            homeController.currentNavIndex.value = 3;
-                            Get.snackbar(
-                              'Alerts',
-                              'Coming soon!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                        // Profile Avatar
-                        GestureDetector(
-                          onTap: () {
-                            homeController.currentNavIndex.value = 4;
-                          },
-                          child: Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: homeController.currentNavIndex.value == 4
-                                    ? AppColors.tomato
-                                    : Colors.transparent,
-                                width: 2,
-                              ),
-                              image:
-                                  profileController != null &&
-                                      profileController
-                                          .profileImagePath
-                                          .value
-                                          .isNotEmpty
-                                  ? DecorationImage(
-                                      image: FileImage(
-                                        File(
-                                          profileController
-                                              .profileImagePath
-                                              .value,
-                                        ),
-                                      ),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : const DecorationImage(
-                                      image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
+                child: const BottomNavigationWidget(),
               ),
             ],
           ),
@@ -740,7 +628,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Standard List Tile Item (Updated with onTap) ==========
+  // ========== Standard List Tile Item ==========
   Widget _buildListTile(IconData? icon, String title, {VoidCallback? onTap}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -843,49 +731,6 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  // ========== Bottom Navigation Item Builder ==========
-  Widget _buildNavItem(
-    int index,
-    IconData icon,
-    String label,
-    HomeController controller, {
-    required VoidCallback onTap,
-  }) {
-    bool isActive = controller.currentNavIndex.value == index;
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: EdgeInsets.all(isActive ? 10 : 0),
-            decoration: BoxDecoration(
-              color: isActive ? AppColors.tomato : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: isActive ? Colors.white : Colors.black38,
-              size: 26,
-            ),
-          ),
-          if (isActive) ...[
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: AppColors.tomato,
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
         ],
       ),
     );

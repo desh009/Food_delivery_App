@@ -1,3 +1,5 @@
+import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/view/order_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
@@ -105,11 +107,11 @@ class AppPages {
       page: () => const HelpCenterScreen(),
       binding: HelpCenterBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.ROUND_TRIP,
-    //   page: () => const RoundTripView(),
-    //   binding: RoundTripBinding(),
-    // ),
+    GetPage(
+      name: _Paths.ORDER_DETAILS,
+      page: () => const OrderDetailsScreen(),
+      binding: OrderDetailsBinding(),
+    ),
     // GetPage(
     //   name: _Paths.HELICOPTER_BOOKING,
     //   page: () => const HelicopterBookingView(),

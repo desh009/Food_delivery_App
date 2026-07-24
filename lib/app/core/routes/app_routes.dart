@@ -34,6 +34,8 @@ abstract class Routes {
 
     static const HELP_CENTER = _Paths.HELP_CENTER;
 
+    static const ORDER_DETAILS = _Paths.ORDER_DETAILS;
+
 }
 
 abstract class _Paths {
@@ -68,7 +70,9 @@ abstract class _Paths {
   static const REVIEW_ITEM = '/review-item';
     static const  PAYMENT_METHOD = '/payment-method';
 
-      static const String HELP_CENTER = '/help-center';
+      static const  HELP_CENTER = '/help-center';
 
+
+      static const  ORDER_DETAILS = '/order-details';
 
 }
