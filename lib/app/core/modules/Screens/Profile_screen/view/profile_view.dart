@@ -22,8 +22,8 @@ Widget build(BuildContext context) {
   // 🔥 Profile Screen এ index 3 set করুন (Alerts সরানোর পর)
   WidgetsBinding.instance.addPostFrameCallback((_) {
     try {
-      print('ProfileScreen Loaded - Setting index to 3');
-      BottomNavController.to.changeIndex(3);  // এখন Profile index 3
+      print('ProfileScreen Loaded - Setting index to 4');
+      BottomNavController.to.changeIndex(4);  // এখন Profile index 3
     } catch (e) {
       print('Error: $e');
     }

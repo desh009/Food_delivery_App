@@ -6,7 +6,6 @@ class BottomNavController extends GetxController {
 
   final RxInt currentIndex = 0.obs;
 
-  // ✅ Alerts সরিয়ে ফেলুন
   final List<BottomNavItem> navItems = [
     BottomNavItem(icon: Icons.home_filled, label: 'Home', route: '/home'),
     BottomNavItem(
@@ -19,7 +18,16 @@ class BottomNavController extends GetxController {
       label: 'Favorites',
       route: '/favorites',
     ),
-    // Alerts সরানো হয়েছে
+    BottomNavItem(
+      icon: Icons.notifications_none_rounded,
+      label: 'Notification',
+      route: '/notifications',
+    ),
+    BottomNavItem(
+      icon: Icons.person_outline,
+      label: 'Profile',
+      route: '/my-account',
+    ),
   ];
 
   @override
@@ -31,11 +39,12 @@ class BottomNavController extends GetxController {
   void changeIndex(int index) {
     if (currentIndex.value != index) {
       currentIndex.value = index;
+      print('✅ Index changed to: ${currentIndex.value}');
     }
   }
 
-  // 🔥 Navigation Logic - Alerts সরান
   void navigateToScreen(int index, BuildContext context) {
+    print('🔄 Navigating to index: $index');
     switch (index) {
       case 0: // Home
         if (Get.currentRoute != '/home') {
@@ -57,8 +66,18 @@ class BottomNavController extends GetxController {
           duration: const Duration(seconds: 2),
         );
         break;
-      case 3: // Profile
-        print('Navigating to Profile');
+      case 3: // Notification
+        Get.snackbar(
+          'Notification',
+          'Coming soon!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.blue,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
+        break;
+      case 4: // Profile
+        print('👤 Navigating to Profile - Index: 4');
         if (Get.currentRoute != '/my-account') {
           Get.toNamed('/my-account');
         }
@@ -69,7 +88,7 @@ class BottomNavController extends GetxController {
   }
 
   void _updateIndexFromRoute(String route) {
-    print('Current Route: $route');
+    print('📍 Current Route: $route');
     switch (route) {
       case '/home':
         currentIndex.value = 0;
@@ -80,14 +99,17 @@ class BottomNavController extends GetxController {
       case '/favorites':
         currentIndex.value = 2;
         break;
+      case '/notifications':
+        currentIndex.value = 3;
+        break;
       case '/my-account':
-        currentIndex.value = 3;  // Profile index 3
+        currentIndex.value = 4; // 🔥 এখানে 4 আছে নিশ্চিত করুন
         break;
       default:
         currentIndex.value = 0;
         break;
     }
-    print('Updated Index: ${currentIndex.value}');
+    print('📌 Updated Index: ${currentIndex.value}');
   }
 
   void onRouteChanged(String route) {
