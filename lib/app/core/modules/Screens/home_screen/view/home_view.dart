@@ -9,6 +9,7 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/view/profil
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
+import 'package:food_hjoiopk/app/core/widgets/location/location_selection/location_selection.dart';
 import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -108,22 +109,6 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-    final PageController pageController = PageController();
-
-    // Start auto-sliding after the widget is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Make sure the page controller has clients before starting
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (pageController.hasClients) {
-          controller.onPageViewReady();
-        } else {
-          // If still no clients, try again
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            controller.onPageViewReady();
-          });
-        }
-      });
-    });
 
     final List<Map<String, String>> categories = [
       {'name': 'Burger', 'icon': '🍔'},
@@ -162,62 +147,19 @@ class HomeScreen extends GetView<HomeController> {
                   children: [
                     const SizedBox(height: 16),
 
-                    // Header Section
+                    // ========== FIXED HEADER SECTION ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    "Deliver to",
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.arrow_forward,
-                                    size: 14,
-                                    color: Colors.black54,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Text(
-                                    "Home",
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Text(
-                                    "221B Baker Street",
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.tomato,
-                                    size: 24,
-                                  ),
-                                ],
-                              ),
-                            ],
+                          // Location Picker - Expanded to take available space
+                          const Expanded(
+                            child: LocationPicker(
+                              onLocationSelected: null,
+                            ),
                           ),
+                          const SizedBox(width: 12),
                           // Profile Button
                           GestureDetector(
                             onTap: () {
@@ -257,8 +199,7 @@ class HomeScreen extends GetView<HomeController> {
                         onPageChanged: (index) {
                           controller.onBannerPageChanged(index);
                         },
-                        controller: controller
-                            .pageController, // Use controller's pageController
+                        controller: controller.pageController,
                         itemBuilder: (context, index) {
                           final banner = bannerData[index];
                           return Padding(
@@ -267,7 +208,6 @@ class HomeScreen extends GetView<HomeController> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                // Navigate to special offer screen when banner is tapped
                                 Get.toNamed(Routes.SPECIAL_OFFER);
                               },
                               child: Container(
@@ -385,7 +325,6 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
-                    // Rest of your view code remains the same...
                     const SizedBox(height: 20),
 
                     // Search & Filter Bar
@@ -456,7 +395,6 @@ class HomeScreen extends GetView<HomeController> {
                                     ),
                                   ),
                                 ),
-                                // Filter Applied Badge
                                 Obx(
                                   () => controller.isFilterApplied.value
                                       ? Positioned(
@@ -673,7 +611,6 @@ class HomeScreen extends GetView<HomeController> {
                           final offer = specialOffers[index];
                           return GestureDetector(
                             onTap: () {
-                              // Navigate to product detail or special offer detail
                               Get.toNamed(Routes.SPECIAL_OFFER);
                             },
                             child: _buildSpecialOfferCard(
