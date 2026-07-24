@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -143,9 +144,9 @@ class HomeController extends GetxController {
                       selectedCategory.value = category;
                       checkFilterStatus();
                     },
-                    backgroundColor: Colors.grey.shade200,
-                    selectedColor: Colors.green.shade100,
-                    checkmarkColor: Colors.green,
+                    backgroundColor: AppColors.tomato,
+                    selectedColor: AppColors.tomato,
+                    checkmarkColor: AppColors.tomato,
                   );
                 }).toList(),
               ),
@@ -183,8 +184,8 @@ class HomeController extends GetxController {
                     min: 0,
                     max: 100,
                     divisions: 100,
-                    activeColor: Colors.green,
-                    inactiveColor: Colors.grey.shade300,
+                    activeColor: AppColors.tomato,
+                    inactiveColor: AppColors.tomato,
                     onChanged: (values) {
                       minPrice.value = values.start;
                       maxPrice.value = values.end;
@@ -223,9 +224,9 @@ class HomeController extends GetxController {
                       selectedSortBy.value = sortOption;
                       checkFilterStatus();
                     },
-                    backgroundColor: Colors.grey.shade200,
-                    selectedColor: Colors.green.shade100,
-                    checkmarkColor: Colors.green,
+                    backgroundColor: AppColors.ashLight,
+                    selectedColor: AppColors.tomato,
+                    checkmarkColor: AppColors.tomato,
                   );
                 }).toList(),
               ),
@@ -241,7 +242,7 @@ class HomeController extends GetxController {
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: AppColors.tomato,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
