@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/home_screen/view/home_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
@@ -7,20 +9,20 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/view/profil
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
+import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourite_service/favourite_screen_service.dart';
 import 'package:food_hjoiopk/app/core/widgets/location/location_selection/location_selection.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
 import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
-import 'dart:io';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
-  // Banner data
   final List<Map<String, dynamic>> bannerData = const [
     {
+      'id': 'banner_1',
       'title': 'GREEN DAY',
       'subtitle': 'UP TO\n60% OFF',
       'category': 'Salad Category',
@@ -29,6 +31,7 @@ class HomeScreen extends GetView<HomeController> {
       'gradient': [Color(0xFF0F7A54), Color(0xFF1BA375)],
     },
     {
+      'id': 'banner_2',
       'title': 'BURGER FEST',
       'subtitle': 'GET\n20% OFF',
       'category': 'Burger Category',
@@ -37,6 +40,7 @@ class HomeScreen extends GetView<HomeController> {
       'gradient': [Color(0xFFD35400), Color(0xFFE67E22)],
     },
     {
+      'id': 'banner_3',
       'title': 'PIZZA DEAL',
       'subtitle': 'BUY 1\nGET 1 FREE',
       'category': 'Pizza Category',
@@ -45,6 +49,7 @@ class HomeScreen extends GetView<HomeController> {
       'gradient': [Color(0xFF8B0000), Color(0xFFC0392B)],
     },
     {
+      'id': 'banner_4',
       'title': 'DRINKS SPECIAL',
       'subtitle': 'UP TO\n50% OFF',
       'category': 'Drinks Category',
@@ -54,9 +59,9 @@ class HomeScreen extends GetView<HomeController> {
     },
   ];
 
-  // Special offers data
   final List<Map<String, dynamic>> specialOffers = const [
     {
+      'id': 'offer_1',
       'title': 'Cheese Burger',
       'image':
           'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500',
@@ -65,6 +70,7 @@ class HomeScreen extends GetView<HomeController> {
       'discount': '20% OFF',
     },
     {
+      'id': 'offer_2',
       'title': 'Pepperoni Pizza',
       'image':
           'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500',
@@ -73,6 +79,7 @@ class HomeScreen extends GetView<HomeController> {
       'discount': '15% OFF',
     },
     {
+      'id': 'offer_3',
       'title': 'Caesar Salad',
       'image':
           'https://images.unsplash.com/photo-1546793665-c74683f339c1?q=80&w=500',
@@ -81,6 +88,7 @@ class HomeScreen extends GetView<HomeController> {
       'discount': '10% OFF',
     },
     {
+      'id': 'offer_4',
       'title': 'Chicken Tacos',
       'image':
           'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=500',
@@ -89,6 +97,7 @@ class HomeScreen extends GetView<HomeController> {
       'discount': '25% OFF',
     },
     {
+      'id': 'offer_5',
       'title': 'Margarita Pizza',
       'image':
           'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?q=80&w=500',
@@ -97,6 +106,7 @@ class HomeScreen extends GetView<HomeController> {
       'discount': '18% OFF',
     },
     {
+      'id': 'offer_6',
       'title': 'Veggie Burger',
       'image':
           'https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=500',
@@ -108,16 +118,22 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HomeController>();
-
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-    try {
-      BottomNavController.to.changeIndex(0);
-    } catch (e) {
-      // Ignore
+    // Initialize FavoriteService
+    if (!Get.isRegistered<FavoriteService>()) {
+      Get.put<FavoriteService>(FavoriteService(), permanent: true);
     }
-  });
+
+    final controller = Get.find<HomeController>();
+    final favoriteService = Get.find<FavoriteService>();
+
+    // Set Home index
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        BottomNavController.to.changeIndex(0);
+      } catch (e) {
+        // Ignore
+      }
+    });
 
     final List<Map<String, String>> categories = [
       {'name': 'Burger', 'icon': '🍔'},
@@ -134,12 +150,6 @@ class HomeScreen extends GetView<HomeController> {
       {'name': 'More', 'icon': '👀'},
     ];
 
-    // Create observables for favorite states
-    final List<RxBool> favoriteStates = List.generate(
-      specialOffers.length,
-      (index) => false.obs,
-    );
-
     return ResponsiveWrapper(
       child: Scaffold(
         backgroundColor: const Color(0xFFFAFAFA),
@@ -147,7 +157,6 @@ class HomeScreen extends GetView<HomeController> {
           bottom: false,
           child: Stack(
             children: [
-              // Main Content (Scrollable)
               SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 100),
@@ -156,7 +165,7 @@ class HomeScreen extends GetView<HomeController> {
                   children: [
                     const SizedBox(height: 16),
 
-                    // ========== HEADER ==========
+                    // Header
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -196,7 +205,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 20),
 
-                    // ========== BANNER SLIDER ==========
+                    // Banner Slider
                     SizedBox(
                       height: 150,
                       child: PageView.builder(
@@ -208,13 +217,17 @@ class HomeScreen extends GetView<HomeController> {
                         itemBuilder: (context, index) {
                           final banner = bannerData[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4.0,
+                            ),
                             child: GestureDetector(
                               onTap: () {
                                 Get.toNamed(Routes.SPECIAL_OFFER);
                               },
                               child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 8),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
@@ -231,8 +244,10 @@ class HomeScreen extends GetView<HomeController> {
                                     Padding(
                                       padding: const EdgeInsets.all(20.0),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             banner['title'],
@@ -256,7 +271,9 @@ class HomeScreen extends GetView<HomeController> {
                                           Text(
                                             banner['category'],
                                             style: TextStyle(
-                                              color: Colors.white.withOpacity(0.9),
+                                              color: Colors.white.withOpacity(
+                                                0.9,
+                                              ),
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -274,16 +291,17 @@ class HomeScreen extends GetView<HomeController> {
                                           banner['image'],
                                           width: 160,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              width: 160,
-                                              color: Colors.grey[300],
-                                              child: const Icon(
-                                                Icons.image_not_supported,
-                                                size: 40,
-                                              ),
-                                            );
-                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                return Container(
+                                                  width: 160,
+                                                  color: Colors.grey[300],
+                                                  child: const Icon(
+                                                    Icons.image_not_supported,
+                                                    size: 40,
+                                                  ),
+                                                );
+                                              },
                                         ),
                                       ),
                                     ),
@@ -311,7 +329,9 @@ class HomeScreen extends GetView<HomeController> {
                             height: 6,
                             width: isActive ? 18 : 6,
                             decoration: BoxDecoration(
-                              color: isActive ? AppColors.tomato : Colors.black12,
+                              color: isActive
+                                  ? AppColors.tomato
+                                  : Colors.black12,
                               borderRadius: BorderRadius.circular(3),
                             ),
                           );
@@ -321,7 +341,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 20),
 
-                    // ========== SEARCH & FILTER ==========
+                    // Search Bar
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Container(
@@ -332,7 +352,11 @@ class HomeScreen extends GetView<HomeController> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Row(
                           children: [
-                            const Icon(Icons.search, color: Colors.black38, size: 26),
+                            const Icon(
+                              Icons.search,
+                              color: Colors.black38,
+                              size: 26,
+                            ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Obx(
@@ -366,7 +390,6 @@ class HomeScreen extends GetView<HomeController> {
                                 ),
                               ),
                             ),
-                            // Filter Button
                             Stack(
                               children: [
                                 IconButton(
@@ -420,26 +443,33 @@ class HomeScreen extends GetView<HomeController> {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    if (controller.selectedCategory.value != 'All')
+                                    if (controller.selectedCategory.value !=
+                                        'All')
                                       _buildFilterChip(
-                                        label: 'Category: ${controller.selectedCategory.value}',
+                                        label:
+                                            'Category: ${controller.selectedCategory.value}',
                                         onDelete: () {
-                                          controller.selectedCategory.value = 'All';
+                                          controller.selectedCategory.value =
+                                              'All';
                                           controller.checkFilterStatus();
                                         },
                                       ),
-                                    if (controller.selectedSortBy.value != 'Popular')
+                                    if (controller.selectedSortBy.value !=
+                                        'Popular')
                                       _buildFilterChip(
-                                        label: 'Sort: ${controller.selectedSortBy.value}',
+                                        label:
+                                            'Sort: ${controller.selectedSortBy.value}',
                                         onDelete: () {
-                                          controller.selectedSortBy.value = 'Popular';
+                                          controller.selectedSortBy.value =
+                                              'Popular';
                                           controller.checkFilterStatus();
                                         },
                                       ),
                                     if (controller.minPrice.value > 0 ||
                                         controller.maxPrice.value < 100)
                                       _buildFilterChip(
-                                        label: 'Price: £${controller.minPrice.value.toInt()} - £${controller.maxPrice.value.toInt()}',
+                                        label:
+                                            'Price: £${controller.minPrice.value.toInt()} - £${controller.maxPrice.value.toInt()}',
                                         onDelete: () {
                                           controller.minPrice.value = 0;
                                           controller.maxPrice.value = 100;
@@ -448,7 +478,8 @@ class HomeScreen extends GetView<HomeController> {
                                       ),
                                     if (controller.searchText.value.isNotEmpty)
                                       _buildFilterChip(
-                                        label: 'Search: ${controller.searchText.value}',
+                                        label:
+                                            'Search: ${controller.searchText.value}',
                                         onDelete: () {
                                           controller.clearSearch();
                                         },
@@ -469,19 +500,20 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 24),
 
-                    // ========== CATEGORIES ==========
+                    // Categories
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: categories.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 0.85,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                            ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
@@ -532,7 +564,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 28),
 
-                    // ========== SPECIAL OFFERS ==========
+                    // Special Offers Header
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
@@ -574,33 +606,29 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 16),
 
-                    // Special Offers Grid
+                    // 🔥 Special Offers Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.8,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.8,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: specialOffers.length,
                         itemBuilder: (context, index) {
                           final offer = specialOffers[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.SPECIAL_OFFER);
-                            },
-                            child: _buildSpecialOfferCard(
-                              imageUrl: offer['image'],
-                              title: offer['title'],
-                              rating: offer['rating'],
-                              price: offer['price'],
-                              discount: offer['discount'],
-                              isFavorite: favoriteStates[index],
-                            ),
+                          return _buildSpecialOfferCard(
+                            id: offer['id'] ?? 'offer_$index',
+                            imageUrl: offer['image'],
+                            title: offer['title'],
+                            rating: offer['rating'],
+                            price: offer['price'],
+                            discount: offer['discount'],
                           );
                         },
                       ),
@@ -611,7 +639,7 @@ class HomeScreen extends GetView<HomeController> {
                 ),
               ),
 
-              // ========== BOTTOM NAVIGATION ==========
+              // Bottom Navigation
               Positioned(
                 bottom: 20,
                 left: 20,
@@ -627,130 +655,152 @@ class HomeScreen extends GetView<HomeController> {
 
   // ========== Special Offer Card ==========
   Widget _buildSpecialOfferCard({
+    required String id,
     required String imageUrl,
     required String title,
     required String rating,
     required String price,
     required String discount,
-    required RxBool isFavorite,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image with Discount Badge
-              Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(20),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(imageUrl),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    // Discount Badge
-                    Positioned(
-                      top: 10,
-                      left: 10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+    final favoriteService = Get.find<FavoriteService>();
+    final double priceValue =
+        double.tryParse(price.replaceAll('\$', '')) ?? 0.0;
+    final double ratingValue = double.tryParse(rating) ?? 0.0;
+
+    return Obx(() {
+      final isFavorite = favoriteService.isFavorite(id);
+
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Container(
                         decoration: BoxDecoration(
-                          color: AppColors.tomato,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          discount,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                          image: DecorationImage(
+                            image: NetworkImage(imageUrl),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    ),
-                    // Favorite Button
-                    Positioned(
-                      top: 10,
-                      right: 10,
-                      child: Obx(
-                        () => AnimatedFavoriteButton(
-                          isFavorite: isFavorite.value,
-                          size: 16,
-                          onTap: (newValue) {
-                            isFavorite.value = newValue;
+                      // Discount Badge
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.tomato,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            discount,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // 🔥 Favorite Button
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: AnimatedFavoriteButton(
+                          isFavorite: isFavorite,
+                          size: 18,
+                          navigateOnAdd: false,
+                          onTap: (newValue) async {
+                            final item = FavoriteItem(
+                              id: id,
+                              title: title,
+                              image: imageUrl,
+                              rating: ratingValue,
+                              price: priceValue,
+                            );
+
+                            if (newValue) {
+                              await favoriteService.addFavorite(
+                                item,
+                                navigateToLikedScreen: false,
+                              );
+                            } else {
+                              await favoriteService.removeFavorite(id);
+                            }
                           },
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              // Details
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        overflow: TextOverflow.ellipsis,
+                // Details
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 1,
                       ),
-                      maxLines: 1,
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 14),
-                        Text(
-                          " $rating",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black54,
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          Text(
+                            " $rating",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                            ),
                           ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          price,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.tomato,
+                          const Spacer(),
+                          Text(
+                            price,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.tomato,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   // ========== Filter Chip ==========

@@ -30,12 +30,13 @@ abstract class Routes {
   static const SPECIAL_OFFER = _Paths.SPECIAL_OFFER;
   static const CART_ITEM = _Paths.CART_ITEM;
   static const REVIEW_ITEM = _Paths.REVIEW_ITEM;
-    static const PAYMENT_METHOD = _Paths.PAYMENT_METHOD;
+  static const PAYMENT_METHOD = _Paths.PAYMENT_METHOD;
 
-    static const HELP_CENTER = _Paths.HELP_CENTER;
+  static const HELP_CENTER = _Paths.HELP_CENTER;
 
-    static const ORDER_DETAILS = _Paths.ORDER_DETAILS;
+  static const ORDER_DETAILS = _Paths.ORDER_DETAILS;
 
+  static const LIKED_SCREEN = _Paths.LIKED_SCREEN;
 }
 
 abstract class _Paths {
@@ -68,11 +69,10 @@ abstract class _Paths {
   static const CART_ITEM = '/cart-item';
 
   static const REVIEW_ITEM = '/review-item';
-    static const  PAYMENT_METHOD = '/payment-method';
+  static const PAYMENT_METHOD = '/payment-method';
 
-      static const  HELP_CENTER = '/help-center';
+  static const HELP_CENTER = '/help-center';
 
-
-      static const  ORDER_DETAILS = '/order-details';
-
+  static const ORDER_DETAILS = '/order-details';
+  static const LIKED_SCREEN = '/liked-screen';
 }

@@ -19,11 +19,10 @@ Widget build(BuildContext context) {
       ? Get.find<ProfileController>()
       : Get.put(ProfileController());
   
-  // 🔥 Profile Screen এ index 3 set করুন (Alerts সরানোর পর)
   WidgetsBinding.instance.addPostFrameCallback((_) {
     try {
       print('ProfileScreen Loaded - Setting index to 4');
-      BottomNavController.to.changeIndex(4);  // এখন Profile index 3
+      BottomNavController.to.changeIndex(4); 
     } catch (e) {
       print('Error: $e');
     }

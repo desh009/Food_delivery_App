@@ -16,7 +16,7 @@ class BottomNavController extends GetxController {
     BottomNavItem(
       icon: Icons.favorite_border,
       label: 'Favorites',
-      route: '/favorites',
+      route: '/liked-screen',
     ),
     BottomNavItem(
       icon: Icons.notifications_none_rounded,
@@ -57,14 +57,10 @@ class BottomNavController extends GetxController {
         }
         break;
       case 2: // Favorites
-        Get.snackbar(
-          'Favorites',
-          'Coming soon!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blue,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-        );
+     print('⭐ Navigating to Favorites');
+        if (Get.currentRoute != '/liked-screen') {
+          Get.toNamed('/liked-screen');  // ← এখানে `/favorites` ব্যবহার করুন
+        }
         break;
       case 3: // Notification
         Get.snackbar(
@@ -96,7 +92,7 @@ class BottomNavController extends GetxController {
       case '/order-details':
         currentIndex.value = 1;
         break;
-      case '/favorites':
+      case '//liked-screen':
         currentIndex.value = 2;
         break;
       case '/notifications':

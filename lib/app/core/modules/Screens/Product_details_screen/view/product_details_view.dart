@@ -198,7 +198,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             size: 24,
                             onTap: (newValue) {
                               controller.isFavorite.value = newValue;
-                            },
+                            }, navigateOnAdd: false,
                           ),
                         ),
                       ),

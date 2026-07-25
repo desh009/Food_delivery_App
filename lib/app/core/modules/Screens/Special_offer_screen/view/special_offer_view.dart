@@ -244,6 +244,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                           );
                                         }
                                       },
+                                      navigateOnAdd: false,
                                     ),
                                   ),
                                 ],

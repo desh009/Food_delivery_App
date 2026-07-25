@@ -4,12 +4,14 @@ class AnimatedFavoriteButton extends StatefulWidget {
   final bool isFavorite;
   final ValueChanged<bool> onTap;
   final double size;
+    final bool navigateOnAdd;  // 🔥 New: Navigation control
+
 
   const AnimatedFavoriteButton({
     super.key,
     required this.isFavorite,
     required this.onTap,
-    this.size = 18, 
+    this.size = 18, required this.navigateOnAdd, 
   });
 
   @override

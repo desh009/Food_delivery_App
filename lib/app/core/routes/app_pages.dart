@@ -14,6 +14,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/binde
 import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/view/special_offer_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/binder/add_to_cart_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/view/add_to_cart_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/favourite_screen/binder/favourite_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/favourite_screen/view/favourite_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/binder/home_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/view/home_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/binder/login_screen_binder.dart';
@@ -112,11 +114,11 @@ class AppPages {
       page: () => const OrderDetailsScreen(),
       binding: OrderDetailsBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.HELICOPTER_BOOKING,
-    //   page: () => const HelicopterBookingView(),
-    //   binding: HelicopterBookingBinding(),
-    // ),
+    GetPage(
+      name: _Paths.LIKED_SCREEN,
+      page: () => const LikedScreen(),
+      binding: LikedBinding(),
+    ),
     // GetPage(
     //   name: _Paths.BOOKING_SYSTEM,
     //   page: () => const BookingSystemView(),
