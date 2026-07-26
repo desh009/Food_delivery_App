@@ -1,3 +1,5 @@
+import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/binder/notification_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/view/notification_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/view/order_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
@@ -17,6 +19,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/view/add_to_ca
 import 'package:food_hjoiopk/app/core/modules/Screens/favourite_screen/binder/favourite_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/favourite_screen/view/favourite_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/binder/home_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/profile_edit_screen/binder/profile_edit_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/profile_edit_screen/view/profile_edit_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/view/home_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/binder/login_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/view/login_sceen-view.dart';
@@ -119,16 +123,16 @@ class AppPages {
       page: () => const LikedScreen(),
       binding: LikedBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.BOOKING_SYSTEM,
-    //   page: () => const BookingSystemView(),
-    //   binding: BookingSystemBinding(),
-    // ),
-    // GetPage(
-    //   name: _Paths.TRIP_DETAILS,
-    //   page: () => const TripDetailsView(),
-    //   binding: TripDetailsBinding(),
-    // ),
+    GetPage(
+      name: _Paths.PROFILE_EDIT,
+      page: () => const YourProfileScreen(),
+      binding: YourProfileBinding(),
+    ),
+       GetPage(
+      name: _Paths.NOTIFICATION,
+      page: () => const NotificationScreen(),
+      binding: NotificationBinding(),
+    ),
     // GetPage(
     //   name: _Paths.EMAIL_VALIDATION,
     //   page: () => const EmailValidationView(),

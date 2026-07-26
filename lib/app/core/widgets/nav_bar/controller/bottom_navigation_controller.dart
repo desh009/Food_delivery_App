@@ -21,7 +21,7 @@ class BottomNavController extends GetxController {
     BottomNavItem(
       icon: Icons.notifications_none_rounded,
       label: 'Notification',
-      route: '/notifications',
+      route: '/notification',
     ),
     BottomNavItem(
       icon: Icons.person_outline,
@@ -57,20 +57,16 @@ class BottomNavController extends GetxController {
         }
         break;
       case 2: // Favorites
-     print('⭐ Navigating to Favorites');
+        print('⭐ Navigating to Favorites');
         if (Get.currentRoute != '/liked-screen') {
-          Get.toNamed('/liked-screen');  // ← এখানে `/favorites` ব্যবহার করুন
+          Get.toNamed('/liked-screen'); // ← এখানে `/favorites` ব্যবহার করুন
         }
         break;
       case 3: // Notification
-        Get.snackbar(
-          'Notification',
-          'Coming soon!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blue,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-        );
+        print('🔔 Navigating to Notifications');
+        if (Get.currentRoute != '/notification') {
+          Get.toNamed('/notification');
+        }
         break;
       case 4: // Profile
         print('👤 Navigating to Profile - Index: 4');
@@ -92,10 +88,10 @@ class BottomNavController extends GetxController {
       case '/order-details':
         currentIndex.value = 1;
         break;
-      case '//liked-screen':
+      case '/liked-screen':
         currentIndex.value = 2;
         break;
-      case '/notifications':
+      case '/notification':
         currentIndex.value = 3;
         break;
       case '/my-account':

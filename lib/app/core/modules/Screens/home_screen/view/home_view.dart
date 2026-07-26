@@ -68,6 +68,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.8',
       'price': '\$12.99',
       'discount': '20% OFF',
+      'category': 'Burger', // 🔥 Added category
     },
     {
       'id': 'offer_2',
@@ -77,6 +78,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.9',
       'price': '\$15.99',
       'discount': '15% OFF',
+      'category': 'Pizza', // 🔥 Added category
     },
     {
       'id': 'offer_3',
@@ -86,6 +88,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.6',
       'price': '\$9.99',
       'discount': '10% OFF',
+      'category': 'Salad', // 🔥 Added category
     },
     {
       'id': 'offer_4',
@@ -95,6 +98,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.7',
       'price': '\$11.99',
       'discount': '25% OFF',
+      'category': 'Tacos', // 🔥 Added category
     },
     {
       'id': 'offer_5',
@@ -104,6 +108,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.5',
       'price': '\$14.99',
       'discount': '18% OFF',
+      'category': 'Pizza', // 🔥 Added category
     },
     {
       'id': 'offer_6',
@@ -113,6 +118,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.3',
       'price': '\$10.99',
       'discount': '12% OFF',
+      'category': 'Burger', // 🔥 Added category
     },
   ];
 
@@ -126,8 +132,9 @@ class HomeScreen extends GetView<HomeController> {
     final controller = Get.find<HomeController>();
     final favoriteService = Get.find<FavoriteService>();
 
-    // Set Home index
+    // 🔥 Set special offers to controller for filtering
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.setSpecialOffers(specialOffers);
       try {
         BottomNavController.to.changeIndex(0);
       } catch (e) {
@@ -177,7 +184,7 @@ class HomeScreen extends GetView<HomeController> {
                           const SizedBox(width: 12),
                           GestureDetector(
                             onTap: () {
-                              Get.toNamed('/profile');
+                              Get.toNamed('/profile-edit');
                             },
                             child: Container(
                               padding: const EdgeInsets.all(12),
@@ -341,7 +348,7 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 20),
 
-                    // Search Bar
+                    // ========== SEARCH BAR WITH FILTER ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Container(
@@ -367,7 +374,7 @@ class HomeScreen extends GetView<HomeController> {
                                   decoration: InputDecoration(
                                     hintText: controller.isFilterApplied.value
                                         ? "Search with filters..."
-                                        : "Search",
+                                        : "Search products...",
                                     hintStyle: const TextStyle(
                                       color: Colors.black38,
                                       fontSize: 16,
@@ -390,32 +397,40 @@ class HomeScreen extends GetView<HomeController> {
                                 ),
                               ),
                             ),
+                            // 🔥 FILTER BUTTON WITH BADGE
                             Stack(
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    controller.showFilterBottomSheet(context);
-                                  },
-                                  icon: Obx(
-                                    () => Icon(
-                                      controller.isFilterApplied.value
-                                          ? Icons.filter_alt
-                                          : Icons.tune,
-                                      color: controller.isFilterApplied.value
-                                          ? AppColors.tomato
-                                          : Colors.black54,
-                                      size: 26,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      controller.showFilterBottomSheet(context);
+                                    },
+                                    icon: Obx(
+                                      () => Icon(
+                                        controller.isFilterApplied.value
+                                            ? Icons.filter_alt
+                                            : Icons.tune,
+                                        color: controller.isFilterApplied.value
+                                            ? AppColors.tomato
+                                            : Colors.black54,
+                                        size: 24,
+                                      ),
                                     ),
                                   ),
                                 ),
+                                // 🔥 Filter Active Indicator Dot
                                 Obx(
                                   () => controller.isFilterApplied.value
                                       ? Positioned(
-                                          right: 8,
-                                          top: 8,
+                                          right: 4,
+                                          top: 4,
                                           child: Container(
-                                            width: 8,
-                                            height: 8,
+                                            width: 10,
+                                            height: 10,
                                             decoration: const BoxDecoration(
                                               color: AppColors.tomato,
                                               shape: BoxShape.circle,
@@ -431,7 +446,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
-                    // Active Filters Chips
+                    // ========== ACTIVE FILTERS CHIPS ==========
                     Obx(
                       () => controller.isFilterApplied.value
                           ? Padding(
@@ -451,7 +466,7 @@ class HomeScreen extends GetView<HomeController> {
                                         onDelete: () {
                                           controller.selectedCategory.value =
                                               'All';
-                                          controller.checkFilterStatus();
+                                          controller.applyFilters();
                                         },
                                       ),
                                     if (controller.selectedSortBy.value !=
@@ -462,7 +477,7 @@ class HomeScreen extends GetView<HomeController> {
                                         onDelete: () {
                                           controller.selectedSortBy.value =
                                               'Popular';
-                                          controller.checkFilterStatus();
+                                          controller.applyFilters();
                                         },
                                       ),
                                     if (controller.minPrice.value > 0 ||
@@ -473,7 +488,7 @@ class HomeScreen extends GetView<HomeController> {
                                         onDelete: () {
                                           controller.minPrice.value = 0;
                                           controller.maxPrice.value = 100;
-                                          controller.checkFilterStatus();
+                                          controller.applyFilters();
                                         },
                                       ),
                                     if (controller.searchText.value.isNotEmpty)
@@ -606,32 +621,85 @@ class HomeScreen extends GetView<HomeController> {
 
                     const SizedBox(height: 16),
 
-                    // 🔥 Special Offers Grid
+                    // ========== 🔥 SPECIAL OFFERS GRID (FILTERED) ==========
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.8,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
+                      child: Obx(() {
+                        final offers = controller.filteredOffers.isNotEmpty 
+                            ? controller.filteredOffers 
+                            : specialOffers;
+                        
+                        // 🔥 Show empty state when no results
+                        if (offers.isEmpty && controller.isFilterApplied.value) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(40.0),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.search_off,
+                                    size: 64,
+                                    color: Colors.black26,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    "No offers found!",
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Try adjusting your filters",
+                                    style: TextStyle(
+                                      color: Colors.black38,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: specialOffers.length,
-                        itemBuilder: (context, index) {
-                          final offer = specialOffers[index];
-                          return _buildSpecialOfferCard(
-                            id: offer['id'] ?? 'offer_$index',
-                            imageUrl: offer['image'],
-                            title: offer['title'],
-                            rating: offer['rating'],
-                            price: offer['price'],
-                            discount: offer['discount'],
                           );
-                        },
-                      ),
+                        }
+                        
+                        if (offers.isEmpty) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(40.0),
+                              child: Text(
+                                "No special offers available",
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        
+                        return GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.8,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: offers.length,
+                          itemBuilder: (context, index) {
+                            final offer = offers[index];
+                            return _buildSpecialOfferCard(
+                              id: offer['id'] ?? 'offer_$index',
+                              imageUrl: offer['image'],
+                              title: offer['title'],
+                              rating: offer['rating'],
+                              price: offer['price'],
+                              discount: offer['discount'],
+                            );
+                          },
+                        );
+                      }),
                     ),
 
                     const SizedBox(height: 30),

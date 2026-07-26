@@ -37,6 +37,7 @@ abstract class Routes {
   static const ORDER_DETAILS = _Paths.ORDER_DETAILS;
 
   static const LIKED_SCREEN = _Paths.LIKED_SCREEN;
+  static const PROFILE_EDIT = _Paths.PROFILE_EDIT;
 }
 
 abstract class _Paths {
@@ -75,4 +76,6 @@ abstract class _Paths {
 
   static const ORDER_DETAILS = '/order-details';
   static const LIKED_SCREEN = '/liked-screen';
+
+  static const PROFILE_EDIT = '/profile-edit';
 }

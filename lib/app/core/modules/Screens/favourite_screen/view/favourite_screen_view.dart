@@ -8,6 +8,7 @@ import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourite_service/favourite_screen_service.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
+import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 
 class LikedScreen extends StatelessWidget {
@@ -36,51 +37,53 @@ class LikedScreen extends StatelessWidget {
       }
     });
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(controller),
-            _buildSearchBar(controller),
-            const SizedBox(height: 10),
-            _buildItemsCount(controller),
-            Expanded(
-              child: Obx(() {
-                if (controller.isLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: AppColors.tomato),
+    return ResponsiveWrapper(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(controller),
+              _buildSearchBar(controller),
+              const SizedBox(height: 10),
+              _buildItemsCount(controller),
+              Expanded(
+                child: Obx(() {
+                  if (controller.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.tomato),
+                    );
+                  }
+      
+                  if (controller.filteredItems.isEmpty) {
+                    return _buildEmptyState();
+                  }
+      
+                  return GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    itemCount: controller.filteredItems.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.74,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = controller.filteredItems[index];
+                      final isFavorite = favoriteService.isFavorite(item.id);
+                      return _buildFoodCard(controller, item, isFavorite);
+                    },
                   );
-                }
-
-                if (controller.filteredItems.isEmpty) {
-                  return _buildEmptyState();
-                }
-
-                return GridView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  itemCount: controller.filteredItems.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.74,
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = controller.filteredItems[index];
-                    final isFavorite = favoriteService.isFavorite(item.id);
-                    return _buildFoodCard(controller, item, isFavorite);
-                  },
-                );
-              }),
-            ),
-          ],
+                }),
+              ),
+            ],
+          ),
         ),
+        bottomNavigationBar: const BottomNavigationWidget(),
       ),
-      bottomNavigationBar: const BottomNavigationWidget(),
     );
   }
 
@@ -140,6 +143,7 @@ class LikedScreen extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildSearchBar(LikedController controller) {
     return Padding(

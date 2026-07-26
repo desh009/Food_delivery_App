@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/Profile_screen/view/profile_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
@@ -14,19 +16,19 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-Widget build(BuildContext context) {
-  final ProfileController controller = Get.isRegistered<ProfileController>()
-      ? Get.find<ProfileController>()
-      : Get.put(ProfileController());
-  
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    try {
-      print('ProfileScreen Loaded - Setting index to 4');
-      BottomNavController.to.changeIndex(4); 
-    } catch (e) {
-      print('Error: $e');
-    }
-  });
+  Widget build(BuildContext context) {
+    final ProfileController controller = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
+        : Get.put(ProfileController());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      try {
+        print('ProfileScreen Loaded - Setting index to 4');
+        BottomNavController.to.changeIndex(4);
+      } catch (e) {
+        print('Error: $e');
+      }
+    });
 
     return ResponsiveWrapper(
       child: Scaffold(
@@ -281,43 +283,18 @@ Widget build(BuildContext context) {
     );
   }
 
-  // ========== Profile Info Header Row ==========
+  // ========== 🔥 Profile Info Header (No Image Picker) ==========
   Widget _buildUserProfileHeader(ProfileController controller) {
     return Row(
       children: [
-        // Avatar Image with Edit Option
-        GestureDetector(
-          onTap: () {
-            _showImagePickerOptions(Get.context!, controller);
-          },
-          child: Stack(
-            children: [
-              Obx(
-                () => CircleAvatar(
-                  radius: 32,
-                  backgroundImage: controller.profileImagePath.value.isNotEmpty
-                      ? FileImage(File(controller.profileImagePath.value))
-                      : const NetworkImage('https://i.pravatar.cc/300')
-                            as ImageProvider,
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    color: AppColors.tomato,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 12,
-                  ),
-                ),
-              ),
-            ],
+        // 🔥 Only Avatar - No Edit Option
+        Obx(
+          () => CircleAvatar(
+            radius: 32,
+            backgroundImage: controller.profileImagePath.value.isNotEmpty
+                ? FileImage(File(controller.profileImagePath.value))
+                : const NetworkImage('https://i.pravatar.cc/300')
+                      as ImageProvider,
           ),
         ),
         const SizedBox(width: 14),
@@ -382,16 +359,10 @@ Widget build(BuildContext context) {
           ),
         ),
 
-        // Edit Button
+        // 🔥 Edit Button - Navigate to YourProfileScreen
         GestureDetector(
           onTap: () {
-            Get.snackbar(
-              'Edit Profile',
-              'Feature coming soon!',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.blue,
-              colorText: Colors.white,
-            );
+            Get.toNamed('/profile-edit');
           },
           child: Container(
             padding: const EdgeInsets.all(12),
@@ -410,118 +381,6 @@ Widget build(BuildContext context) {
           ),
         ),
       ],
-    );
-  }
-
-  // ========== Image Picker Options ==========
-  void _showImagePickerOptions(
-    BuildContext context,
-    ProfileController controller,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const Text(
-                "Change Profile Photo",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildImagePickerOption(
-                    icon: Icons.photo_library,
-                    label: "Gallery",
-                    color: Colors.blue,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  _buildImagePickerOption(
-                    icon: Icons.camera_alt,
-                    label: "Camera",
-                    color: Colors.green,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  _buildImagePickerOption(
-                    icon: Icons.delete_outline,
-                    label: "Remove",
-                    color: Colors.red,
-                    onTap: () {
-                      Navigator.pop(context);
-                      controller.profileImagePath.value = '';
-                      Get.snackbar(
-                        'Success',
-                        'Profile photo removed',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.grey,
-                        colorText: Colors.white,
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // ========== Image Picker Option Button ==========
-  Widget _buildImagePickerOption({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 28),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
     );
   }
 

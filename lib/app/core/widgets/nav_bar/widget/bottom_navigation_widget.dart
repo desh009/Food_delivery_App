@@ -1,3 +1,5 @@
+// lib/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
@@ -11,6 +13,11 @@ class BottomNavigationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BottomNavController controller = Get.find<BottomNavController>();
+    
+    // 🔥 ProfileController Initialize
+    if (!Get.isRegistered<ProfileController>()) {
+      Get.put<ProfileController>(ProfileController(), permanent: true);
+    }
 
     return Stack(
       clipBehavior: Clip.none,
@@ -31,6 +38,9 @@ class BottomNavigationWidget extends StatelessWidget {
             ],
           ),
           child: Obx(() {
+            // 🔥 Get ProfileController inside Obx
+            final ProfileController profileController = Get.find<ProfileController>();
+            
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -78,12 +88,13 @@ class BottomNavigationWidget extends StatelessWidget {
                     controller.navigateToScreen(3, context);
                   },
                 ),
-                // 4. Profile
+                // 🔥 4. Profile - Dynamic Image
                 _buildProfileItem(
                   context: context,
                   index: 4,
                   isActive: controller.currentIndex.value == 4,
                   controller: controller,
+                  profileController: profileController,
                 ),
               ],
             );
@@ -111,7 +122,6 @@ class BottomNavigationWidget extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             if (isActive) ...[
-              // Floating Popped-Up Active Button
               Positioned(
                 top: -22,
                 child: Column(
@@ -131,11 +141,7 @@ class BottomNavigationWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: Icon(
-                        icon,
-                        color: Colors.white,
-                        size: 26,
-                      ),
+                      child: Icon(icon, color: Colors.white, size: 26),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -150,14 +156,7 @@ class BottomNavigationWidget extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              // Normal Inactive Icon (No Text Label)
-              Center(
-                child: Icon(
-                  icon,
-                  color: Colors.grey.shade400,
-                  size: 24,
-                ),
-              ),
+              Center(child: Icon(icon, color: Colors.grey.shade400, size: 24)),
             ],
           ],
         ),
@@ -165,12 +164,13 @@ class BottomNavigationWidget extends StatelessWidget {
     );
   }
 
-  // ========== Profile Nav Item ==========
+  // ========== 🔥 Profile Nav Item with Dynamic Image ==========
   Widget _buildProfileItem({
     required BuildContext context,
     required int index,
     required bool isActive,
     required BottomNavController controller,
+    required ProfileController profileController,
   }) {
     return GestureDetector(
       onTap: () {
@@ -185,7 +185,6 @@ class BottomNavigationWidget extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             if (isActive) ...[
-              // Floating Popped-Up Profile Avatar
               Positioned(
                 top: -22,
                 child: Column(
@@ -207,7 +206,24 @@ class BottomNavigationWidget extends StatelessWidget {
                         ],
                       ),
                       child: ClipOval(
-                        child: _getProfileImage(),
+                        child: Obx(() {
+                          // 🔥 Get image path from controller
+                          final String imagePath = profileController.profileImagePath.value;
+                          print('📸 Active State - Image Path: $imagePath'); // Debug
+                          
+                          if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+                            return Image.file(
+                              File(imagePath),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                print('❌ Error loading image: $error');
+                                return _buildDefaultAvatar();
+                              },
+                            );
+                          } else {
+                            return _buildDefaultAvatar();
+                          }
+                        }),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -223,13 +239,32 @@ class BottomNavigationWidget extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              // Inactive Profile Icon
+              // 🔥 Inactive State - Always show updated image
               Center(
-                child: Icon(
-                  Icons.person_outline_rounded,
-                  color: Colors.grey.shade400,
-                  size: 25,
-                ),
+                child: Obx(() {
+                  final String imagePath = profileController.profileImagePath.value;
+                  print('📸 Inactive State - Image Path: $imagePath'); // Debug
+                  
+                  if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+                    return Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: FileImage(File(imagePath)),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Icon(
+                      Icons.person_outline_rounded,
+                      color: Colors.grey.shade400,
+                      size: 25,
+                    );
+                  }
+                }),
               ),
             ],
           ],
@@ -238,20 +273,21 @@ class BottomNavigationWidget extends StatelessWidget {
     );
   }
 
-  // ========== Safe Profile Image Provider ==========
-  Widget _getProfileImage() {
-    if (Get.isRegistered<ProfileController>()) {
-      final profileController = Get.find<ProfileController>();
-      if (profileController.profileImagePath.value.isNotEmpty) {
-        return Image.file(
-          File(profileController.profileImagePath.value),
-          fit: BoxFit.cover,
-        );
-      }
-    }
+  // ========== Default Avatar ==========
+  Widget _buildDefaultAvatar() {
     return Image.network(
       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200',
       fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: Colors.grey.shade200,
+          child: Icon(
+            Icons.person,
+            color: Colors.grey.shade400,
+            size: 30,
+          ),
+        );
+      },
     );
   }
 }
