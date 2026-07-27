@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/controller/add_to-cart_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/add_new_card/add_new_card.dart';
 import 'package:get/get.dart';
@@ -18,30 +19,30 @@ class MyBasketScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: Color(0xFFFAFAFA),
       body: Stack(
         children: [
           SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(
-              top: 50,
-              left: 20,
-              right: 20,
-              bottom: 120,
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.only(
+              top: 50.h,
+              left: 20.w,
+              right: 20.w,
+              bottom: 120.h,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 _buildOrderSummaryHeader(),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
                 Obx(() {
                   if (cartController.cartItems.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 40.0),
+                        padding: EdgeInsets.only(top: 40.0.h),
                         child: Text(
                           "Your basket is empty!",
                           style: TextStyle(color: Colors.black45),
@@ -51,19 +52,19 @@ class MyBasketScreen extends StatelessWidget {
                   }
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: cartController.cartItems.length,
                     itemBuilder: (context, index) {
                       final item = cartController.cartItems[index];
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
+                        padding: EdgeInsets.only(bottom: 16.0.h),
                         child: _buildCartItem(item, cartController),
                       );
                     },
                   );
                 }),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // ========== Deliver To Tile ==========
                 _buildInfoTile(
@@ -71,12 +72,12 @@ class MyBasketScreen extends StatelessWidget {
                   "Deliver to",
                   "Select Your Location",
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
 
                 // ========== Payment Method Tile (Opens BottomSheet) ==========
                 _buildPaymentMethodTile(context, cartController),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
 
                 // ========== Promotions Tile ==========
                 _buildInfoTile(
@@ -84,7 +85,7 @@ class MyBasketScreen extends StatelessWidget {
                   "Promotions",
                   "Select Your Discounts",
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 Obx(() => _buildBillDetails(cartController)),
               ],
@@ -104,7 +105,7 @@ class MyBasketScreen extends StatelessWidget {
         GestureDetector(
           onTap: () => Get.back(),
           child: Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -112,25 +113,25 @@ class MyBasketScreen extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
-            child: const Icon(Icons.arrow_back, color: Colors.black87),
+            child: Icon(Icons.arrow_back, color: Colors.black87),
           ),
         ),
-        const Expanded(
+        Expanded(
           child: Text(
             "My Basket",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
         ),
-        const SizedBox(width: 44),
+        SizedBox(width: 44.w),
       ],
     );
   }
@@ -140,10 +141,10 @@ class MyBasketScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           "Order Summary",
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
@@ -151,17 +152,17 @@ class MyBasketScreen extends StatelessWidget {
         TextButton(
           onPressed: () => Get.back(),
           style: TextButton.styleFrom(
-            side: BorderSide(color: AppColors.tomato, width: 1),
+            side: BorderSide(color: AppColors.tomato, width: 1.w),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
           ),
           child: Text(
             "Add Items",
             style: TextStyle(
               color: AppColors.tomato,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -178,33 +179,33 @@ class MyBasketScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
       child: ListTile(
         onTap: () => _showPaymentBottomSheet(context, controller),
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.r),
           decoration: BoxDecoration(
             color: AppColors.tomato.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
+          child: Icon(
             Icons.credit_card_rounded,
             color: AppColors.tomato,
-            size: 20,
+            size: 20.sp,
           ),
         ),
-        title: const Text(
+        title: Text(
           "Payment method",
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
@@ -214,12 +215,12 @@ class MyBasketScreen extends StatelessWidget {
             controller.selectedPaymentMethod.value.isEmpty
                 ? "Select Payment Method"
                 : controller.selectedPaymentMethod.value,
-            style: const TextStyle(fontSize: 12, color: Colors.black38),
+            style: TextStyle(fontSize: 12.sp, color: Colors.black38),
           ),
         ),
-        trailing: const Icon(
+        trailing: Icon(
           Icons.arrow_forward_ios_rounded,
-          size: 16,
+          size: 16.sp,
           color: Colors.black38,
         ),
       ),
@@ -243,13 +244,13 @@ class MyBasketScreen extends StatelessWidget {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.85,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        decoration: const BoxDecoration(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
         ),
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -259,7 +260,7 @@ class MyBasketScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () => Get.back(),
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(8.r),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -267,32 +268,32 @@ class MyBasketScreen extends StatelessWidget {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
                             blurRadius: 10,
-                            offset: const Offset(0, 2),
+                            offset: Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_back,
-                        size: 20,
+                        size: 20.sp,
                         color: Colors.black87,
                       ),
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "Payment Methods",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 36), // Alignment Balance
+                  SizedBox(width: 36.w), // Alignment Balance
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
 
               // Payment Options
               Obx(
@@ -300,70 +301,70 @@ class MyBasketScreen extends StatelessWidget {
                   children: [
                     _buildBottomSheetOptionItem(
                       title: "Cash",
-                      iconWidget: const Icon(
+                      iconWidget: Icon(
                         Icons.payments_rounded,
                         color: Colors.green,
-                        size: 22,
+                        size: 22.sp,
                       ),
                       value: "Cash",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     _buildBottomSheetOptionItem(
                       title: "PayPal",
-                      iconWidget: const Icon(
+                      iconWidget: Icon(
                         Icons.account_balance_wallet_rounded,
                         color: Colors.blue,
-                        size: 22,
+                        size: 22.sp,
                       ),
                       value: "PayPal",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     _buildBottomSheetOptionItem(
                       title: "Google Pay",
-                      iconWidget: const Icon(
+                      iconWidget: Icon(
                         Icons.g_mobiledata_rounded,
                         color: Colors.deepOrange,
-                        size: 28,
+                        size: 28.sp,
                       ),
                       value: "Google Pay",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     _buildBottomSheetOptionItem(
                       title: "Apple Pay",
-                      iconWidget: const Icon(
+                      iconWidget: Icon(
                         Icons.apple_rounded,
                         color: Colors.black,
-                        size: 24,
+                        size: 24.sp,
                       ),
                       value: "Apple Pay",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     _buildBottomSheetOptionItem(
                       title: "**** **** **** 0895",
-                      iconWidget: const Icon(
+                      iconWidget: Icon(
                         Icons.credit_card_rounded,
                         color: Colors.indigo,
-                        size: 22,
+                        size: 22.sp,
                       ),
                       value: "**** **** **** 0895",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     _buildBottomSheetOptionItem(
                       title: "**** **** **** 2259",
-                      iconWidget: const Icon(
+                      iconWidget: Icon(
                         Icons.credit_card_rounded,
                         color: Colors.orange,
-                        size: 22,
+                        size: 22.sp,
                       ),
                       value: "**** **** **** 2259",
                       groupValue: tempSelected.value,
@@ -373,7 +374,7 @@ class MyBasketScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Add New Card Button
               InkWell(
@@ -381,24 +382,24 @@ class MyBasketScreen extends StatelessWidget {
                   Get.back();
                   AddNewCardBottomSheet.show(context);
                 },
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14.r),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(vertical: 14.h),
                   decoration: BoxDecoration(
                     color: AppColors.tomato.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, color: AppColors.tomato, size: 18),
-                      const SizedBox(width: 8),
+                      Icon(Icons.add, color: AppColors.tomato, size: 18.sp),
+                      SizedBox(width: 8.w),
                       Text(
                         "Add New Card",
                         style: TextStyle(
                           color: AppColors.tomato,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -407,12 +408,12 @@ class MyBasketScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
 
               // Apply Button
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 50.h,
                 child: ElevatedButton(
                   onPressed: () {
                     controller.selectedPaymentMethod.value = tempSelected.value;
@@ -425,27 +426,27 @@ class MyBasketScreen extends StatelessWidget {
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.green,
                       colorText: Colors.white,
-                      duration: const Duration(seconds: 2),
+                      duration: Duration(seconds: 2),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.tomato,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Apply",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
             ],
           ),
         ),
@@ -467,21 +468,21 @@ class MyBasketScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => onSelect(value),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade200, width: 1),
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(color: Colors.grey.shade200, width: 1.w),
         ),
         child: Row(
           children: [
-            SizedBox(width: 30, height: 30, child: Center(child: iconWidget)),
-            const SizedBox(width: 14),
+            SizedBox(width: 30.w, height: 30.h, child: Center(child: iconWidget)),
+            SizedBox(width: 14.w),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -489,8 +490,8 @@ class MyBasketScreen extends StatelessWidget {
             ),
             // Custom Radio Circle
             Container(
-              width: 20,
-              height: 20,
+              width: 20.w,
+              height: 20.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -510,12 +511,12 @@ class MyBasketScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -527,32 +528,32 @@ class MyBasketScreen extends StatelessWidget {
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.blue,
             colorText: Colors.white,
-            duration: const Duration(seconds: 2),
+            duration: Duration(seconds: 2),
           );
         },
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.r),
           decoration: BoxDecoration(
             color: AppColors.tomato.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: AppColors.tomato, size: 20),
+          child: Icon(icon, color: AppColors.tomato, size: 20.sp),
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
         subtitle: Text(
           subtitle,
-          style: const TextStyle(fontSize: 12, color: Colors.black38),
+          style: TextStyle(fontSize: 12.sp, color: Colors.black38),
         ),
-        trailing: const Icon(
+        trailing: Icon(
           Icons.arrow_forward_ios_rounded,
-          size: 16,
+          size: 16.sp,
           color: Colors.black38,
         ),
       ),
@@ -564,76 +565,76 @@ class MyBasketScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.r),
       child: Column(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 child: Image.network(
                   item.imageUrl,
-                  width: 70,
-                  height: 70,
+                  width: 70.w,
+                  height: 70.h,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      width: 70,
-                      height: 70,
+                      width: 70.w,
+                      height: 70.h,
                       color: Colors.grey[200],
-                      child: const Icon(Icons.image, color: Colors.grey),
+                      child: Icon(Icons.image, color: Colors.grey),
                     );
                   },
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       item.name,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.h),
                     Row(
                       children: [
                         if (item.oldPrice != null) ...[
                           Text(
                             "£ ${item.oldPrice!.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontSize: 13,
+                            style: TextStyle(
+                              fontSize: 13.sp,
                               color: Colors.black38,
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.w),
                         ],
                         Text(
                           "£ ${item.price.toStringAsFixed(2)}",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                             color: AppColors.tomato,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     Obx(
                       () => Row(
                         children: [
@@ -644,13 +645,13 @@ class MyBasketScreen extends StatelessWidget {
                             }
                           }),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.0.w,
                             ),
                             child: Text(
                               "${item.quantity.value}",
-                              style: const TextStyle(
-                                fontSize: 14,
+                              style: TextStyle(
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -668,17 +669,17 @@ class MyBasketScreen extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.edit_outlined,
-                      size: 18,
+                      size: 18.sp,
                       color: Colors.black38,
                     ),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.close,
-                      size: 18,
+                      size: 18.sp,
                       color: Colors.black38,
                     ),
                     onPressed: () => controller.removeItem(item),
@@ -689,28 +690,28 @@ class MyBasketScreen extends StatelessWidget {
           ),
 
           if (item.addOns.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0.h),
               child: Divider(color: Color(0xFFF5F5F5)),
             ),
             Column(
               children: item.addOns.map((addOn) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  padding: EdgeInsets.symmetric(vertical: 2.0.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         addOn["name"]!,
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: 12.sp,
                           color: Colors.black54,
                         ),
                       ),
                       Text(
                         "+ £${(addOn["price"] as double).toStringAsFixed(2)}",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           color: AppColors.tomato,
                           fontWeight: FontWeight.w500,
                         ),
@@ -730,12 +731,12 @@ class MyBasketScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.all(4.r),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: Colors.black12),
         ),
-        child: Icon(icon, size: 14, color: Colors.black87),
+        child: Icon(icon, size: 14.sp, color: Colors.black87),
       ),
     );
   }
@@ -749,22 +750,22 @@ class MyBasketScreen extends StatelessWidget {
           "£ ${controller.subtotal.toStringAsFixed(2)}",
           isBold: true,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         _buildBillRow(
           "Delivery Fee",
           controller.selectedPaymentMethod.value.isEmpty ? "—" : "£ 0.00",
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         _buildBillRow("Discount", "—"),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 12.0),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 12.0.h),
           child: Divider(color: Colors.black12),
         ),
         _buildBillRow(
           "Total",
           "£ ${controller.total.toStringAsFixed(2)}",
           isBold: true,
-          fontSize: 16,
+          fontSize: 16.sp,
         ),
       ],
     );
@@ -800,20 +801,20 @@ class MyBasketScreen extends StatelessWidget {
     BuildContext context,
   ) {
     return Positioned(
-      bottom: 20,
-      left: 20,
-      right: 20,
+      bottom: 20.h,
+      left: 20.w,
+      right: 20.w,
       child: Container(
-        height: 80,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        height: 80.h,
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.06),
               blurRadius: 20,
-              offset: const Offset(0, -4),
+              offset: Offset(0, -4),
             ),
           ],
         ),
@@ -822,8 +823,8 @@ class MyBasketScreen extends StatelessWidget {
           children: [
             Text(
               "£ ${controller.total.toStringAsFixed(2)}",
-              style: const TextStyle(
-                fontSize: 20,
+              style: TextStyle(
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -834,19 +835,19 @@ class MyBasketScreen extends StatelessWidget {
                   : () => _showPlaceOrderDialog(context, controller),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.tomato,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 36,
-                  vertical: 14,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 36.w,
+                  vertical: 14.h,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(18.r),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Place Order",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -865,20 +866,20 @@ class MyBasketScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
           ),
           elevation: 0,
           backgroundColor: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.r),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(24.r),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
                   blurRadius: 20,
-                  offset: const Offset(0, 10),
+                  offset: Offset(0, 10),
                 ),
               ],
             ),
@@ -886,8 +887,8 @@ class MyBasketScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 80,
-                  height: 80,
+                  width: 80.w,
+                  height: 80.h,
                   decoration: BoxDecoration(
                     color: Colors.green[50],
                     shape: BoxShape.circle,
@@ -895,102 +896,102 @@ class MyBasketScreen extends StatelessWidget {
                   child: Icon(
                     Icons.check_circle,
                     color: Colors.green[600],
-                    size: 50,
+                    size: 50.sp,
                   ),
                 ),
-                const SizedBox(height: 16),
-                const Text(
+                SizedBox(height: 16.h),
+                Text(
                   "Order Placed!",
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Text(
                   "Your order has been placed successfully!",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.tomato.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
                     "Total: £${controller.total.toStringAsFixed(2)}",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: AppColors.tomato,
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(12),
+                    color: Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             "Items",
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               color: Colors.black54,
                             ),
                           ),
                           Text(
                             "${controller.totalItems} items",
-                            style: const TextStyle(
-                              fontSize: 13,
+                            style: TextStyle(
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.black87,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             "Estimated Delivery",
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               color: Colors.black54,
                             ),
                           ),
-                          const Text(
+                          Text(
                             "20-30 min",
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.black87,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       Obx(
                         () => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               "Payment Method",
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 color: Colors.black54,
                               ),
                             ),
@@ -998,8 +999,8 @@ class MyBasketScreen extends StatelessWidget {
                               controller.selectedPaymentMethod.value.isEmpty
                                   ? "Cash on Delivery"
                                   : controller.selectedPaymentMethod.value,
-                              style: const TextStyle(
-                                fontSize: 13,
+                              style: TextStyle(
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black87,
                               ),
@@ -1010,10 +1011,10 @@ class MyBasketScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
+                  height: 50.h,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -1023,23 +1024,23 @@ class MyBasketScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.tomato,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Continue Shopping",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 SizedBox(
                   width: double.infinity,
-                  height: 45,
+                  height: 45.h,
                   child: OutlinedButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -1052,16 +1053,16 @@ class MyBasketScreen extends StatelessWidget {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColors.tomato, width: 1.5),
+                      side: BorderSide(color: AppColors.tomato, width: 1.5.w),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                     ),
                     child: Text(
                       "Track Order",
                       style: TextStyle(
                         color: AppColors.tomato,
-                        fontSize: 15,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

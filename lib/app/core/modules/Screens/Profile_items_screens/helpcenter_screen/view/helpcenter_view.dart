@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/controller/helpcenter-controller.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -9,47 +10,47 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: Color(0xFFFAFAFA),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: controller.goBack,
         ),
-        title: const Text(
+        title: Text(
           'Help Center',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
+          preferredSize: Size.fromHeight(60),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F4),
-                borderRadius: BorderRadius.circular(12),
+                color: Color(0xFFF3F3F4),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: TextField(
                 onChanged: controller.searchFAQ,
                 decoration: InputDecoration(
                   hintText: 'Search FAQs...',
-                  hintStyle: const TextStyle(
+                  hintStyle: TextStyle(
                     color: Colors.black38,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search,
                     color: Colors.black38,
-                    size: 20,
+                    size: 20.sp,
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                 ),
               ),
             ),
@@ -59,7 +60,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
       body: Obx(() {
         // ===== Loading State =====
         if (controller.isLoading.value) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(
               color: AppColors.tomato,
             ),
@@ -74,28 +75,28 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
               children: [
                 Icon(
                   Icons.error_outline,
-                  size: 60,
+                  size: 60.sp,
                   color: Colors.red,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Text(
                   controller.errorMessage.value,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     color: Colors.red,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 ElevatedButton(
                   onPressed: controller.loadFAQData,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.tomato,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Retry',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -107,20 +108,20 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
 
         // ===== Empty State =====
         if (controller.faqList.isEmpty) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.search_off,
-                  size: 60,
+                  size: 60.sp,
                   color: Colors.black26,
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Text(
                   'No FAQs found',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: Colors.black38,
                   ),
                 ),
@@ -131,7 +132,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
 
         // ===== FAQ List =====
         return ListView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.r),
           children: [
             // FAQ Items
             ...controller.faqList.map(
@@ -140,14 +141,14 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                 faq['answer'] ?? '',
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // ===== Contact Support Section =====
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.04),
@@ -157,70 +158,70 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
               ),
               child: Column(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.headset_mic_outlined,
                     color: AppColors.tomato,
-                    size: 40,
+                    size: 40.sp,
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
+                  SizedBox(height: 8.h),
+                  Text(
                     'Still need help?',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   Text(
                     'Our support team is here for you ${controller.supportHours.value}',
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: TextStyle(
+                      fontSize: 13.sp,
                       color: Colors.black54,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12.h),
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: controller.emailSupport,
-                          icon: const Icon(Icons.email_outlined, size: 18),
-                          label: const Text('Email'),
+                          icon: Icon(Icons.email_outlined, size: 18.sp),
+                          label: Text('Email'),
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: controller.callSupport,
-                          icon: const Icon(Icons.phone_outlined, size: 18),
-                          label: const Text('Call'),
+                          icon: Icon(Icons.phone_outlined, size: 18.sp),
+                          label: Text('Call'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.tomato,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   SizedBox(
                     width: double.infinity,
                     child: TextButton.icon(
                       onPressed: controller.contactSupport,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.support_agent_outlined,
                         color: AppColors.tomato,
                       ),
-                      label: const Text(
+                      label: Text(
                         'View All Contact Options',
                         style: TextStyle(
                           color: AppColors.tomato,
@@ -232,7 +233,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
           ],
         );
       }),
@@ -242,10 +243,10 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
   // ========== FAQ Item Widget ==========
   Widget _buildFAQItem(String question, String answer) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: EdgeInsets.only(bottom: 10.h),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -254,36 +255,36 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
         ],
       ),
       child: ExpansionTile(
-        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        tilePadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
         leading: Container(
-          padding: const EdgeInsets.all(6),
-          decoration: const BoxDecoration(
+          padding: EdgeInsets.all(6.r),
+          decoration: BoxDecoration(
             color: AppColors.tomato,
             shape: BoxShape.circle,
           ),
-          child: const Icon(
+          child: Icon(
             Icons.question_mark,
             color: Colors.white,
-            size: 14,
+            size: 14.sp,
           ),
         ),
         title: Text(
           question,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
         ),
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.r),
             child: Text(
               answer,
-              style: const TextStyle(
-                fontSize: 13,
+              style: TextStyle(
+                fontSize: 13.sp,
                 color: Colors.black54,
-                height: 1.6,
+                height: 1.6.h,
               ),
             ),
           ),

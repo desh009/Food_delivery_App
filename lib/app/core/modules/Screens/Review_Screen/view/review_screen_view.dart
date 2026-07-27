@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Review_Screen/controller/review-screen_controller.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
@@ -11,8 +11,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
   Widget build(BuildContext context) {
   
 
-    return ResponsiveWrapper(
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
@@ -24,39 +23,39 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                 child: Obx(
                   () {
                     if (controller.isLoading.value) {
-                      return const Center(
+                      return Center(
                         child: CircularProgressIndicator(
                           color: AppColors.tomato,
                         ),
                       );
                     }
                     return SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
       
                           // ২. ওভারঅল রেটিং
                           _buildRatingOverview(),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24.h),
       
                           // ৩. ফিল্টার চিপস
                           _buildFilterChips(),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24.h),
       
                           // ৪. রিভিউ লিস্ট
                           Obx(
                             () {
                               if (controller.filteredReviews.isEmpty) {
-                                return const Center(
+                                return Center(
                                   child: Padding(
-                                    padding: EdgeInsets.only(top: 40.0),
+                                    padding: EdgeInsets.only(top: 40.0.h),
                                     child: Text(
                                       "No reviews found",
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 16.sp,
                                         color: Colors.black45,
                                       ),
                                     ),
@@ -65,10 +64,10 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                               }
                               return ListView.separated(
                                 shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
                                 itemCount: controller.filteredReviews.length,
                                 separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 20),
+                                    SizedBox(height: 20.h),
                                 itemBuilder: (context, index) {
                                   return _buildReviewCard(
                                     controller.filteredReviews[index],
@@ -77,7 +76,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                               );
                             },
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
                         ],
                       ),
                     );
@@ -87,14 +86,13 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   // ========== ১. অ্যাপ বার উইজেট ==========
   Widget _buildAppBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 12.0.h),
       child: Column(
         children: [
           Row(
@@ -102,7 +100,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
               GestureDetector(
                 onTap: controller.goBack,
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -110,33 +108,33 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.06),
                         blurRadius: 10,
-                        offset: const Offset(0, 4),
+                        offset: Offset(0, 4),
                       )
                     ],
                   ),
-                  child: const Icon(Icons.arrow_back, color: Colors.black87),
+                  child: Icon(Icons.arrow_back, color: Colors.black87),
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
                   "Reviews",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
               ),
-              const SizedBox(width: 44),
+              SizedBox(width: 44.w),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Obx(
             () => Text(
               controller.productName.value,
-              style: const TextStyle(
-                fontSize: 22,
+              style: TextStyle(
+                fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -158,8 +156,8 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
             children: [
               Text(
                 controller.getAverageRating().toStringAsFixed(1),
-                style: const TextStyle(
-                  fontSize: 40,
+                style: TextStyle(
+                  fontSize: 40.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -170,23 +168,23 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                   (index) {
                     final rating = controller.getAverageRating();
                     if (index < rating.floor()) {
-                      return const Icon(Icons.star, color: Colors.amber, size: 18);
+                      return Icon(Icons.star, color: Colors.amber, size: 18.sp);
                     } else if (index < rating.ceil() && rating % 1 != 0) {
-                      return const Icon(Icons.star_half, color: Colors.amber, size: 18);
+                      return Icon(Icons.star_half, color: Colors.amber, size: 18.sp);
                     } else {
-                      return const Icon(Icons.star_border, color: Colors.amber, size: 18);
+                      return Icon(Icons.star_border, color: Colors.amber, size: 18.sp);
                     }
                   },
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.h),
               Text(
                 "(${controller.getTotalReviews()})",
-                style: const TextStyle(fontSize: 13, color: Colors.black45),
+                style: TextStyle(fontSize: 13.sp, color: Colors.black45),
               ),
             ],
           ),
-          const SizedBox(width: 24),
+          SizedBox(width: 24.w),
 
           // ডান পাশের প্রোগ্রেস বার
           Expanded(
@@ -208,26 +206,26 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
   // প্রোগ্রেস বারের একক রো
   Widget _buildProgressBarRow(int starNumber, double progress) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: EdgeInsets.symmetric(vertical: 2.0.h),
       child: Row(
         children: [
           Text(
             "$starNumber",
-            style: const TextStyle(
-              fontSize: 12,
+            style: TextStyle(
+              fontSize: 12.sp,
               color: Colors.black54,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8.w),
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
               child: LinearProgressIndicator(
                 value: progress,
-                minHeight: 6,
-                backgroundColor: const Color(0xFFE0E0E0),
-                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.tomato),
+                minHeight: 6.h,
+                backgroundColor: Color(0xFFE0E0E0),
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.tomato),
               ),
             ),
           ),
@@ -241,31 +239,31 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
     return Obx(
       () => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Row(
           children: controller.filters.map((filter) {
             final isSelected = controller.selectedFilter.value == filter;
             return Padding(
-              padding: const EdgeInsets.only(right: 10.0),
+              padding: EdgeInsets.only(right: 10.0.w),
               child: GestureDetector(
                 onTap: () => controller.filterReviews(filter),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  duration: Duration(milliseconds: 200),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.tomato : const Color(0xFFF2F2F2),
-                    borderRadius: BorderRadius.circular(20),
+                    color: isSelected ? AppColors.tomato : Color(0xFFF2F2F2),
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Row(
                     children: [
                       if (isSelected) ...[
-                        const Icon(Icons.check, size: 14, color: Colors.white),
-                        const SizedBox(width: 4),
+                        Icon(Icons.check, size: 14.sp, color: Colors.white),
+                        SizedBox(width: 4.w),
                       ],
                       Text(
                         filter,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w600,
                           color: isSelected ? Colors.white : Colors.black87,
                         ),
@@ -294,20 +292,20 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
           children: [
             // প্রোফাইল ইমেজ
             CircleAvatar(
-              radius: 20,
+              radius: 20.r,
               backgroundColor: Colors.grey.shade200,
               backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
               child: avatarUrl == null
                   ? Text(
                       name[0],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
                     )
                   : null,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
 
             // ইউজার নেম ও ডেট
             Expanded(
@@ -316,16 +314,16 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
-                      fontSize: 15,
+                    style: TextStyle(
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2.h),
                   Text(
                     review["date"],
-                    style: const TextStyle(fontSize: 12, color: Colors.black38),
+                    style: TextStyle(fontSize: 12.sp, color: Colors.black38),
                   ),
                 ],
               ),
@@ -335,20 +333,20 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
             Row(
               children: List.generate(
                 review["rating"] ?? 5,
-                (index) => const Icon(Icons.star, color: Colors.amber, size: 16),
+                (index) => Icon(Icons.star, color: Colors.amber, size: 16.sp),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10.h),
 
         // রিভিউ কমেন্ট
         Text(
           review["comment"] ?? "No comment provided.",
-          style: const TextStyle(
-            fontSize: 13,
+          style: TextStyle(
+            fontSize: 13.sp,
             color: Colors.black87,
-            height: 1.4,
+            height: 1.4.h,
           ),
         ),
       ],

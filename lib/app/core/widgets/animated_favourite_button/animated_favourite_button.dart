@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AnimatedFavoriteButton extends StatefulWidget {
   final bool isFavorite;
@@ -7,7 +8,7 @@ class AnimatedFavoriteButton extends StatefulWidget {
     final bool navigateOnAdd;  // 🔥 New: Navigation control
 
 
-  const AnimatedFavoriteButton({
+  AnimatedFavoriteButton({
     super.key,
     required this.isFavorite,
     required this.onTap,
@@ -28,7 +29,7 @@ class _AnimatedFavoriteButtonState extends State<AnimatedFavoriteButton>
     super.initState();
     
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
       vsync: this,
     );
 
@@ -60,7 +61,7 @@ class _AnimatedFavoriteButtonState extends State<AnimatedFavoriteButton>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          padding: const EdgeInsets.all(6),
+          padding: EdgeInsets.all(6.r),
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
@@ -68,7 +69,7 @@ class _AnimatedFavoriteButtonState extends State<AnimatedFavoriteButton>
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 6,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),

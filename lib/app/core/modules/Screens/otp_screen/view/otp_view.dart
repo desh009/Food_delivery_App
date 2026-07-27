@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/otp_screen/controller/otp_controller.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
@@ -12,18 +12,17 @@ class VerificationScreen extends GetView<VerificationController> {
   Widget build(BuildContext context) {
     final controller = Get.put(VerificationController());
 
-    return ResponsiveWrapper(
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: AppColors.tomato, 
         body: Container(
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24.0),
+            borderRadius: BorderRadius.circular(24.0.r),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 24.0.h),
             child: Column(
               children: [
                 // Back Button
@@ -32,8 +31,8 @@ class VerificationScreen extends GetView<VerificationController> {
                   child: GestureDetector(
                     onTap: () => Get.back(),
                     child: Container(
-                      width: 44,
-                      height: 44,
+                      width: 44.w,
+                      height: 44.h,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -41,57 +40,57 @@ class VerificationScreen extends GetView<VerificationController> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.08),
                             blurRadius: 10,
-                            offset: const Offset(0, 4),
+                            offset: Offset(0, 4),
                           )
                         ],
                       ),
-                      child: const Icon(Icons.arrow_back, color: Colors.black87),
+                      child: Icon(Icons.arrow_back, color: Colors.black87),
                     ),
                   ),
                 ),
         
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
         
                 // Title
-                const Text(
+                Text(
                   "Verification",
                   style: TextStyle(
                     color: AppColors.tomato,
-                    fontSize: 34,
+                    fontSize: 34.sp,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),
         
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
         
                 // Subtitle
               Obx(
                     () => Column(
                       children: [
-                        const Text(
+                        Text(
                           "Code has been sent to",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black87,
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                         Text(
                           '${controller.countryCode.value} ${controller.phoneNumber.value}',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.tomato,
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
-                const SizedBox(height: 36),
+                SizedBox(height: 36.h),
         
                 // OTP Input Fields
                 Row(
@@ -104,31 +103,31 @@ class VerificationScreen extends GetView<VerificationController> {
                   ],
                 ),
         
-                const SizedBox(height: 40),
+                SizedBox(height: 40.h),
         
                 // Resend Timer Section
-                const Text(
+                Text(
                   "Didn’t receive code?",
                   style: TextStyle(
                     color: Colors.black87,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
         
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.access_time, color: Colors.black87, size: 20),
-                    const SizedBox(width: 8),
+                    Icon(Icons.access_time, color: Colors.black87, size: 20.sp),
+                    SizedBox(width: 8.w),
                     Obx(
                       () => Text(
                         controller.formattedTime.value,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black87,
-                          fontSize: 16,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -136,7 +135,7 @@ class VerificationScreen extends GetView<VerificationController> {
                   ],
                 ),
         
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
         
                 Obx(
                   () => GestureDetector(
@@ -149,7 +148,7 @@ class VerificationScreen extends GetView<VerificationController> {
                         color: controller.canResend.value
                             ? AppColors.tomato
                             : Colors.black38,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
                       ),
@@ -157,13 +156,13 @@ class VerificationScreen extends GetView<VerificationController> {
                   ),
                 ),
         
-                const Spacer(),
+                Spacer(),
         
                 // Verify Button (Dynamic Color)
                 Obx(
                   () => SizedBox(
                     width: double.infinity,
-                    height: 56,
+                    height: 56.h,
                     child: ElevatedButton(
                       onPressed: controller.isOtpComplete.value && !controller.isLoading.value
                           ? () => controller.verifyOTP()
@@ -183,18 +182,18 @@ class VerificationScreen extends GetView<VerificationController> {
                           color: controller.isOtpComplete.value
                               ? AppColors.tomato
                               : Colors.black26,
-                          width: 1.5,
+                          width: 1.5.w,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28.0),
+                          borderRadius: BorderRadius.circular(28.0.r),
                         ),
                       ),
                       child: controller.isLoading.value
                           ? SizedBox(
-                              height: 24,
-                              width: 24,
+                              height: 24.h,
+                              width: 24.w,
                               child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
+                                strokeWidth: 2.5.r,
                                 color: controller.isOtpComplete.value
                                     ? Colors.white
                                     : Colors.black,
@@ -203,7 +202,7 @@ class VerificationScreen extends GetView<VerificationController> {
                           : Text(
                               "Verify",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                                 color: controller.isOtpComplete.value
                                     ? Colors.white
@@ -214,27 +213,27 @@ class VerificationScreen extends GetView<VerificationController> {
                   ),
                 ),
         
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
         
                 // Footer Text
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Back to ",
                       style: TextStyle(
                         color: Colors.black87,
-                        fontSize: 15,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     GestureDetector(
                       onTap: () => Get.back(),
-                      child: const Text(
+                      child: Text(
                         "Sign In",
                         style: TextStyle(
                           color: AppColors.tomato,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -245,8 +244,7 @@ class VerificationScreen extends GetView<VerificationController> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildOtpBox(
@@ -257,11 +255,11 @@ class VerificationScreen extends GetView<VerificationController> {
     VerificationController controller,
   ) {
     return Container(
-      width: 64,
-      height: 72,
+      width: 64.w,
+      height: 72.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(12),
+        color: Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Center(
         child: TextField(
@@ -281,14 +279,14 @@ class VerificationScreen extends GetView<VerificationController> {
               FocusScope.of(context).previousFocus();
             }
           },
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87),
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           inputFormatters: [
             LengthLimitingTextInputFormatter(1),
             FilteringTextInputFormatter.digitsOnly,
           ],
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: InputBorder.none,
             counterText: "",
           ),

@@ -1,9 +1,9 @@
 // lib/app/core/modules/Screens/track_order_screen/view/track_order_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/controller/track_order_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 
 class TrackOrderScreen extends GetView<TrackOrderController> {
@@ -11,46 +11,44 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWrapper(
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(20.0.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Order Status Card
                 _buildOrderStatusCard(),
                 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 
                 // Order Details
                 _buildOrderDetails(),
                 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 
                 // Delivery Information
                 _buildDeliveryInfo(),
                 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 
                 // Order Items
                 _buildOrderItems(),
                 
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 
                 // Action Buttons
                 _buildActionButtons(),
                 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
               ],
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   // ========== APP BAR ==========
@@ -59,21 +57,21 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+        icon: Icon(Icons.arrow_back, color: Colors.black87),
         onPressed: controller.goBack,
       ),
-      title: const Text(
+      title: Text(
         "Track Order",
         style: TextStyle(
           color: Colors.black87,
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.bold,
         ),
       ),
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.support_agent, color: Colors.black87),
+          icon: Icon(Icons.support_agent, color: Colors.black87),
           onPressed: controller.contactSupport,
         ),
       ],
@@ -87,7 +85,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
       final isCancelled = status == 'Cancelled';
       
       return Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.r),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: isCancelled 
@@ -96,12 +94,12 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: (isCancelled ? Colors.grey : AppColors.tomato).withOpacity(0.3),
               blurRadius: 15,
-              offset: const Offset(0, 5),
+              offset: Offset(0, 5),
             ),
           ],
         ),
@@ -113,47 +111,47 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               children: [
                 Text(
                   "Order #${controller.orderNumber.value}",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white70,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: isCancelled ? Colors.red : Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
                     controller.orderStatus.value,
                     style: TextStyle(
                       color: isCancelled ? Colors.white : AppColors.tomato,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            const Text(
+            SizedBox(height: 16.h),
+            Text(
               "Expected Delivery",
               style: TextStyle(
                 color: Colors.white70,
-                fontSize: 14,
+                fontSize: 14.sp,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4.h),
             Text(
               controller.expectedDelivery.value,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             if (!isCancelled) _buildProgressTimeline(),
           ],
         ),
@@ -176,33 +174,33 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               Column(
                 children: [
                   Container(
-                    width: 32,
-                    height: 32,
+                    width: 32.w,
+                    height: 32.h,
                     decoration: BoxDecoration(
                       color: isCompleted ? Colors.white : Colors.white.withOpacity(0.3),
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isCompleted ? Colors.white : Colors.white.withOpacity(0.3),
-                        width: 2,
+                        width: 2.w,
                       ),
                     ),
                     child: Icon(
                       isCompleted ? Icons.check : Icons.access_time,
                       color: isCompleted ? AppColors.tomato : Colors.white70,
-                      size: 16,
+                      size: 16.sp,
                     ),
                   ),
                   if (!isLast)
                     Container(
-                      width: 2,
-                      height: 40,
+                      width: 2.w,
+                      height: 40.h,
                       color: isCompleted 
                           ? Colors.white 
                           : Colors.white.withOpacity(0.3),
                     ),
                 ],
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16.w),
               // Timeline content
               Expanded(
                 child: Column(
@@ -212,18 +210,18 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
                       step['label'] as String,
                       style: TextStyle(
                         color: isCompleted ? Colors.white : Colors.white70,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: isCompleted ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                     Text(
                       step['time'] as String,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 12,
+                        fontSize: 12.sp,
                       ),
                     ),
-                    if (!isLast) const SizedBox(height: 8),
+                    if (!isLast) SizedBox(height: 8.h),
                   ],
                 ),
               ),
@@ -238,30 +236,30 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
   Widget _buildOrderDetails() {
     return Obx(() {
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
               blurRadius: 10,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Order Details",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             _buildDetailRow("Order Date", controller.orderDate.value),
             _buildDivider(),
             _buildDetailRow("Payment Method", controller.paymentMethod.value),
@@ -277,22 +275,22 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.black54,
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           ),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.black87,
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -304,7 +302,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
   Widget _buildDivider() {
     return Divider(
       color: Colors.grey.shade200,
-      height: 1,
+      height: 1.h,
     );
   }
 
@@ -313,78 +311,78 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     return Obx(() {
       final address = controller.deliveryAddress.value;
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
               blurRadius: 10,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Delivery Address",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
                     color: AppColors.tomato.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.location_on,
                     color: AppColors.tomato,
-                    size: 20,
+                    size: 20.sp,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         address['name'] ?? '',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           color: Colors.black87,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2.h),
                       Text(
                         address['address'] ?? '',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black54,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                       Text(
                         address['city'] ?? '',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black54,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                       Text(
                         "Phone: ${address['phone'] ?? ''}",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black54,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ],
@@ -402,38 +400,38 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
   Widget _buildOrderItems() {
     return Obx(() {
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
               blurRadius: 10,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Order Items",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             ...controller.orderItems.map((item) => _buildOrderItem(item)),
-            const Divider(height: 20),
+            Divider(height: 20.h),
             _buildTotalRow("Subtotal", "\$${controller.subtotal.value.toStringAsFixed(2)}"),
-            const SizedBox(height: 4),
+            SizedBox(height: 4.h),
             _buildTotalRow("Delivery", "\$${controller.deliveryCharge.value.toStringAsFixed(2)}"),
-            const SizedBox(height: 4),
+            SizedBox(height: 4.h),
             _buildTotalRow("Tax", "\$${controller.tax.value.toStringAsFixed(2)}"),
-            const Divider(height: 16),
+            Divider(height: 16.h),
             _buildTotalRow(
               "Total",
               "\$${controller.total.value.toStringAsFixed(2)}",
@@ -447,38 +445,38 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
 
   Widget _buildOrderItem(Map<String, dynamic> item) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
+            width: 50.w,
+            height: 50.h,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
               image: DecorationImage(
                 image: NetworkImage(item['image']),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   item['name'],
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: Colors.black87,
                   ),
                 ),
                 Text(
                   item['quantity'],
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.black54,
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ],
@@ -486,9 +484,9 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
           ),
           Text(
             item['price'],
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: 14.sp,
               color: Colors.black87,
             ),
           ),
@@ -528,7 +526,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
       final isDelivered = controller.orderStatus.value == 'Delivered';
       
       if (isCancelled || isDelivered) {
-        return const SizedBox.shrink();
+        return SizedBox.shrink();
       }
       
       return Row(
@@ -537,23 +535,23 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
             child: OutlinedButton(
               onPressed: controller.cancelOrder,
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                side: const BorderSide(color: Colors.red),
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                side: BorderSide(color: Colors.red),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Cancel Order",
                 style: TextStyle(
                   color: Colors.red,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           Expanded(
             child: ElevatedButton(
               onPressed: () {
@@ -567,16 +565,16 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.tomato,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: EdgeInsets.symmetric(vertical: 14.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Need Help?",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),

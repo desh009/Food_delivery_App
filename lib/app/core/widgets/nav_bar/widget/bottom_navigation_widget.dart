@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -24,16 +25,16 @@ class BottomNavigationWidget extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         Container(
-          height: 60,
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          height: 60.h,
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.08),
                 blurRadius: 20,
-                offset: const Offset(0, 4),
+                offset: Offset(0, 4),
               ),
             ],
           ),
@@ -116,20 +117,20 @@ class BottomNavigationWidget extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 55,
+        width: 55.w,
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
             if (isActive) ...[
               Positioned(
-                top: -22,
+                top: -22.h,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 50.w,
+                      height: 50.h,
                       decoration: BoxDecoration(
                         color: AppColors.tomato,
                         shape: BoxShape.circle,
@@ -137,18 +138,18 @@ class BottomNavigationWidget extends StatelessWidget {
                           BoxShadow(
                             color: AppColors.tomato.withOpacity(0.35),
                             blurRadius: 10,
-                            offset: const Offset(0, 4),
+                            offset: Offset(0, 4),
                           ),
                         ],
                       ),
-                      child: Icon(icon, color: Colors.white, size: 26),
+                      child: Icon(icon, color: Colors.white, size: 26.sp),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.h),
                     Text(
                       label,
                       style: TextStyle(
                         color: AppColors.tomato,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -156,7 +157,7 @@ class BottomNavigationWidget extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              Center(child: Icon(icon, color: Colors.grey.shade400, size: 24)),
+              Center(child: Icon(icon, color: Colors.grey.shade400, size: 24.sp)),
             ],
           ],
         ),
@@ -179,21 +180,21 @@ class BottomNavigationWidget extends StatelessWidget {
       },
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 55,
+        width: 55.w,
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
             if (isActive) ...[
               Positioned(
-                top: -22,
+                top: -22.h,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
-                      padding: const EdgeInsets.all(2),
+                      width: 50.w,
+                      height: 50.h,
+                      padding: EdgeInsets.all(2.r),
                       decoration: BoxDecoration(
                         color: AppColors.tomato,
                         shape: BoxShape.circle,
@@ -201,7 +202,7 @@ class BottomNavigationWidget extends StatelessWidget {
                           BoxShadow(
                             color: AppColors.tomato.withOpacity(0.35),
                             blurRadius: 10,
-                            offset: const Offset(0, 4),
+                            offset: Offset(0, 4),
                           ),
                         ],
                       ),
@@ -226,12 +227,12 @@ class BottomNavigationWidget extends StatelessWidget {
                         }),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.h),
                     Text(
                       'Profile',
                       style: TextStyle(
                         color: AppColors.tomato,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -247,8 +248,8 @@ class BottomNavigationWidget extends StatelessWidget {
                   
                   if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
                     return Container(
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
@@ -261,7 +262,7 @@ class BottomNavigationWidget extends StatelessWidget {
                     return Icon(
                       Icons.person_outline_rounded,
                       color: Colors.grey.shade400,
-                      size: 25,
+                      size: 25.sp,
                     );
                   }
                 }),
@@ -284,7 +285,7 @@ class BottomNavigationWidget extends StatelessWidget {
           child: Icon(
             Icons.person,
             color: Colors.grey.shade400,
-            size: 30,
+            size: 30.sp,
           ),
         );
       },

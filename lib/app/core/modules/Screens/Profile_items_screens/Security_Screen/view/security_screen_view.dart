@@ -1,9 +1,9 @@
 // lib/app/core/modules/Screens/security_screen/view/security_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/controller/security_screen_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 
 class SecurityScreen extends GetView<SecurityController> {
@@ -11,61 +11,59 @@ class SecurityScreen extends GetView<SecurityController> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWrapper(
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFAFAFA),
+    return Scaffold(
+        backgroundColor: Color(0xFFFAFAFA),
         appBar: _buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Security Overview
                 _buildSecurityOverview(),
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // Biometric Authentication
                 _buildBiometricSection(),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 // PIN/Password
                 _buildPinSection(),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 // Two Factor Authentication
                 _buildTwoFactorSection(),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 // Security Questions
                 _buildSecurityQuestions(),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 // Session Management
                 _buildSessionManagement(),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 // Login History
                 _buildLoginHistory(),
 
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
 
                 // Change Password
                 _buildChangePasswordButton(),
 
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
               ],
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -73,21 +71,21 @@ class SecurityScreen extends GetView<SecurityController> {
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black87),
+        icon: Icon(Icons.arrow_back, color: Colors.black87),
         onPressed: controller.goBack,
       ),
-      title: const Text(
+      title: Text(
         "Security",
         style: TextStyle(
           color: Colors.black87,
-          fontSize: 20,
+          fontSize: 20.sp,
           fontWeight: FontWeight.bold,
         ),
       ),
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.help_outline, color: Colors.black87),
+          icon: Icon(Icons.help_outline, color: Colors.black87),
           onPressed: () {
             Get.snackbar(
               'Security Help',
@@ -108,64 +106,64 @@ class SecurityScreen extends GetView<SecurityController> {
       final securityLevel = _calculateSecurityLevel();
 
       return Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.r),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [AppColors.tomato, AppColors.tomato.withOpacity(0.8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.shield, color: Colors.white, size: 24),
-                SizedBox(width: 8),
+                Icon(Icons.shield, color: Colors.white, size: 24.sp),
+                SizedBox(width: 8.w),
                 Text(
                   "Security Status",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   securityLevel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
                     _getSecurityLevelIcon(securityLevel),
-                    style: const TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20.sp),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               _getSecurityLevelDescription(securityLevel),
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
+              style: TextStyle(color: Colors.white70, fontSize: 14.sp),
             ),
           ],
         ),
@@ -217,9 +215,9 @@ class SecurityScreen extends GetView<SecurityController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Enable Fingerprint/Face ID",
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
               ),
               Obx(
                 () => Switch(
@@ -230,21 +228,21 @@ class SecurityScreen extends GetView<SecurityController> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.info_outline, color: Colors.black54, size: 16),
-                SizedBox(width: 8),
+                Icon(Icons.info_outline, color: Colors.black54, size: 16.sp),
+                SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
                     "Use your fingerprint or face to quickly sign in",
-                    style: TextStyle(color: Colors.black54, fontSize: 13),
+                    style: TextStyle(color: Colors.black54, fontSize: 13.sp),
                   ),
                 ),
               ],
@@ -265,9 +263,9 @@ class SecurityScreen extends GetView<SecurityController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Enable PIN Lock",
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
               ),
               Obx(
                 () => Switch(
@@ -281,28 +279,28 @@ class SecurityScreen extends GetView<SecurityController> {
           Obx(() {
             if (controller.isPinEnabled.value) {
               return Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: EdgeInsets.only(top: 8.h),
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
                     color: Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                     border: Border.all(color: Colors.green.shade200),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.check_circle, color: Colors.green, size: 16),
-                      SizedBox(width: 8),
+                      Icon(Icons.check_circle, color: Colors.green, size: 16.sp),
+                      SizedBox(width: 8.w),
                       Text(
                         "PIN is set and active",
-                        style: TextStyle(color: Colors.green, fontSize: 13),
+                        style: TextStyle(color: Colors.green, fontSize: 13.sp),
                       ),
                     ],
                   ),
                 ),
               );
             }
-            return const SizedBox.shrink();
+            return SizedBox.shrink();
           }),
         ],
       ),
@@ -319,9 +317,9 @@ class SecurityScreen extends GetView<SecurityController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Enable 2FA",
-                style: TextStyle(fontSize: 14, color: Colors.black87),
+                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
               ),
               Obx(
                 () => Switch(
@@ -335,24 +333,24 @@ class SecurityScreen extends GetView<SecurityController> {
           Obx(() {
             if (controller.isTwoFactorEnabled.value) {
               return Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: EdgeInsets.only(top: 8.h),
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                     border: Border.all(color: Colors.blue.shade200),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.sms, color: Colors.blue, size: 16),
-                      const SizedBox(width: 8),
+                      Icon(Icons.sms, color: Colors.blue, size: 16.sp),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: Text(
                           "Verification via ${controller.twoFactorMethod.value}",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.blue,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                           ),
                         ),
                       ),
@@ -361,7 +359,7 @@ class SecurityScreen extends GetView<SecurityController> {
                 ),
               );
             }
-            return const SizedBox.shrink();
+            return SizedBox.shrink();
           }),
         ],
       ),
@@ -381,29 +379,29 @@ class SecurityScreen extends GetView<SecurityController> {
               children: controller.securityQuestions.map((question) {
                 final index = controller.securityQuestions.indexOf(question);
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: EdgeInsets.only(bottom: 12.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         question['question']!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4.h),
                       // এখানে Obx এর প্রয়োজন নেই কারণ TextFormField এর onChanged ই update করে
                       TextFormField(
                         initialValue: question['answer'],
                         decoration: InputDecoration(
                           hintText: 'Enter your answer',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 8.h,
                           ),
                         ),
                         onChanged: (value) {
@@ -416,12 +414,12 @@ class SecurityScreen extends GetView<SecurityController> {
               }).toList(),
             );
           }),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: controller.resetSecurityQuestions,
-              child: const Text('Reset All'),
+              child: Text('Reset All'),
             ),
           ),
         ],
@@ -439,12 +437,12 @@ class SecurityScreen extends GetView<SecurityController> {
           Obx(
             () => ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.timer_outlined, color: Colors.black54),
-              title: const Text('Session Timeout'),
+              leading: Icon(Icons.timer_outlined, color: Colors.black54),
+              title: Text('Session Timeout'),
               subtitle: Text('${controller.sessionTimeout.value} minutes'),
               trailing: DropdownButton<int>(
                 value: controller.sessionTimeout.value,
-                items: const [
+                items: [
                   DropdownMenuItem(value: 15, child: Text('15 min')),
                   DropdownMenuItem(value: 30, child: Text('30 min')),
                   DropdownMenuItem(value: 45, child: Text('45 min')),
@@ -458,18 +456,18 @@ class SecurityScreen extends GetView<SecurityController> {
               ),
             ),
           ),
-          const Divider(height: 1),
+          Divider(height: 1.h),
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.power_settings_new, color: Colors.red),
-            title: const Text('End Current Session'),
-            subtitle: const Text('Sign out from all devices'),
+            leading: Icon(Icons.power_settings_new, color: Colors.red),
+            title: Text('End Current Session'),
+            subtitle: Text('Sign out from all devices'),
             trailing: OutlinedButton(
               onPressed: controller.endSession,
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.red),
+                side: BorderSide(color: Colors.red),
               ),
-              child: const Text('End', style: TextStyle(color: Colors.red)),
+              child: Text('End', style: TextStyle(color: Colors.red)),
             ),
           ),
         ],
@@ -486,59 +484,59 @@ class SecurityScreen extends GetView<SecurityController> {
         children: controller.loginHistory.map((login) {
           final isFailed = login['status'] == 'Failed';
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.symmetric(vertical: 8.h),
             child: Row(
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 40.w,
+                  height: 40.h,
                   decoration: BoxDecoration(
                     color: isFailed ? Colors.red.shade50 : Colors.green.shade50,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
                     isFailed ? Icons.close : Icons.check,
                     color: isFailed ? Colors.red : Colors.green,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         login['device'],
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                       Text(
                         '${login['location']} • ${login['time']}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black54,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.w,
+                    vertical: 4.h,
                   ),
                   decoration: BoxDecoration(
                     color: isFailed
                         ? Colors.red.shade100
                         : Colors.green.shade100,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
                     login['status'],
                     style: TextStyle(
                       color: isFailed ? Colors.red : Colors.green,
-                      fontSize: 11,
+                      fontSize: 11.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -558,22 +556,22 @@ class SecurityScreen extends GetView<SecurityController> {
       child: OutlinedButton(
         onPressed: controller.changePassword,
         style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          side: const BorderSide(color: AppColors.tomato),
+          padding: EdgeInsets.symmetric(vertical: 14.h),
+          side: BorderSide(color: AppColors.tomato),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.lock_outline, color: AppColors.tomato),
-            const SizedBox(width: 8),
-            const Text(
+            Icon(Icons.lock_outline, color: AppColors.tomato),
+            SizedBox(width: 8.w),
+            Text(
               "Change Password",
               style: TextStyle(
                 color: AppColors.tomato,
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -591,15 +589,15 @@ class SecurityScreen extends GetView<SecurityController> {
     required Widget child,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -608,19 +606,19 @@ class SecurityScreen extends GetView<SecurityController> {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.tomato, size: 22),
-              const SizedBox(width: 8),
+              Icon(icon, color: AppColors.tomato, size: 22.sp),
+              SizedBox(width: 8.w),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
             ],
           ),
-          const Divider(height: 16),
+          Divider(height: 16.h),
           child,
         ],
       ),

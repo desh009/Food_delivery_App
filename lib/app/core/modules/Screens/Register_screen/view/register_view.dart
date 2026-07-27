@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/controller/Register_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:food_hjoiopk/app/core/widgets/custom_textfield/custom_texfield.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -12,64 +12,63 @@ class RegisterScreen extends GetView<RegisterController> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWrapper(
-      child: Scaffold(
-        backgroundColor: const Color(0xFF1E1E1E),
+    return Scaffold(
+        backgroundColor: Color(0xFF1E1E1E),
         body: Container(
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24.0),
+            borderRadius: BorderRadius.circular(24.0.r),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 24.0.h),
             child: Column(
               children: [
-                const Spacer(flex: 2),
+                Spacer(flex: 2),
       
       
-                const Text(
+                Text(
                   "Register",
                   style: TextStyle(
                     color: AppColors.tomato,
-                    fontSize: 32,
+                    fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),
       
-                const SizedBox(height: 32),
+                SizedBox(height: 32.h),
                 // intl_phone_field
                 IntlPhoneField(
                   controller: controller.phoneController,
                   decoration: InputDecoration(
                     hintText: 'Enter phone number',
-                    hintStyle: const TextStyle(
+                    hintStyle: TextStyle(
                       color: Colors.black26,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                     ),
                     filled: true,
-                    fillColor: const Color(0xFFF5F5F5),
+                    fillColor: Color(0xFFF5F5F5),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide(
                         color: AppColors.tomato,
-                        width: 1.5,
+                        width: 1.5.w,
                       ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 16.h,
                     ),
                   ),
                   initialCountryCode: 'GB',
@@ -77,15 +76,15 @@ class RegisterScreen extends GetView<RegisterController> {
                     controller.completePhoneNumber.value = phone.completeNumber;
                   },
                   dropdownIconPosition: IconPosition.trailing,
-                  dropdownIcon: const Icon(
+                  dropdownIcon: Icon(
                     Icons.keyboard_arrow_down,
                     color: Colors.black87,
                   ),
-                  flagsButtonPadding: const EdgeInsets.only(left: 8),
-                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  flagsButtonPadding: EdgeInsets.only(left: 8.w),
+                  style: TextStyle(fontSize: 16.sp, color: Colors.black87),
                 ),
       
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 CustomTextField(
                   controller: controller.emailController,
                   hintText: '.Email',
@@ -103,7 +102,7 @@ class RegisterScreen extends GetView<RegisterController> {
                     return null;
                   },
                 ),
-                SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 CustomTextField(
                   controller: controller.nameController,
                   hintText: 'Name',
@@ -119,7 +118,7 @@ class RegisterScreen extends GetView<RegisterController> {
                 ),
       
                 // Remember Me Checkbox Row
-                SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -127,50 +126,50 @@ class RegisterScreen extends GetView<RegisterController> {
                       onTap: () => controller.toggleRememberMe(),
                       child: Obx(
                         () => Container(
-                          width: 22,
-                          height: 22,
+                          width: 22.w,
+                          height: 22.h,
                           decoration: BoxDecoration(
                             color: controller.isRememberMeChecked.value
                                 ? AppColors.tomato
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(
                               color: controller.isRememberMeChecked.value
                                   ? AppColors.tomato
                                   : Colors.black26,
-                              width: 1.5,
+                              width: 1.5.w,
                             ),
                           ),
                           child: controller.isRememberMeChecked.value
-                              ? const Icon(
+                              ? Icon(
                                   Icons.check,
-                                  size: 16,
+                                  size: 16.sp,
                                   color: Colors.white,
                                 )
                               : null,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    const Text(
+                    SizedBox(width: 20.w),
+                    Text(
                       "Remember me",
                       style: TextStyle(
                         color: Colors.black87,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
       
-                const Spacer(flex: 5),
+                Spacer(flex: 5),
       
                 // Sign In Button
                 Obx(
                   () => SizedBox(
                     width: double.infinity,
-                    height: 56,
+                    height: 56.h,
                     child: ElevatedButton(
                       onPressed:
                           controller.isRememberMeChecked.value &&
@@ -192,18 +191,18 @@ class RegisterScreen extends GetView<RegisterController> {
                           color: controller.isRememberMeChecked.value
                               ? AppColors.tomato
                               : Colors.black26,
-                          width: 1.5,
+                          width: 1.5.w,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28.0),
+                          borderRadius: BorderRadius.circular(28.0.r),
                         ),
                       ),
                       child: controller.isLoading.value
                           ? SizedBox(
-                              height: 24,
-                              width: 24,
+                              height: 24.h,
+                              width: 24.w,
                               child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
+                                strokeWidth: 2.5.r,
                                 color: controller.isRememberMeChecked.value
                                     ? Colors.white
                                     : Colors.black,
@@ -212,7 +211,7 @@ class RegisterScreen extends GetView<RegisterController> {
                           : Text(
                               "Register",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                                 color: controller.isRememberMeChecked.value
                                     ? Colors.white
@@ -223,31 +222,31 @@ class RegisterScreen extends GetView<RegisterController> {
                   ),
                 ),
       
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
       
                 Row(
                   children: [
-                    const Expanded(
-                      child: Divider(color: Colors.black12, thickness: 1),
+                    Expanded(
+                      child: Divider(color: Colors.black12, thickness: 1.r),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0.w),
                       child: Text(
                         "Or sign in with",
                         style: TextStyle(
                           color: Colors.black38,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    const Expanded(
-                      child: Divider(color: Colors.black12, thickness: 1),
+                    Expanded(
+                      child: Divider(color: Colors.black12, thickness: 1.r),
                     ),
                   ],
                 ),
       
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
       
                 // Social Media Buttons
                 Row(
@@ -260,7 +259,7 @@ class RegisterScreen extends GetView<RegisterController> {
                         Get.snackbar('Info', 'Google Sign-in coming soon!');
                       },
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16.w),
                     _buildSocialButton(
                       fallbackIcon: Icons.facebook,
                       iconColor: Colors.blue,
@@ -268,7 +267,7 @@ class RegisterScreen extends GetView<RegisterController> {
                         Get.snackbar('Info', 'Facebook Sign-in coming soon!');
                       },
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16.w),
                     _buildSocialButton(
                       fallbackIcon: Icons.apple,
                       iconColor: Colors.black,
@@ -279,17 +278,17 @@ class RegisterScreen extends GetView<RegisterController> {
                   ],
                 ),
       
-                const SizedBox(height: 28),
+                SizedBox(height: 28.h),
       
                 // Footer Text
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Don’t have an account? ",
                       style: TextStyle(
                         color: Colors.black87,
-                        fontSize: 15,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -297,11 +296,11 @@ class RegisterScreen extends GetView<RegisterController> {
                       onTap: () {
                         // Get.toNamed(Routes.OTP);
                       },
-                      child: const Text(
+                      child: Text(
                         "Register",
                         style: TextStyle(
                           color: AppColors.tomato,
-                          fontSize: 15,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -312,8 +311,7 @@ class RegisterScreen extends GetView<RegisterController> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildSocialButton({
@@ -324,14 +322,14 @@ class RegisterScreen extends GetView<RegisterController> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 52,
-        height: 52,
+        width: 52.w,
+        height: 52.h,
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.black12, width: 1),
+          border: Border.all(color: Colors.black12, width: 1.w),
         ),
-        child: Center(child: Icon(fallbackIcon, size: 28, color: iconColor)),
+        child: Center(child: Icon(fallbackIcon, size: 28.sp, color: iconColor)),
       ),
     );
   }

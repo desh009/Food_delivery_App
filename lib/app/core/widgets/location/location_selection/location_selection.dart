@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -88,32 +89,32 @@ class _LocationPickerState extends State<LocationPicker> {
   void _openLocationPicker() {
     Get.dialog(
       Dialog(
-        insetPadding: const EdgeInsets.all(10),
+        insetPadding: EdgeInsets.all(10.r),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.85,
           width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
             color: Colors.white,
           ),
           child: Column(
             children: [
               // Header
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.r),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       "লোকেশন নির্বাচন করুন",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     IconButton(
                       onPressed: () => Get.back(),
-                      icon: const Icon(Icons.close),
+                      icon: Icon(Icons.close),
                     ),
                   ],
                 ),
@@ -121,21 +122,21 @@ class _LocationPickerState extends State<LocationPicker> {
               
               // Address Bar
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                margin: const EdgeInsets.symmetric(horizontal: 12),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                margin: EdgeInsets.symmetric(horizontal: 12.w),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.location_pin, color: Colors.green, size: 24),
-                    const SizedBox(width: 10),
+                    Icon(Icons.location_pin, color: Colors.green, size: 24.sp),
+                    SizedBox(width: 10.w),
                     Expanded(
                       child: Text(
                         _currentAddress,
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                         ),
                         maxLines: 2,
@@ -143,15 +144,15 @@ class _LocationPickerState extends State<LocationPicker> {
                       ),
                     ),
                     if (_isLoading)
-                      const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                      SizedBox(
+                        height: 20.h,
+                        width: 20.w,
+                        child: CircularProgressIndicator(strokeWidth: 2.r),
                       ),
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               
               // ========== Google Map ==========
               Expanded(
@@ -172,7 +173,7 @@ class _LocationPickerState extends State<LocationPicker> {
                     }
                   },
                   initialCameraPosition: CameraPosition(
-                    target: _selectedLocation ?? const LatLng(23.8103, 90.4125),
+                    target: _selectedLocation ?? LatLng(23.8103, 90.4125),
                     zoom: 14,
                   ),
                   onTap: _onMapTapped,  // ← ম্যাপে ট্যাপ করলে লোকেশন সিলেক্ট হবে
@@ -182,9 +183,9 @@ class _LocationPickerState extends State<LocationPicker> {
                   markers: _selectedLocation != null
                       ? {
                           Marker(
-                            markerId: const MarkerId("selected"),
+                            markerId: MarkerId("selected"),
                             position: _selectedLocation!,
-                            infoWindow: const InfoWindow(
+                            infoWindow: InfoWindow(
                               title: "আপনার লোকেশন",
                               snippet: "এখানে ডেলিভারি নিন",
                             ),
@@ -196,7 +197,7 @@ class _LocationPickerState extends State<LocationPicker> {
               
               // Confirm Button
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0.r),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -215,7 +216,7 @@ class _LocationPickerState extends State<LocationPicker> {
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.green,
                           colorText: Colors.white,
-                          duration: const Duration(seconds: 3),
+                          duration: Duration(seconds: 3),
                         );
                       } else {
                         Get.snackbar(
@@ -227,16 +228,16 @@ class _LocationPickerState extends State<LocationPicker> {
                         );
                       }
                     },
-                    icon: const Icon(Icons.check_circle),
-                    label: const Text(
+                    icon: Icon(Icons.check_circle),
+                    label: Text(
                       "এই লোকেশন কনফর্ম করুন",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16.sp),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
                   ),
@@ -255,43 +256,43 @@ class _LocationPickerState extends State<LocationPicker> {
     return GestureDetector(
       onTap: _openLocationPicker,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 8,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.location_on_rounded,
               color: Colors.green,
-              size: 22,
+              size: 22.sp,
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     "Delivery Location",
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 10.sp,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
                     _currentAddress,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: TextStyle(
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -301,10 +302,10 @@ class _LocationPickerState extends State<LocationPicker> {
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.arrow_drop_down,
               color: Colors.grey,
-              size: 20,
+              size: 20.sp,
             ),
           ],
         ),

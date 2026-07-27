@@ -1,6 +1,7 @@
 // lib/app/core/modules/Screens/home_screen/view/home_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
@@ -13,14 +14,13 @@ import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourit
 import 'package:food_hjoiopk/app/core/widgets/location/location_selection/location_selection.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
 class HomeScreen extends GetView<HomeController> {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
-  final List<Map<String, dynamic>> bannerData = const [
+  final List<Map<String, dynamic>> bannerData = [
     {
       'id': 'banner_1',
       'title': 'GREEN DAY',
@@ -59,7 +59,7 @@ class HomeScreen extends GetView<HomeController> {
     },
   ];
 
-  final List<Map<String, dynamic>> specialOffers = const [
+  final List<Map<String, dynamic>> specialOffers = [
     {
       'id': 'offer_1',
       'title': 'Cheese Burger',
@@ -157,37 +157,36 @@ class HomeScreen extends GetView<HomeController> {
       {'name': 'More', 'icon': '👀'},
     ];
 
-    return ResponsiveWrapper(
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFAFAFA),
+    return Scaffold(
+        backgroundColor: Color(0xFFFAFAFA),
         body: SafeArea(
           bottom: false,
           child: Stack(
             children: [
               SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 100),
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.only(bottom: 100.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
 
                     // Header
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: LocationPicker(onLocationSelected: null),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12.w),
                           GestureDetector(
                             onTap: () {
                               Get.toNamed('/profile-edit');
                             },
                             child: Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: EdgeInsets.all(12.r),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
@@ -195,14 +194,14 @@ class HomeScreen extends GetView<HomeController> {
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.05),
                                     blurRadius: 10,
-                                    offset: const Offset(0, 4),
+                                    offset: Offset(0, 4),
                                   ),
                                 ],
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.person_outline,
                                 color: Colors.black87,
-                                size: 24,
+                                size: 24.sp,
                               ),
                             ),
                           ),
@@ -210,11 +209,11 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
                     // Banner Slider
                     SizedBox(
-                      height: 150,
+                      height: 150.h,
                       child: PageView.builder(
                         itemCount: bannerData.length,
                         onPageChanged: (index) {
@@ -224,16 +223,16 @@ class HomeScreen extends GetView<HomeController> {
                         itemBuilder: (context, index) {
                           final banner = bannerData[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4.0,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 4.0.w,
                             ),
                             child: GestureDetector(
                               onTap: () {
                                 Get.toNamed(Routes.SPECIAL_OFFER);
                               },
                               child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
                                 ),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
@@ -244,12 +243,12 @@ class HomeScreen extends GetView<HomeController> {
                                     begin: Alignment.centerLeft,
                                     end: Alignment.centerRight,
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(20.r),
                                 ),
                                 child: Stack(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(20.0.r),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -258,30 +257,30 @@ class HomeScreen extends GetView<HomeController> {
                                         children: [
                                           Text(
                                             banner['title'],
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.white70,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(height: 4),
+                                          SizedBox(height: 4.h),
                                           Text(
                                             banner['subtitle'],
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 24,
+                                              fontSize: 24.sp,
                                               fontWeight: FontWeight.w900,
-                                              height: 1.1,
+                                              height: 1.1.h,
                                             ),
                                           ),
-                                          const SizedBox(height: 8),
+                                          SizedBox(height: 8.h),
                                           Text(
                                             banner['category'],
                                             style: TextStyle(
                                               color: Colors.white.withOpacity(
                                                 0.9,
                                               ),
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -289,23 +288,23 @@ class HomeScreen extends GetView<HomeController> {
                                       ),
                                     ),
                                     Positioned(
-                                      right: -10,
-                                      bottom: -10,
-                                      top: -10,
+                                      right: -10.w,
+                                      bottom: -10.h,
+                                      top: -10.h,
                                       child: Opacity(
                                         opacity: 0.9,
                                         child: Image.network(
                                           banner['image'],
-                                          width: 160,
+                                          width: 160.w,
                                           fit: BoxFit.cover,
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                                 return Container(
-                                                  width: 160,
+                                                  width: 160.w,
                                                   color: Colors.grey[300],
-                                                  child: const Icon(
+                                                  child: Icon(
                                                     Icons.image_not_supported,
-                                                    size: 40,
+                                                    size: 40.sp,
                                                   ),
                                                 );
                                               },
@@ -321,7 +320,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
 
                     // Banner Indicator Dots
                     Obx(
@@ -331,40 +330,40 @@ class HomeScreen extends GetView<HomeController> {
                           bool isActive =
                               controller.currentBannerIndex.value == index;
                           return AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.symmetric(horizontal: 3),
-                            height: 6,
+                            duration: Duration(milliseconds: 300),
+                            margin: EdgeInsets.symmetric(horizontal: 3.w),
+                            height: 6.h,
                             width: isActive ? 18 : 6,
                             decoration: BoxDecoration(
                               color: isActive
                                   ? AppColors.tomato
                                   : Colors.black12,
-                              borderRadius: BorderRadius.circular(3),
+                              borderRadius: BorderRadius.circular(3.r),
                             ),
                           );
                         }),
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
                     // ========== SEARCH BAR WITH FILTER ==========
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
-                          borderRadius: BorderRadius.circular(16),
+                          color: Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.search,
                               color: Colors.black38,
-                              size: 26,
+                              size: 26.sp,
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12.w),
                             Expanded(
                               child: Obx(
                                 () => TextField(
@@ -375,9 +374,9 @@ class HomeScreen extends GetView<HomeController> {
                                     hintText: controller.isFilterApplied.value
                                         ? "Search with filters..."
                                         : "Search products...",
-                                    hintStyle: const TextStyle(
+                                    hintStyle: TextStyle(
                                       color: Colors.black38,
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                     ),
                                     border: InputBorder.none,
                                     suffixIcon:
@@ -386,10 +385,10 @@ class HomeScreen extends GetView<HomeController> {
                                             onPressed: () {
                                               controller.clearSearch();
                                             },
-                                            icon: const Icon(
+                                            icon: Icon(
                                               Icons.clear,
                                               color: Colors.black38,
-                                              size: 20,
+                                              size: 20.sp,
                                             ),
                                           )
                                         : null,
@@ -403,7 +402,7 @@ class HomeScreen extends GetView<HomeController> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(8.r),
                                   ),
                                   child: IconButton(
                                     onPressed: () {
@@ -417,7 +416,7 @@ class HomeScreen extends GetView<HomeController> {
                                         color: controller.isFilterApplied.value
                                             ? AppColors.tomato
                                             : Colors.black54,
-                                        size: 24,
+                                        size: 24.sp,
                                       ),
                                     ),
                                   ),
@@ -426,18 +425,18 @@ class HomeScreen extends GetView<HomeController> {
                                 Obx(
                                   () => controller.isFilterApplied.value
                                       ? Positioned(
-                                          right: 4,
-                                          top: 4,
+                                          right: 4.w,
+                                          top: 4.h,
                                           child: Container(
-                                            width: 10,
-                                            height: 10,
-                                            decoration: const BoxDecoration(
+                                            width: 10.w,
+                                            height: 10.h,
+                                            decoration: BoxDecoration(
                                               color: AppColors.tomato,
                                               shape: BoxShape.circle,
                                             ),
                                           ),
                                         )
-                                      : const SizedBox.shrink(),
+                                      : SizedBox.shrink(),
                                 ),
                               ],
                             ),
@@ -450,9 +449,9 @@ class HomeScreen extends GetView<HomeController> {
                     Obx(
                       () => controller.isFilterApplied.value
                           ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0,
-                                vertical: 8.0,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.0.w,
+                                vertical: 8.0.h,
                               ),
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
@@ -510,30 +509,30 @@ class HomeScreen extends GetView<HomeController> {
                                 ),
                               ),
                             )
-                          : const SizedBox.shrink(),
+                          : SizedBox.shrink(),
                     ),
 
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
 
                     // Categories
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       child: GridView.builder(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: categories.length,
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                            SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 4,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16.h,
+                              crossAxisSpacing: 16.w,
                               childAspectRatio: 0.85,
                             ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
                               Get.to(
-                                () => const ProductListScreen(),
+                                () => ProductListScreen(),
                                 binding: ProductListBinding(),
                                 arguments: {
                                   'name': categories[index]['name'],
@@ -544,12 +543,12 @@ class HomeScreen extends GetView<HomeController> {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(16.r),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.02),
                                     blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                                    offset: Offset(0, 2),
                                   ),
                                 ],
                               ),
@@ -558,14 +557,14 @@ class HomeScreen extends GetView<HomeController> {
                                 children: [
                                   Text(
                                     categories[index]['icon']!,
-                                    style: const TextStyle(fontSize: 28),
+                                    style: TextStyle(fontSize: 28.sp),
                                   ),
-                                  const SizedBox(height: 6),
+                                  SizedBox(height: 6.h),
                                   Text(
                                     categories[index]['name']!,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.black87,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -577,18 +576,18 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
-                    const SizedBox(height: 28),
+                    SizedBox(height: 28.h),
 
                     // Special Offers Header
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             "Special Offers",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
@@ -603,13 +602,13 @@ class HomeScreen extends GetView<HomeController> {
                                   "View All",
                                   style: TextStyle(
                                     color: AppColors.tomato,
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
-                                  size: 14,
+                                  size: 14.sp,
                                   color: AppColors.tomato,
                                 ),
                               ],
@@ -619,11 +618,11 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
 
                     // ========== 🔥 SPECIAL OFFERS GRID (FILTERED) ==========
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       child: Obx(() {
                         final offers = controller.filteredOffers.isNotEmpty 
                             ? controller.filteredOffers 
@@ -631,29 +630,29 @@ class HomeScreen extends GetView<HomeController> {
                         
                         // 🔥 Show empty state when no results
                         if (offers.isEmpty && controller.isFilterApplied.value) {
-                          return const Center(
+                          return Center(
                             child: Padding(
-                              padding: EdgeInsets.all(40.0),
+                              padding: EdgeInsets.all(40.0.r),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.search_off,
-                                    size: 64,
+                                    size: 64.sp,
                                     color: Colors.black26,
                                   ),
-                                  SizedBox(height: 16),
+                                  SizedBox(height: 16.h),
                                   Text(
                                     "No offers found!",
                                     style: TextStyle(
                                       color: Colors.black45,
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                     ),
                                   ),
                                   Text(
                                     "Try adjusting your filters",
                                     style: TextStyle(
                                       color: Colors.black38,
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
                                 ],
@@ -663,14 +662,14 @@ class HomeScreen extends GetView<HomeController> {
                         }
                         
                         if (offers.isEmpty) {
-                          return const Center(
+                          return Center(
                             child: Padding(
-                              padding: EdgeInsets.all(40.0),
+                              padding: EdgeInsets.all(40.0.r),
                               child: Text(
                                 "No special offers available",
                                 style: TextStyle(
                                   color: Colors.black45,
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                 ),
                               ),
                             ),
@@ -678,14 +677,14 @@ class HomeScreen extends GetView<HomeController> {
                         }
                         
                         return GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.8,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16.w,
+                            mainAxisSpacing: 16.h,
                           ),
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: offers.length,
                           itemBuilder: (context, index) {
                             final offer = offers[index];
@@ -702,23 +701,22 @@ class HomeScreen extends GetView<HomeController> {
                       }),
                     ),
 
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
                   ],
                 ),
               ),
 
               // Bottom Navigation
               Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: const BottomNavigationWidget(),
+                bottom: 20.h,
+                left: 20.w,
+                right: 20.w,
+                child: BottomNavigationWidget(),
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   // ========== Special Offer Card ==========
@@ -741,12 +739,12 @@ class HomeScreen extends GetView<HomeController> {
       return Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -760,8 +758,8 @@ class HomeScreen extends GetView<HomeController> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(20),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20.r),
                           ),
                           image: DecorationImage(
                             image: NetworkImage(imageUrl),
@@ -771,22 +769,22 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                       // Discount Badge
                       Positioned(
-                        top: 10,
-                        left: 10,
+                        top: 10.h,
+                        left: 10.w,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.tomato,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Text(
                             discount,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -794,11 +792,11 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                       // 🔥 Favorite Button
                       Positioned(
-                        top: 10,
-                        right: 10,
+                        top: 10.h,
+                        right: 10.w,
                         child: AnimatedFavoriteButton(
                           isFavorite: isFavorite,
-                          size: 18,
+                          size: 18.sp,
                           navigateOnAdd: false,
                           onTap: (newValue) async {
                             final item = FavoriteItem(
@@ -825,35 +823,35 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 // Details
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: EdgeInsets.all(12.0.r),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           overflow: TextOverflow.ellipsis,
                         ),
                         maxLines: 1,
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2.h),
                       Row(
                         children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 14),
+                          Icon(Icons.star, color: Colors.amber, size: 14.sp),
                           Text(
                             " $rating",
-                            style: const TextStyle(
-                              fontSize: 12,
+                            style: TextStyle(
+                              fontSize: 12.sp,
                               color: Colors.black54,
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           Text(
                             price,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.bold,
                               color: AppColors.tomato,
                             ),
@@ -878,16 +876,16 @@ class HomeScreen extends GetView<HomeController> {
     required VoidCallback onDelete,
   }) {
     return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: EdgeInsets.only(right: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: isClearAll
             ? Colors.red.withOpacity(0.1)
             : AppColors.tomato.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: isClearAll ? Colors.red : AppColors.tomato,
-          width: 1,
+          width: 1.w,
         ),
       ),
       child: Row(
@@ -897,16 +895,16 @@ class HomeScreen extends GetView<HomeController> {
             label,
             style: TextStyle(
               color: isClearAll ? Colors.red : AppColors.tomato,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4.w),
           GestureDetector(
             onTap: onDelete,
             child: Icon(
               Icons.close,
-              size: 16,
+              size: 16.sp,
               color: isClearAll ? Colors.red : AppColors.tomato,
             ),
           ),
