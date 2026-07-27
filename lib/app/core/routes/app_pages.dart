@@ -4,6 +4,10 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/view/order_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/view/track_order_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/binder/profile_binder.dart';
@@ -133,16 +137,16 @@ class AppPages {
       page: () => const NotificationScreen(),
       binding: NotificationBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.EMAIL_VALIDATION,
-    //   page: () => const EmailValidationView(),
-    //   binding: EmailValidationBinding(),
-    // ),
-    // GetPage(
-    //   name: _Paths.FORGOT_PASSWORD,
-    //   page: () => ForgotPasswordView(),
-    //   binding: ForgotPasswordBinding(),
-    // ),
+       GetPage(
+      name: _Paths.TRACK_ORDER,
+      page: () => const TrackOrderScreen(),
+      binding: TrackOrderBinding(),
+    ),
+      GetPage(
+      name: _Paths.SECURITY,
+      page: () => const SecurityScreen(),
+      binding: SecurityBinding(),
+    ),
     // GetPage(
     //   name: _Paths.CHANGE_PASSWORD,
     //   page: () => ChangePasswordView(),

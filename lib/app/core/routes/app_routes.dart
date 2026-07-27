@@ -38,6 +38,10 @@ abstract class Routes {
 
   static const LIKED_SCREEN = _Paths.LIKED_SCREEN;
   static const PROFILE_EDIT = _Paths.PROFILE_EDIT;
+
+    static const TRACK_ORDER = _Paths.TRACK_ORDER;
+    static const SECURITY = _Paths.TRACK_ORDER;
+
 }
 
 abstract class _Paths {
@@ -78,4 +82,8 @@ abstract class _Paths {
   static const LIKED_SCREEN = '/liked-screen';
 
   static const PROFILE_EDIT = '/profile-edit';
+
+  static const String TRACK_ORDER = '/track-order';
+ static const String SECURITY = '/security'; 
+
 }

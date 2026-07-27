@@ -1,6 +1,10 @@
 // lib/app/core/modules/Screens/Profile_screen/view/profile_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/view/track_order_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
@@ -62,14 +66,15 @@ class ProfileScreen extends StatelessWidget {
                     // ========== Primary Navigation Items ==========
                     _buildListTile(
                       Icons.location_on_outlined,
-                      "My Locations",
+                      "Track Order",
                       onTap: () {
-                        Get.snackbar(
-                          'My Locations',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
+                        Get.to(
+                          () => const TrackOrderScreen(),
+                          binding: TrackOrderBinding(),
+                          arguments: {
+                            'orderNumber': 'ORD-2024-001',
+                            'orderStatus': 'Preparing',
+                          },
                         );
                       },
                     ),
@@ -129,12 +134,9 @@ class ProfileScreen extends StatelessWidget {
                       Icons.shield_outlined,
                       "Security",
                       onTap: () {
-                        Get.snackbar(
-                          'Security',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
+                        Get.to(
+                          () => const SecurityScreen(),
+                          binding: SecurityBinding(),
                         );
                       },
                     ),
