@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/profile_edit_screen/controller/profile_edit_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
@@ -30,19 +31,19 @@ class YourProfileScreen extends StatelessWidget {
                 _buildHeader(controller),
                 Expanded(
                   child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    physics: BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         _buildProfileAvatar(controller),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
                         _buildNameField(controller),
-                        const SizedBox(height: 14),
+                        SizedBox(height: 14.h),
                         _buildDobField(controller),
-                        const SizedBox(height: 14),
+                        SizedBox(height: 14.h),
                         _buildGenderDropdown(controller),
-                        const SizedBox(height: 30),
+                        SizedBox(height: 30.h),
                       ],
                     ),
                   ),
@@ -50,16 +51,16 @@ class YourProfileScreen extends StatelessWidget {
               ],
             ),
             Positioned(
-              bottom: 80,
-              left: 0,
-              right: 0,
+              bottom: 80.h,
+              left: 0.w,
+              right: 0.w,
               child: _buildBottomButton(controller),
             ),
             Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: const BottomNavigationWidget(),
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,
+              child: BottomNavigationWidget(),
             ),
           ],
         ),
@@ -70,31 +71,31 @@ class YourProfileScreen extends StatelessWidget {
   // ========== Header ==========
   Widget _buildHeader(YourProfileController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: Row(
         children: [
           GestureDetector(
             onTap: controller.goBack,
             child: Container(
-              width: 40,
-              height: 40,
+              width: 40.w,
+              height: 40.h,
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                size: 20,
+                size: 20.sp,
                 color: Colors.black87,
               ),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
               'Edit Profile',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -107,13 +108,13 @@ class YourProfileScreen extends StatelessWidget {
                     child: Text(
                       'Save',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                         color: AppColors.tomato,
                       ),
                     ),
                   )
-                : const SizedBox(width: 40),
+                : SizedBox(width: 40.w),
           ),
         ],
       ),
@@ -127,14 +128,14 @@ class YourProfileScreen extends StatelessWidget {
         children: [
           Obx(
             () => Container(
-              width: 120,
-              height: 120,
+              width: 120.w,
+              height: 120.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: controller.profileImageUrl.value.isNotEmpty
                       ? FileImage(File(controller.profileImageUrl.value))
-                      : const NetworkImage('https://i.pravatar.cc/300')
+                      : NetworkImage('https://i.pravatar.cc/300')
                             as ImageProvider,
                   fit: BoxFit.cover,
                 ),
@@ -142,21 +143,21 @@ class YourProfileScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 4,
-            right: 4,
+            top: 4.h,
+            right: 4.w,
             child: GestureDetector(
               onTap: () => controller.showImagePickerOptions(Get.context!),
               child: Container(
-                width: 32,
-                height: 32,
+                width: 32.w,
+                height: 32.h,
                 decoration: BoxDecoration(
                   color: AppColors.tomato,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
+                  border: Border.all(color: Colors.white, width: 2.w),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.edit_rounded,
-                  size: 16,
+                  size: 16.sp,
                   color: Colors.white,
                 ),
               ),
@@ -173,23 +174,23 @@ class YourProfileScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Full Name',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           TextField(
             controller: controller.nameController,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: InputBorder.none,
               isDense: true,
               contentPadding: EdgeInsets.zero,
@@ -209,15 +210,15 @@ class YourProfileScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Date of Birth',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           Row(
             children: [
               Expanded(
@@ -225,12 +226,12 @@ class YourProfileScreen extends StatelessWidget {
                   controller: controller.dobController,
                   readOnly: true,
                   onTap: () => controller.selectDate(Get.context!),
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.black87,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
@@ -241,9 +242,9 @@ class YourProfileScreen extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () => controller.selectDate(Get.context!),
-                child: const Icon(
+                child: Icon(
                   Icons.calendar_today_outlined,
-                  size: 20,
+                  size: 20.sp,
                   color: AppColors.tomato,
                 ),
               ),
@@ -260,28 +261,28 @@ class YourProfileScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Gender',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           Obx(
             () => DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: controller.selectedGender.value,
                 isExpanded: true,
                 isDense: true,
-                icon: const Icon(
+                icon: Icon(
                   Icons.keyboard_arrow_down_rounded,
                   color: Colors.black87,
-                  size: 22,
+                  size: 22.sp,
                 ),
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
@@ -304,10 +305,10 @@ class YourProfileScreen extends StatelessWidget {
   Widget _buildCustomCard({required Widget child}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: AppColors.ashLight,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
       ),
       child: child,
     );
@@ -316,10 +317,10 @@ class YourProfileScreen extends StatelessWidget {
   // ========== Bottom Button ==========
   Widget _buildBottomButton(YourProfileController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: SizedBox(
         width: double.infinity,
-        height: 52,
+        height: 52.h,
         child: Obx(
           () => ElevatedButton(
             onPressed: controller.isLoading.value
@@ -329,22 +330,22 @@ class YourProfileScreen extends StatelessWidget {
               backgroundColor: AppColors.tomato,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(26),
+                borderRadius: BorderRadius.circular(26.r),
               ),
             ),
             child: controller.isLoading.value
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
+                ? SizedBox(
+                    width: 24.w,
+                    height: 24.h,
                     child: CircularProgressIndicator(
-                      strokeWidth: 2,
+                      strokeWidth: 2.r,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text(
+                : Text(
                     'Save Changes',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

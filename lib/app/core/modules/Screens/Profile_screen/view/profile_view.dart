@@ -1,6 +1,7 @@
 // lib/app/core/modules/Screens/Profile_screen/view/profile_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
@@ -11,7 +12,6 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,34 +34,33 @@ class ProfileScreen extends StatelessWidget {
       }
     });
 
-    return ResponsiveWrapper(
-      child: Scaffold(
-        backgroundColor: const Color(0xFFFAFAFA),
+    return Scaffold(
+        backgroundColor: Color(0xFFFAFAFA),
         body: SafeArea(
           bottom: false,
           child: Stack(
             children: [
               // ========== Main Content (Scrollable) ==========
               SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  bottom: 100,
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.only(
+                  left: 20.w,
+                  right: 20.w,
+                  bottom: 100.h,
                 ),
                 child: Column(
                   children: [
                     // ========== Top Header Bar ==========
                     _buildTopHeader(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
                     // ========== User Profile Header ==========
                     _buildUserProfileHeader(controller),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
 
                     // ========== Logout Button ==========
                     _buildLogoutButton(controller),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.h),
 
                     // ========== Primary Navigation Items ==========
                     _buildListTile(
@@ -69,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                       "Track Order",
                       onTap: () {
                         Get.to(
-                          () => const TrackOrderScreen(),
+                          () => TrackOrderScreen(),
                           binding: TrackOrderBinding(),
                           arguments: {
                             'orderNumber': 'ORD-2024-001',
@@ -135,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
                       "Security",
                       onTap: () {
                         Get.to(
-                          () => const SecurityScreen(),
+                          () => SecurityScreen(),
                           binding: SecurityBinding(),
                         );
                       },
@@ -145,15 +144,15 @@ class ProfileScreen extends StatelessWidget {
                       "Help Center",
                       onTap: () {
                         Get.to(
-                          () => const HelpCenterScreen(),
+                          () => HelpCenterScreen(),
                           binding: HelpCenterBinding(),
                         );
                       },
                     ),
 
-                    const SizedBox(height: 8),
-                    const Divider(color: Color(0xFFEEEEEE), thickness: 1),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.h),
+                    Divider(color: Color(0xFFEEEEEE), thickness: 1.r),
+                    SizedBox(height: 8.h),
 
                     // ========== Preferences / Settings ==========
                     _buildLanguageDropdown(controller),
@@ -168,9 +167,9 @@ class ProfileScreen extends StatelessWidget {
                       controller.automaticallyUpdated,
                     ),
 
-                    const SizedBox(height: 8),
-                    const Divider(color: Color(0xFFEEEEEE), thickness: 1),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.h),
+                    Divider(color: Color(0xFFEEEEEE), thickness: 1.r),
+                    SizedBox(height: 8.h),
 
                     // ========== Secondary Items ==========
                     _buildListTile(
@@ -212,23 +211,22 @@ class ProfileScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                   ],
                 ),
               ),
 
               // ========== Global Bottom Navigation Bar ==========
               Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: const BottomNavigationWidget(),
+                bottom: 20.h,
+                left: 20.w,
+                right: 20.w,
+                child: BottomNavigationWidget(),
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   // ========== Top App Bar ==========
@@ -239,7 +237,7 @@ class ProfileScreen extends StatelessWidget {
         GestureDetector(
           onTap: () => Get.back(),
           child: Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -247,27 +245,27 @@ class ProfileScreen extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.04),
                   blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.arrow_back,
-              size: 18,
+              size: 18.sp,
               color: Colors.black87,
             ),
           ),
         ),
-        const Text(
+        Text(
           "Profile",
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(10.r),
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
@@ -275,11 +273,11 @@ class ProfileScreen extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 8,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
-          child: const Icon(Icons.more_horiz, size: 18, color: Colors.black87),
+          child: Icon(Icons.more_horiz, size: 18.sp, color: Colors.black87),
         ),
       ],
     );
@@ -292,14 +290,14 @@ class ProfileScreen extends StatelessWidget {
         // 🔥 Only Avatar - No Edit Option
         Obx(
           () => CircleAvatar(
-            radius: 32,
+            radius: 32.r,
             backgroundImage: controller.profileImagePath.value.isNotEmpty
                 ? FileImage(File(controller.profileImagePath.value))
-                : const NetworkImage('https://i.pravatar.cc/300')
+                : NetworkImage('https://i.pravatar.cc/300')
                       as ImageProvider,
           ),
         ),
-        const SizedBox(width: 14),
+        SizedBox(width: 14.w),
 
         // Text Info
         Expanded(
@@ -309,27 +307,27 @@ class ProfileScreen extends StatelessWidget {
               Obx(
                 () => Text(
                   controller.userName.value,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.tomato,
                   ),
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.h),
               Obx(
                 () => Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.phone_outlined,
-                      size: 13,
+                      size: 13.sp,
                       color: Colors.black45,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                     Text(
                       controller.userPhone.value,
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style: TextStyle(
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
                       ),
@@ -337,20 +335,20 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 3),
+              SizedBox(height: 3.h),
               Obx(
                 () => Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.email_outlined,
-                      size: 13,
+                      size: 13.sp,
                       color: Colors.black45,
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                     Text(
                       controller.userEmail.value,
-                      style: const TextStyle(
-                        fontSize: 11,
+                      style: TextStyle(
+                        fontSize: 11.sp,
                         color: Colors.black54,
                       ),
                     ),
@@ -367,7 +365,7 @@ class ProfileScreen extends StatelessWidget {
             Get.toNamed('/profile-edit');
           },
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               color: AppColors.tomato,
               shape: BoxShape.circle,
@@ -375,11 +373,11 @@ class ProfileScreen extends StatelessWidget {
                 BoxShadow(
                   color: AppColors.tomato.withOpacity(0.3),
                   blurRadius: 8,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
-            child: const Icon(Icons.edit, size: 18, color: Colors.white),
+            child: Icon(Icons.edit, size: 18.sp, color: Colors.white),
           ),
         ),
       ],
@@ -392,24 +390,24 @@ class ProfileScreen extends StatelessWidget {
       onTap: () {
         _showLogoutDialog(Get.context!);
       },
-      borderRadius: BorderRadius.circular(22),
+      borderRadius: BorderRadius.circular(22.r),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF0EF),
-          borderRadius: BorderRadius.circular(22),
+          color: Color(0xFFFFF0EF),
+          borderRadius: BorderRadius.circular(22.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout_rounded, color: AppColors.tomato, size: 20),
-            const SizedBox(width: 8),
+            Icon(Icons.logout_rounded, color: AppColors.tomato, size: 20.sp),
+            SizedBox(width: 8.w),
             Text(
               "Logout",
               style: TextStyle(
                 color: AppColors.tomato,
-                fontSize: 15,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -426,20 +424,20 @@ class ProfileScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20.r),
           ),
-          title: const Text(
+          title: Text(
             "Logout",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
           ),
-          content: const Text(
+          content: Text(
             "Are you sure you want to logout?",
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16.sp),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
+              child: Text(
                 "Cancel",
                 style: TextStyle(color: Colors.black54),
               ),
@@ -474,10 +472,10 @@ class ProfileScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Logout",
                 style: TextStyle(color: Colors.white),
               ),
@@ -491,24 +489,24 @@ class ProfileScreen extends StatelessWidget {
   // ========== Standard List Tile Item ==========
   Widget _buildListTile(IconData? icon, String title, {VoidCallback? onTap}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         dense: true,
         leading: icon != null
-            ? Icon(icon, size: 20, color: Colors.black87)
+            ? Icon(icon, size: 20.sp, color: Colors.black87)
             : null,
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
         ),
-        trailing: const Icon(
+        trailing: Icon(
           Icons.arrow_forward_ios_rounded,
-          size: 14,
+          size: 14.sp,
           color: Colors.black45,
         ),
         onTap: onTap ?? () {},
@@ -519,36 +517,36 @@ class ProfileScreen extends StatelessWidget {
   // ========== Language Dropdown ==========
   Widget _buildLanguageDropdown(ProfileController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: EdgeInsets.symmetric(vertical: 6.0.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             "Language",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
           ),
           Obx(
             () => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: controller.selectedLanguage.value,
                   isDense: true,
-                  icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+                  icon: Icon(Icons.keyboard_arrow_down, size: 18.sp),
                   items: <String>['English', 'Bangla', 'Spanish'].map((
                     String value,
                   ) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value, style: const TextStyle(fontSize: 12)),
+                      child: Text(value, style: TextStyle(fontSize: 12.sp)),
                     );
                   }).toList(),
                   onChanged: (newValue) {
@@ -568,14 +566,14 @@ class ProfileScreen extends StatelessWidget {
   // ========== Switch Settings Tile ==========
   Widget _buildSwitchTile(String title, RxBool rxBool) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: EdgeInsets.symmetric(vertical: 2.0.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),

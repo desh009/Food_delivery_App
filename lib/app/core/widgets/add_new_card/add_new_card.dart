@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,7 @@ class AddNewCardBottomSheet extends StatefulWidget {
   // Bottom Sheet ওপেন করার সুবিধার জন্য স্ট্যাটিক মেথড
   static void show(BuildContext context) {
     Get.bottomSheet(
-      const AddNewCardBottomSheet(),
+      AddNewCardBottomSheet(),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
@@ -97,57 +98,57 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.9,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
       ),
       padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 12,
+        left: 20.w,
+        right: 20.w,
+        top: 12.h,
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
       child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // Handle Bar
             Center(
               child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
+                width: 40.w,
+                height: 4.h,
+                margin: EdgeInsets.only(bottom: 16.h),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
             ),
 
             // Title
-            const Text(
+            Text(
               "Add New Card",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // ========== 💳 Live Credit Card Preview ==========
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20.r),
               decoration: BoxDecoration(
                 color: AppColors.tomato,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.tomato.withOpacity(0.3),
                     blurRadius: 12,
-                    offset: const Offset(0, 6),
+                    offset: Offset(0, 6),
                   ),
                 ],
               ),
@@ -158,27 +159,27 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                   Align(
                     alignment: Alignment.topRight,
                     child: Container(
-                      width: 40,
-                      height: 28,
+                      width: 40.w,
+                      height: 28.h,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.85),
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(6.r),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   // Card Number Display
                   Text(
                     cardNumber,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
 
                   // Bottom Card Details Row
                   Row(
@@ -187,19 +188,19 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Cardholder Name",
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: 10,
+                              fontSize: 10.sp,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4.h),
                           Text(
                             cardHolder,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -208,19 +209,19 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text(
+                          Text(
                             "Expiry Date",
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: 10,
+                              fontSize: 10.sp,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4.h),
                           Text(
                             expiryDate,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -232,7 +233,7 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // ========== 📝 Form Input Fields ==========
 
@@ -267,7 +268,7 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Cardholder Name Field
             _buildInputField(
@@ -290,7 +291,7 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Expiry Date & CVV Row
             Row(
@@ -302,10 +303,10 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                     controller: _expiryDateController,
                     keyboardType: TextInputType.datetime,
                     maxLength: 5,
-                    suffixIcon: const Icon(
+                    suffixIcon: Icon(
                       Icons.calendar_month_outlined,
                       color: Colors.black54,
-                      size: 20,
+                      size: 20.sp,
                     ),
                     onChanged: (val) {
                       setState(() {
@@ -324,7 +325,7 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                     },
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: _buildInputField(
                     label: "CVV / CVC",
@@ -352,12 +353,12 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
               ],
             ),
 
-            const SizedBox(height: 28),
+            SizedBox(height: 28.h),
 
             // ========== 🔘 Save Button (Dynamic Color) ==========
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 50.h,
               child: ElevatedButton(
                 onPressed: _isFormValid
                     ? () {
@@ -391,20 +392,20 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
                       : Colors.grey[400], // ❌ ফর্ম ভ্যালিড না হলে Grey
                   elevation: _isFormValid ? 2 : 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(25.r),
                   ),
                 ),
                 child: Text(
                   "Save",
                   style: TextStyle(
                     color: _isFormValid ? Colors.white : Colors.grey[700],
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
           ],
         ),
       ),
@@ -428,50 +429,50 @@ class _AddNewCardBottomSheetState extends State<AddNewCardBottomSheet> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 12,
+          style: TextStyle(
+            fontSize: 12.sp,
             fontWeight: FontWeight.w600,
             color: Colors.black54,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6.h),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
           onChanged: onChanged,
           maxLength: maxLength,
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          style: TextStyle(fontSize: 14.sp, color: Colors.black87),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(fontSize: 13, color: Colors.grey[400]),
+            hintStyle: TextStyle(fontSize: 13.sp, color: Colors.grey[400]),
             filled: true,
-            fillColor: const Color(0xFFF7F7F8),
+            fillColor: Color(0xFFF7F7F8),
             suffixIcon: suffixIcon,
             counterText: '', // ম্যাক্স লেন্থ কাউন্টার লুকান
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 14.h,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.tomato, width: 1),
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: AppColors.tomato, width: 1.w),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: Colors.red, width: 1.w),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: Colors.red, width: 1.w),
             ),
           ),
           validator: validator,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -9,7 +10,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction textInputAction;
   final String? Function(String?)? validator;
 
-  const CustomTextField({
+  CustomTextField({
     super.key,
     this.controller,
     required this.hintText,
@@ -30,31 +31,31 @@ class CustomTextField extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           color: Colors.black26,
-          fontSize: 16,
+          fontSize: 16.sp,
           fontWeight: FontWeight.w400,
         ),
         prefixIcon: Icon(
           prefixIcon,
           color: Colors.black38,
-          size: 24,
+          size: 24.sp,
         ),
         filled: true,
-        fillColor: const Color(0xFFF5F5F5), 
+        fillColor: Color(0xFFF5F5F5), 
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/controller/order-screen_controller.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -26,7 +27,7 @@ class OrderDetailsScreen extends StatelessWidget {
     }
   });
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Color(0xFFF8F9FA),
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -38,47 +39,47 @@ class OrderDetailsScreen extends StatelessWidget {
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return const Center(
+                      return Center(
                         child: CircularProgressIndicator(
                           color: AppColors.tomato,
                         ),
                       );
                     }
                     return SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
+                      physics: BouncingScrollPhysics(),
                       padding: EdgeInsets.symmetric(
                         horizontal: isTablet ? 24 : 16,
-                        vertical: 12,
+                        vertical: 12.h,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildOrderSummaryHeader(controller),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           ...controller.orderItems.map((item) => 
                             _buildOrderItemCard(controller, item)
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
                           _buildInfoCard(
                             icon: Icons.location_on,
-                            iconColor: const Color(0xFFFF6B4A),
+                            iconColor: Color(0xFFFF6B4A),
                             title: "Deliver to -> ${controller.deliveryType.value}",
                             subtitle: controller.deliveryAddress.value,
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           _buildInfoCard(
                             icon: Icons.account_balance_wallet,
-                            iconColor: const Color(0xFFFF6B4A),
+                            iconColor: Color(0xFFFF6B4A),
                             title: "Payment method",
                             subtitle: controller.paymentMethod.value,
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12.h),
                           _buildPromotionsCard(controller),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24.h),
                           _buildPriceSummary(controller),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24.h),
                           _buildOverallRatingSection(controller),
-                          const SizedBox(height: 100),
+                          SizedBox(height: 100.h),
                         ],
                       ),
                     );
@@ -89,10 +90,10 @@ class OrderDetailsScreen extends StatelessWidget {
             
             // Global Bottom Navigation Bar
             Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: const BottomNavigationWidget(),
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,
+              child: BottomNavigationWidget(),
             ),
           ],
         ),
@@ -103,7 +104,7 @@ class OrderDetailsScreen extends StatelessWidget {
   // ========== Top App Bar ==========
   Widget _buildTopAppBar(OrderDetailsController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -113,8 +114,8 @@ class OrderDetailsScreen extends StatelessWidget {
           ),
           Obx(() => Text(
             controller.orderNumber.value,
-            style: const TextStyle(
-              fontSize: 18,
+            style: TextStyle(
+              fontSize: 18.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
@@ -132,7 +133,7 @@ class OrderDetailsScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.all(10.r),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
@@ -140,11 +141,11 @@ class OrderDetailsScreen extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
               blurRadius: 8,
-              offset: const Offset(0, 2),
+              offset: Offset(0, 2),
             ),
           ],
         ),
-        child: Icon(icon, size: 18, color: Colors.black87),
+        child: Icon(icon, size: 18.sp, color: Colors.black87),
       ),
     );
   }
@@ -154,24 +155,24 @@ class OrderDetailsScreen extends StatelessWidget {
     return Obx(() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           "Order Summary",
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 15.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: const Color(0xFFE8F5E9),
-            borderRadius: BorderRadius.circular(12),
+            color: Color(0xFFE8F5E9),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Text(
             controller.orderStatus.value,
-            style: const TextStyle(
-              fontSize: 11,
+            style: TextStyle(
+              fontSize: 11.sp,
               fontWeight: FontWeight.w600,
               color: Color(0xFF2E7D32),
             ),
@@ -184,16 +185,16 @@ class OrderDetailsScreen extends StatelessWidget {
   // ========== Order Item Card ==========
   Widget _buildOrderItemCard(OrderDetailsController controller, OrderItem item) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -204,23 +205,23 @@ class OrderDetailsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12.r),
                 child: Image.network(
                   item.imagePath,
-                  width: 65,
-                  height: 65,
+                  width: 65.w,
+                  height: 65.h,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      width: 65,
-                      height: 65,
+                      width: 65.w,
+                      height: 65.h,
                       color: Colors.grey.shade200,
-                      child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                      child: Icon(Icons.image_not_supported, color: Colors.grey),
                     );
                   },
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,22 +230,22 @@ class OrderDetailsScreen extends StatelessWidget {
                       item.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.h),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 6,
+                      spacing: 6.w,
                       children: [
                         if (item.originalPrice != null)
                           Text(
                             '£ ${item.originalPrice!.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 11,
+                            style: TextStyle(
+                              fontSize: 11.sp,
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,
                             ),
@@ -252,7 +253,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         Text(
                           '£ ${item.discountPrice.toStringAsFixed(2)}',
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 13.sp,
                             fontWeight: FontWeight.bold,
                             color: AppColors.tomato,
                           ),
@@ -262,43 +263,43 @@ class OrderDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               Obx(() => ElevatedButton.icon(
                 onPressed: controller.isReorderInProgress.value 
                     ? null 
                     : () => controller.reorderItem(item.id),
                 icon: controller.isReorderInProgress.value
-                    ? const SizedBox(
-                        width: 12,
-                        height: 12,
+                    ? SizedBox(
+                        width: 12.w,
+                        height: 12.h,
                         child: CircularProgressIndicator(
-                          strokeWidth: 2,
+                          strokeWidth: 2.r,
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Icon(Icons.shopping_bag_outlined, size: 12, color: Colors.white),
-                label: const Text(
+                    : Icon(Icons.shopping_bag_outlined, size: 12.sp, color: Colors.white),
+                label: Text(
                   "Reorder",
-                  style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 10.sp, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.tomato,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                  minimumSize: const Size(0, 28),
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 0.h),
+                  minimumSize: Size(0, 28),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                 ),
               )),
             ],
           ),
           if (item.addOns.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             ...item.addOns.map(
               (addOn) => Padding(
-                padding: const EdgeInsets.only(top: 2.0),
+                padding: EdgeInsets.only(top: 2.0.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -307,13 +308,13 @@ class OrderDetailsScreen extends StatelessWidget {
                         addOn.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 11, color: Colors.black54),
+                        style: TextStyle(fontSize: 11.sp, color: Colors.black54),
                       ),
                     ),
                     Text(
                       '£ ${addOn.price.toStringAsFixed(2)}',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.tomato,
                       ),
@@ -323,48 +324,48 @@ class OrderDetailsScreen extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Row(
             children: List.generate(
               5,
               (index) => Icon(
                 Icons.star_rounded,
-                size: 20,
+                size: 20.sp,
                 color: index < item.rating ? Colors.amber : Colors.grey.shade300,
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           GestureDetector(
             onTap: () => _showReviewDialog(controller, item),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F7),
-                borderRadius: BorderRadius.circular(10),
+                color: Color(0xFFF5F5F7),
+                borderRadius: BorderRadius.circular(10.r),
               ),
               child: Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 18, right: 45),
+                    padding: EdgeInsets.only(bottom: 18.h, right: 45.w),
                     child: Text(
                       item.isReviewed ? item.reviewText : "Type your review ...",
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         color: item.isReviewed ? Colors.black87 : Colors.grey.shade400,
-                        height: 1.3,
+                        height: 1.3.h,
                       ),
                     ),
                   ),
                   Positioned(
-                    bottom: 0,
-                    right: 0,
+                    bottom: 0.h,
+                    right: 0.w,
                     child: Row(
                       children: [
-                        Icon(Icons.camera_alt_outlined, size: 16, color: Colors.grey.shade400),
-                        const SizedBox(width: 6),
-                        Icon(Icons.image_outlined, size: 16, color: Colors.grey.shade400),
+                        Icon(Icons.camera_alt_outlined, size: 16.sp, color: Colors.grey.shade400),
+                        SizedBox(width: 6.w),
+                        Icon(Icons.image_outlined, size: 16.sp, color: Colors.grey.shade400),
                       ],
                     ),
                   ),
@@ -385,42 +386,42 @@ class OrderDetailsScreen extends StatelessWidget {
     required String subtitle,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: iconColor),
-          const SizedBox(width: 10),
+          Icon(icon, size: 18.sp, color: iconColor),
+          SizedBox(width: 10.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2.h),
                 Text(
                   subtitle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 11,
+                  style: TextStyle(
+                    fontSize: 11.sp,
                     color: Colors.black87,
                     fontWeight: FontWeight.w500,
                   ),
@@ -436,16 +437,16 @@ class OrderDetailsScreen extends StatelessWidget {
   // ========== Promotions Card ==========
   Widget _buildPromotionsCard(OrderDetailsController controller) {
     return Obx(() => Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -454,24 +455,24 @@ class OrderDetailsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.confirmation_number_outlined, size: 18, color: AppColors.tomato),
-              const SizedBox(width: 10),
-              const Text(
+              Icon(Icons.confirmation_number_outlined, size: 18.sp, color: AppColors.tomato),
+              SizedBox(width: 10.w),
+              Text(
                 "Promotions",
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Wrap(
-            spacing: 6,
+            spacing: 6.w,
             runSpacing: 4,
             children: controller.promotions.map((promo) => 
-              _buildBadge(promo, const Color(0xFFFFC107))
+              _buildBadge(promo, Color(0xFFFFC107))
             ).toList(),
           ),
         ],
@@ -481,15 +482,15 @@ class OrderDetailsScreen extends StatelessWidget {
 
   Widget _buildBadge(String text, Color bgColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(4.r),
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 9,
+        style: TextStyle(
+          fontSize: 9.sp,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
@@ -500,28 +501,28 @@ class OrderDetailsScreen extends StatelessWidget {
   // ========== Price Summary ==========
   Widget _buildPriceSummary(OrderDetailsController controller) {
     return Obx(() => Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         children: [
           _buildPriceRow("Subtotal", controller.formatPrice(controller.subtotal.value)),
-          const SizedBox(height: 6),
+          SizedBox(height: 6.h),
           _buildPriceRow("Delivery Fee", controller.getDeliveryFeeText()),
-          const SizedBox(height: 6),
+          SizedBox(height: 6.h),
           _buildPriceRow("Discount", controller.getDiscountText()),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Divider(color: Color(0xFFEEEEEE), thickness: 1),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0.h),
+            child: Divider(color: Color(0xFFEEEEEE), thickness: 1.r),
           ),
           _buildPriceRow("Total", controller.formatPrice(controller.total.value), isTotal: true),
         ],
@@ -556,15 +557,15 @@ class OrderDetailsScreen extends StatelessWidget {
   // ========== Overall Rating Section ==========
   Widget _buildOverallRatingSection(OrderDetailsController controller) {
     return Obx(() => Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -576,23 +577,23 @@ class OrderDetailsScreen extends StatelessWidget {
               5,
               (index) => Icon(
                 Icons.star_rounded,
-                size: 38,
+                size: 38.sp,
                 color: index < controller.overallRating.value.floor() 
                     ? Colors.amber 
                     : Colors.grey.shade300,
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14.h),
           GestureDetector(
             onTap: () => _showOverallReviewDialog(controller),
             child: Container(
               width: double.infinity,
-              height: 90,
-              padding: const EdgeInsets.all(12),
+              height: 90.h,
+              padding: EdgeInsets.all(12.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F7),
-                borderRadius: BorderRadius.circular(12),
+                color: Color(0xFFF5F5F7),
+                borderRadius: BorderRadius.circular(12.r),
               ),
               child: Stack(
                 children: [
@@ -601,20 +602,20 @@ class OrderDetailsScreen extends StatelessWidget {
                         ? "Type your review ..." 
                         : controller.overallReview.value,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       color: controller.overallReview.value.isEmpty 
                           ? Colors.grey.shade400 
                           : Colors.black87,
                     ),
                   ),
                   Positioned(
-                    bottom: 0,
-                    right: 0,
+                    bottom: 0.h,
+                    right: 0.w,
                     child: Row(
                       children: [
-                        Icon(Icons.camera_alt_outlined, size: 18, color: Colors.grey.shade400),
-                        const SizedBox(width: 8),
-                        Icon(Icons.image_outlined, size: 18, color: Colors.grey.shade400),
+                        Icon(Icons.camera_alt_outlined, size: 18.sp, color: Colors.grey.shade400),
+                        SizedBox(width: 8.w),
+                        Icon(Icons.image_outlined, size: 18.sp, color: Colors.grey.shade400),
                       ],
                     ),
                   ),
@@ -636,26 +637,26 @@ class OrderDetailsScreen extends StatelessWidget {
     
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.r),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Write a Review",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Text(
                 "Rate ${item.title}",
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14.sp),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.h),
               StatefulBuilder(
                 builder: (context, setState) {
                   return Row(
@@ -669,7 +670,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         },
                         icon: Icon(
                           Icons.star_rounded,
-                          size: 40,
+                          size: 40.sp,
                           color: index < selectedRating ? Colors.amber : Colors.grey.shade300,
                         ),
                       ),
@@ -677,26 +678,26 @@ class OrderDetailsScreen extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               TextField(
                 controller: reviewController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: "Write your review...",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: const Text("Cancel"),
+                    child: Text("Cancel"),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   ElevatedButton(
                     onPressed: () {
                       if (selectedRating > 0) {
@@ -711,7 +712,7 @@ class OrderDetailsScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.tomato,
                     ),
-                    child: const Text("Submit"),
+                    child: Text("Submit"),
                   ),
                 ],
               ),
@@ -728,40 +729,40 @@ class OrderDetailsScreen extends StatelessWidget {
     
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.r),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Overall Review",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               TextField(
                 controller: reviewController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: "Write your overall review...",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: const Text("Cancel"),
+                    child: Text("Cancel"),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8.w),
                   ElevatedButton(
                     onPressed: () {
                       controller.submitOverallReview(reviewController.text);
@@ -770,7 +771,7 @@ class OrderDetailsScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.tomato,
                     ),
-                    child: const Text("Submit"),
+                    child: Text("Submit"),
                   ),
                 ],
               ),

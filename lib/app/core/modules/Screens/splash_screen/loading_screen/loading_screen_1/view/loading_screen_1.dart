@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/splash_screen/loading_screen/loading_screen_2.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:get/get.dart';
@@ -22,13 +23,13 @@ class _TomatoSplashScreenState extends State<TomatoSplashScreen> {
   }
 
   void _startLoading() {
-    _progressTimer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
+    _progressTimer = Timer.periodic(Duration(milliseconds: 30), (timer) {
       setState(() {
         if (_progressValue < 1.0) {
           _progressValue += 0.02;
         } else {
           _progressTimer?.cancel();
-          Get.off(() => const TomatoLoadingScreen());
+          Get.off(() => TomatoLoadingScreen());
         }
       });
     });
@@ -46,14 +47,14 @@ class _TomatoSplashScreenState extends State<TomatoSplashScreen> {
       backgroundColor: AppColors.tomato, 
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: EdgeInsets.all(12.0.r),
           child: Container(
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
               color: AppColors.tomato,
-              // borderRadius: BorderRadius.circular(24.0),
-              // border: Border.all(color: Colors.white, width: 2.0),
+              // borderRadius: BorderRadius.circular(24.0.r),
+              // border: Border.all(color: Colors.white, width: 2.0.w),
             ),
             child: Stack(
               children: [
@@ -63,34 +64,34 @@ class _TomatoSplashScreenState extends State<TomatoSplashScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 120,
-                        height: 120,
+                        width: 120.w,
+                        height: 120.h,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.restaurant,
-                          size: 60,
+                          size: 60.sp,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      const Text(
+                      SizedBox(height: 20.h),
+                      Text(
                         "Food App",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 28,
+                          fontSize: 28.sp,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.0,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
+                      SizedBox(height: 8.h),
+                      Text(
                         "Delicious food at your doorstep",
                         style: TextStyle(
                           color: Colors.white70,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -100,28 +101,28 @@ class _TomatoSplashScreenState extends State<TomatoSplashScreen> {
 
                 // Progress Bar (Bottom)
                 Positioned(
-                  bottom: 40,
-                  left: 24,
-                  right: 24,
+                  bottom: 40.h,
+                  left: 24.w,
+                  right: 24.w,
                   child: Column(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10.r),
                         child: LinearProgressIndicator(
                           value: _progressValue,
-                          backgroundColor: const Color(0xFFE2533B),
-                          valueColor: const AlwaysStoppedAnimation<Color>(
+                          backgroundColor: Color(0xFFE2533B),
+                          valueColor: AlwaysStoppedAnimation<Color>(
                             Colors.white,
                           ),
-                          minHeight: 5,
+                          minHeight: 5.h,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8.h),
                       Text(
                         '${(_progressValue * 100).toInt()}%',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white70,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       ),

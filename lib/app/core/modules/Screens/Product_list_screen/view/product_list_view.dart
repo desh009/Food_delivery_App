@@ -1,9 +1,9 @@
 // lib/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/controller/product_list_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
-import 'package:food_hjoiopk/app/core/widgets/responsive_wrapper/responsive_rapper.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
@@ -12,24 +12,23 @@ class ProductListScreen extends GetView<ProductListController> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWrapper(
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Header Section
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                 child: Row(
                   children: [
                     GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(
-                        width: 44,
-                        height: 44,
+                        width: 44.w,
+                        height: 44.h,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
@@ -37,11 +36,11 @@ class ProductListScreen extends GetView<ProductListController> {
                             BoxShadow(
                               color: Colors.black.withOpacity(0.06),
                               blurRadius: 10,
-                              offset: const Offset(0, 4),
+                              offset: Offset(0, 4),
                             ),
                           ],
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.arrow_back,
                           color: Colors.black87,
                         ),
@@ -53,18 +52,18 @@ class ProductListScreen extends GetView<ProductListController> {
                         children: [
                           Text(
                             controller.categoryIcon,
-                            style: const TextStyle(fontSize: 26),
+                            style: TextStyle(fontSize: 26.sp),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8.w),
                           Text(
                             controller.categoryName,
-                            style: const TextStyle(
-                              fontSize: 24,
+                            style: TextStyle(
+                              fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
                           ),
-                          const SizedBox(width: 44),
+                          SizedBox(width: 44.w),
                         ],
                       ),
                     ),
@@ -72,30 +71,30 @@ class ProductListScreen extends GetView<ProductListController> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Search Bar with Filter Button
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(16),
+                    color: Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Row(
                     children: [
-                      const Icon(Icons.search, color: Colors.black38, size: 26),
-                      const SizedBox(width: 12),
+                      Icon(Icons.search, color: Colors.black38, size: 26.sp),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: TextField(
                           onChanged: (value) =>
                               controller.searchQuery.value = value,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: "Search products...",
                             hintStyle: TextStyle(
                               color: Colors.black38,
-                              fontSize: 16,
+                              fontSize: 16.sp,
                             ),
                             border: InputBorder.none,
                           ),
@@ -109,36 +108,36 @@ class ProductListScreen extends GetView<ProductListController> {
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.filter_list,
                                   color: Colors.black54,
-                                  size: 24,
+                                  size: 24.sp,
                                 ),
                                 onPressed: () => _showFilterBottomSheet(context),
                               ),
                             ),
                             if (filterCount > 0)
                               Positioned(
-                                right: 4,
-                                top: 4,
+                                right: 4.w,
+                                top: 4.h,
                                 child: Container(
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: const BoxDecoration(
+                                  padding: EdgeInsets.all(3.r),
+                                  decoration: BoxDecoration(
                                     color: AppColors.tomato,
                                     shape: BoxShape.circle,
                                   ),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 16,
-                                    minHeight: 16,
+                                  constraints: BoxConstraints(
+                                    minWidth: 16.w,
+                                    minHeight: 16.h,
                                   ),
                                   child: Text(
                                     filterCount.toString(),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 9,
+                                      fontSize: 9.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     textAlign: TextAlign.center,
@@ -153,28 +152,28 @@ class ProductListScreen extends GetView<ProductListController> {
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
 
               // Active Filters Chips
               Obx(() {
-                if (controller.activeFilters.isEmpty) return const SizedBox.shrink();
+                if (controller.activeFilters.isEmpty) return SizedBox.shrink();
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: controller.activeFilters.entries.map((entry) {
                         return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
+                          padding: EdgeInsets.only(right: 8.0.w),
                           child: Chip(
                             label: Text(
                               '${_getFilterLabel(entry.key)}: ${entry.value}',
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 12.sp),
                             ),
                             backgroundColor: AppColors.tomato.withOpacity(0.1),
-                            deleteIcon: const Icon(
+                            deleteIcon: Icon(
                               Icons.close,
-                              size: 16,
+                              size: 16.sp,
                               color: AppColors.tomato,
                             ),
                             onDeleted: () {
@@ -188,7 +187,7 @@ class ProductListScreen extends GetView<ProductListController> {
                 );
               }),
 
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h),
 
               // Products Grid
               Expanded(
@@ -196,23 +195,23 @@ class ProductListScreen extends GetView<ProductListController> {
                   final products = controller.filteredProducts;
 
                   if (products.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.search_off,
-                            size: 64,
+                            size: 64.sp,
                             color: Colors.black26,
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           Text(
                             "No products found!",
-                            style: TextStyle(color: Colors.black45, fontSize: 16),
+                            style: TextStyle(color: Colors.black45, fontSize: 16.sp),
                           ),
                           Text(
                             "Try adjusting your filters",
-                            style: TextStyle(color: Colors.black38, fontSize: 14),
+                            style: TextStyle(color: Colors.black38, fontSize: 14.sp),
                           ),
                         ],
                       ),
@@ -220,16 +219,16 @@ class ProductListScreen extends GetView<ProductListController> {
                   }
 
                   return GridView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
                     itemCount: products.length,
-                    physics: const BouncingScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    physics: BouncingScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
                       childAspectRatio: 0.76,
                     ),
                     itemBuilder: (context, index) {
@@ -241,8 +240,7 @@ class ProductListScreen extends GetView<ProductListController> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   // Filter Bottom Sheet
@@ -257,33 +255,33 @@ class ProductListScreen extends GetView<ProductListController> {
         maxChildSize: 0.9,
         builder: (_, scrollController) {
           return Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25),
+                top: Radius.circular(25.r),
               ),
             ),
             child: Column(
               children: [
                 // Handle
                 Container(
-                  margin: const EdgeInsets.symmetric(vertical: 12),
-                  width: 40,
-                  height: 4,
+                  margin: EdgeInsets.symmetric(vertical: 12.h),
+                  width: 40.w,
+                  height: 4.h,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         "Filters",
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
@@ -293,7 +291,7 @@ class ProductListScreen extends GetView<ProductListController> {
                           controller.clearAllFilters();
                           Get.back();
                         },
-                        child: const Text(
+                        child: Text(
                           "Clear All",
                           style: TextStyle(color: AppColors.tomato),
                         ),
@@ -301,11 +299,11 @@ class ProductListScreen extends GetView<ProductListController> {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+                Divider(height: 1.h),
                 Expanded(
                   child: SingleChildScrollView(
                     controller: scrollController,
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20.r),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -316,7 +314,7 @@ class ProductListScreen extends GetView<ProductListController> {
                             return Column(
                               children: [
                                 Wrap(
-                                  spacing: 8,
+                                  spacing: 8.w,
                                   runSpacing: 8,
                                   children: [
                                     _buildFilterChip(
@@ -351,14 +349,14 @@ class ProductListScreen extends GetView<ProductListController> {
                           }),
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         // Rating Filter
                         _buildFilterSection(
                           title: "Rating",
                           child: Obx(() {
                             return Wrap(
-                              spacing: 8,
+                              spacing: 8.w,
                               runSpacing: 8,
                               children: [
                                 _buildFilterChip(
@@ -396,14 +394,14 @@ class ProductListScreen extends GetView<ProductListController> {
                           }),
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         // Sort Options
                         _buildFilterSection(
                           title: "Sort By",
                           child: Obx(() {
                             return Wrap(
-                              spacing: 8,
+                              spacing: 8.w,
                               runSpacing: 8,
                               children: [
                                 _buildFilterChip(
@@ -431,12 +429,12 @@ class ProductListScreen extends GetView<ProductListController> {
                           }),
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         // Apply Button
                         SizedBox(
                           width: double.infinity,
-                          height: 50,
+                          height: 50.h,
                           child: ElevatedButton(
                             onPressed: () {
                               controller.applyFilters();
@@ -445,13 +443,13 @@ class ProductListScreen extends GetView<ProductListController> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.tomato,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
                             ),
-                            child: const Text(
+                            child: Text(
                               "Apply Filters",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -479,13 +477,13 @@ class ProductListScreen extends GetView<ProductListController> {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
         child,
       ],
     );
@@ -501,7 +499,7 @@ class ProductListScreen extends GetView<ProductListController> {
         label,
         style: TextStyle(
           color: isSelected ? Colors.white : Colors.black87,
-          fontSize: 13,
+          fontSize: 13.sp,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),
@@ -510,12 +508,12 @@ class ProductListScreen extends GetView<ProductListController> {
       backgroundColor: Colors.grey[100],
       selectedColor: AppColors.tomato,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       side: BorderSide(
         color: isSelected ? AppColors.tomato : Colors.transparent,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
     );
   }
 
@@ -540,12 +538,12 @@ class ProductListScreen extends GetView<ProductListController> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
               blurRadius: 12,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -557,8 +555,8 @@ class ProductListScreen extends GetView<ProductListController> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20.r),
                       ),
                       image: DecorationImage(
                         image: NetworkImage(item.imageUrl),
@@ -567,12 +565,12 @@ class ProductListScreen extends GetView<ProductListController> {
                     ),
                   ),
                   Positioned(
-                    top: 10,
-                    right: 10,
+                    top: 10.h,
+                    right: 10.w,
                     child: Obx(
                       () => AnimatedFavoriteButton(
                         isFavorite: controller.isFavorite(item),
-                        size: 18,
+                        size: 18.sp,
                         navigateOnAdd: false,
                         onTap: (newValue) async {
                           await controller.toggleFavorite(item);
@@ -585,7 +583,7 @@ class ProductListScreen extends GetView<ProductListController> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -593,45 +591,45 @@ class ProductListScreen extends GetView<ProductListController> {
                     item.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   Row(
                     children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 4),
+                      Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                      SizedBox(width: 4.w),
                       Text(
                         item.rating.toString(),
-                        style: const TextStyle(
-                          fontSize: 13,
+                        style: TextStyle(
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.black54,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6.h),
                   Row(
                     children: [
                       if (item.oldPrice != null) ...[
                         Text(
                           "£ ${item.oldPrice!.toStringAsFixed(2)}",
-                          style: const TextStyle(
-                            fontSize: 13,
+                          style: TextStyle(
+                            fontSize: 13.sp,
                             color: Colors.black38,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8.w),
                       ],
                       Text(
                         "£ ${item.price.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          fontSize: 15,
+                        style: TextStyle(
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                           color: AppColors.tomato,
                         ),

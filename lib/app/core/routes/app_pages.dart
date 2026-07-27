@@ -77,7 +77,7 @@ class AppPages {
 
     GetPage(
       name: _Paths.HOME,
-      page: () => const HomeScreen(),
+      page: () => HomeScreen(),
       binding: HomeBinder(),
     ),
 
