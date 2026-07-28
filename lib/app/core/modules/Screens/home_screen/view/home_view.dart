@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/view/profile_view.dart'
-    hide ProfileController;
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
@@ -14,11 +11,15 @@ import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourit
 import 'package:food_hjoiopk/app/core/widgets/location/location_selection/location_selection.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
-import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends GetView<HomeController> {
   HomeScreen({super.key});
+
+  // ============================================================
+  // BANNER DATA
+  // ============================================================
 
   final List<Map<String, dynamic>> bannerData = [
     {
@@ -28,7 +29,10 @@ class HomeScreen extends GetView<HomeController> {
       'category': 'Salad Category',
       'image':
           'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=500&auto=format&fit=crop',
-      'gradient': [Color(0xFF0F7A54), Color(0xFF1BA375)],
+      'gradient': [
+        const Color(0xFF0F7A54),
+        const Color(0xFF1BA375),
+      ],
     },
     {
       'id': 'banner_2',
@@ -37,7 +41,10 @@ class HomeScreen extends GetView<HomeController> {
       'category': 'Burger Category',
       'image':
           'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500&auto=format&fit=crop',
-      'gradient': [Color(0xFFD35400), Color(0xFFE67E22)],
+      'gradient': [
+        const Color(0xFFD35400),
+        const Color(0xFFE67E22),
+      ],
     },
     {
       'id': 'banner_3',
@@ -46,7 +53,10 @@ class HomeScreen extends GetView<HomeController> {
       'category': 'Pizza Category',
       'image':
           'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500&auto=format&fit=crop',
-      'gradient': [Color(0xFF8B0000), Color(0xFFC0392B)],
+      'gradient': [
+        const Color(0xFF8B0000),
+        const Color(0xFFC0392B),
+      ],
     },
     {
       'id': 'banner_4',
@@ -55,9 +65,16 @@ class HomeScreen extends GetView<HomeController> {
       'category': 'Drinks Category',
       'image':
           'https://images.unsplash.com/photo-1543854932-4d2e5d5fe46b?q=80&w=500&auto=format&fit=crop',
-      'gradient': [Color(0xFF1A237E), Color(0xFF283593)],
+      'gradient': [
+        const Color(0xFF1A237E),
+        const Color(0xFF283593),
+      ],
     },
   ];
+
+  // ============================================================
+  // SPECIAL OFFERS
+  // ============================================================
 
   final List<Map<String, dynamic>> specialOffers = [
     {
@@ -68,7 +85,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.8',
       'price': '\$12.99',
       'discount': '20% OFF',
-      'category': 'Burger', // 🔥 Added category
+      'category': 'Burger',
     },
     {
       'id': 'offer_2',
@@ -78,7 +95,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.9',
       'price': '\$15.99',
       'discount': '15% OFF',
-      'category': 'Pizza', // 🔥 Added category
+      'category': 'Pizza',
     },
     {
       'id': 'offer_3',
@@ -88,7 +105,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.6',
       'price': '\$9.99',
       'discount': '10% OFF',
-      'category': 'Salad', // 🔥 Added category
+      'category': 'Salad',
     },
     {
       'id': 'offer_4',
@@ -98,7 +115,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.7',
       'price': '\$11.99',
       'discount': '25% OFF',
-      'category': 'Tacos', // 🔥 Added category
+      'category': 'Tacos',
     },
     {
       'id': 'offer_5',
@@ -108,7 +125,7 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.5',
       'price': '\$14.99',
       'discount': '18% OFF',
-      'category': 'Pizza', // 🔥 Added category
+      'category': 'Pizza',
     },
     {
       'id': 'offer_6',
@@ -118,196 +135,312 @@ class HomeScreen extends GetView<HomeController> {
       'rating': '4.3',
       'price': '\$10.99',
       'discount': '12% OFF',
-      'category': 'Burger', // 🔥 Added category
+      'category': 'Burger',
     },
   ];
 
+  // ============================================================
+  // CATEGORIES
+  // ============================================================
+
+  final List<Map<String, String>> categories = const [
+    {'name': 'Burger', 'icon': '🍔'},
+    {'name': 'Taco', 'icon': '🌮'},
+    {'name': 'Burrito', 'icon': '🌯'},
+    {'name': 'Drink', 'icon': '🥤'},
+    {'name': 'Pizza', 'icon': '🍕'},
+    {'name': 'Donut', 'icon': '🍩'},
+    {'name': 'Salad', 'icon': '🥗'},
+    {'name': 'Noodles', 'icon': '🍜'},
+    {'name': 'Sandwich', 'icon': '🥪'},
+    {'name': 'Pasta', 'icon': '🍝'},
+    {'name': 'Ice Cream', 'icon': '🍦'},
+    {'name': 'More', 'icon': '👀'},
+  ];
+
+  // ============================================================
+  // RESPONSIVE HELPERS
+  // ============================================================
+
+  int _getCategoryColumns(double width) {
+    if (width < 350) {
+      return 3;
+    } else if (width < 600) {
+      return 4;
+    } else if (width < 900) {
+      return 5;
+    } else {
+      return 6;
+    }
+  }
+
+  int _getOfferColumns(double width) {
+    if (width < 370) {
+      return 1;
+    } else if (width < 700) {
+      return 2;
+    } else if (width < 1100) {
+      return 3;
+    } else {
+      return 4;
+    }
+  }
+
+  double _getBannerHeight(double width) {
+    if (width < 350) {
+      return 135.h;
+    } else if (width < 600) {
+      return 150.h;
+    } else if (width < 900) {
+      return 175.h;
+    } else {
+      return 200.h;
+    }
+  }
+
+  // ============================================================
+  // BUILD
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
-    // Initialize FavoriteService
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
+    // Favorite Service
     if (!Get.isRegistered<FavoriteService>()) {
-      Get.put<FavoriteService>(FavoriteService(), permanent: true);
+      Get.put<FavoriteService>(
+        FavoriteService(),
+        permanent: true,
+      );
     }
 
-    final controller = Get.find<HomeController>();
+    final homeController = Get.find<HomeController>();
     final favoriteService = Get.find<FavoriteService>();
 
-    // 🔥 Set special offers to controller for filtering
+    // Set offers after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.setSpecialOffers(specialOffers);
+      homeController.setSpecialOffers(specialOffers);
+
       try {
         BottomNavController.to.changeIndex(0);
-      } catch (e) {
-        // Ignore
-      }
+      } catch (_) {}
     });
 
-    final List<Map<String, String>> categories = [
-      {'name': 'Burger', 'icon': '🍔'},
-      {'name': 'Taco', 'icon': '🌮'},
-      {'name': 'Burrito', 'icon': '🌯'},
-      {'name': 'Drink', 'icon': '🥤'},
-      {'name': 'Pizza', 'icon': '🍕'},
-      {'name': 'Donut', 'icon': '🍩'},
-      {'name': 'Salad', 'icon': '🥗'},
-      {'name': 'Noodles', 'icon': '🍜'},
-      {'name': 'Sandwich', 'icon': '🥪'},
-      {'name': 'Pasta', 'icon': '🍝'},
-      {'name': 'Ice Cream', 'icon': '🍦'},
-      {'name': 'More', 'icon': '👀'},
-    ];
+    final categoryColumns = _getCategoryColumns(screenWidth);
+    final offerColumns = _getOfferColumns(screenWidth);
+    final bannerHeight = _getBannerHeight(screenWidth);
 
     return Scaffold(
-        backgroundColor: Color(0xFFFAFAFA),
-        body: SafeArea(
-          bottom: false,
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.only(bottom: 100.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16.h),
+      backgroundColor: const Color(0xFFFAFAFA),
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            // ====================================================
+            // MAIN SCROLL
+            // ====================================================
 
-                    // Header
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: LocationPicker(onLocationSelected: null),
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.only(
+                bottom: 90.h, // ✅ NavBar এর জন্য space (110 → 90)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16.h),
+
+                  // ==================================================
+                  // HEADER
+                  // ==================================================
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: LocationPicker(
+                            onLocationSelected: null,
                           ),
-                          SizedBox(width: 12.w),
-                          GestureDetector(
+                        ),
+                        SizedBox(width: 12.w),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed('/profile-edit');
+                          },
+                          child: Container(
+                            width: 48.w,
+                            height: 48.w,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10.r,
+                                  offset: Offset(
+                                    0,
+                                    4.h,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.person_outline,
+                              color: Colors.black87,
+                              size: 24.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // ==================================================
+                  // BANNER
+                  // ==================================================
+
+                  SizedBox(
+                    height: bannerHeight,
+                    child: PageView.builder(
+                      itemCount: bannerData.length,
+                      controller: homeController.pageController,
+                      onPageChanged: (index) {
+                        homeController.onBannerPageChanged(index);
+                      },
+                      itemBuilder: (context, index) {
+                        final banner = bannerData[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4.w,
+                          ),
+                          child: GestureDetector(
                             onTap: () {
-                              Get.toNamed('/profile-edit');
+                              Get.toNamed(
+                                Routes.SPECIAL_OFFER,
+                              );
                             },
                             child: Container(
-                              padding: EdgeInsets.all(12.r),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                              ),
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Icon(
-                                Icons.person_outline,
-                                color: Colors.black87,
-                                size: 24.sp,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 20.h),
-
-                    // Banner Slider
-                    SizedBox(
-                      height: 150.h,
-                      child: PageView.builder(
-                        itemCount: bannerData.length,
-                        onPageChanged: (index) {
-                          controller.onBannerPageChanged(index);
-                        },
-                        controller: controller.pageController,
-                        itemBuilder: (context, index) {
-                          final banner = bannerData[index];
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 4.0.w,
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.toNamed(Routes.SPECIAL_OFFER);
-                              },
-                              child: Container(
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 8.w,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    banner['gradient'][0],
+                                    banner['gradient'][1],
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
                                 ),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      banner['gradient'][0],
-                                      banner['gradient'][1],
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20.r),
+                                borderRadius: BorderRadius.circular(
+                                  20.r,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  20.r,
                                 ),
                                 child: Stack(
                                   children: [
+                                    // Banner Text
                                     Padding(
-                                      padding: EdgeInsets.all(20.0.r),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            banner['title'],
-                                            style: TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(height: 4.h),
-                                          Text(
-                                            banner['subtitle'],
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 24.sp,
-                                              fontWeight: FontWeight.w900,
-                                              height: 1.1.h,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          Text(
-                                            banner['category'],
-                                            style: TextStyle(
-                                              color: Colors.white.withOpacity(
-                                                0.9,
+                                      padding: EdgeInsets.all(
+                                        20.r,
+                                      ),
+                                      child: FractionallySizedBox(
+                                        widthFactor:
+                                            screenWidth < 400
+                                            ? 0.55
+                                            : 0.60,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              banner['title'],
+                                              maxLines: 1,
+                                              overflow:
+                                                  TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color:
+                                                    Colors.white70,
+                                                fontSize: 12.sp,
+                                                fontWeight:
+                                                    FontWeight.bold,
                                               ),
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
                                             ),
-                                          ),
-                                        ],
+                                            SizedBox(height: 4.h),
+                                            Text(
+                                              banner['subtitle'],
+                                              style: TextStyle(
+                                                color:
+                                                    Colors.white,
+                                                fontSize: screenWidth <
+                                                        350
+                                                    ? 20.sp
+                                                    : 24.sp,
+                                                fontWeight:
+                                                    FontWeight.w900,
+                                                height: 1.1,
+                                              ),
+                                            ),
+                                            SizedBox(height: 8.h),
+                                            Text(
+                                              banner['category'],
+                                              maxLines: 1,
+                                              overflow:
+                                                  TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: Colors.white
+                                                    .withOpacity(0.9),
+                                                fontSize: 12.sp,
+                                                fontWeight:
+                                                    FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
+                                    // Banner Image
                                     Positioned(
                                       right: -10.w,
-                                      bottom: -10.h,
                                       top: -10.h,
+                                      bottom: -10.h,
                                       child: Opacity(
                                         opacity: 0.9,
                                         child: Image.network(
                                           banner['image'],
-                                          width: 160.w,
+                                          width: screenWidth < 400
+                                              ? 140.w
+                                              : 160.w,
                                           fit: BoxFit.cover,
                                           errorBuilder:
-                                              (context, error, stackTrace) {
-                                                return Container(
-                                                  width: 160.w,
-                                                  color: Colors.grey[300],
-                                                  child: Icon(
-                                                    Icons.image_not_supported,
-                                                    size: 40.sp,
-                                                  ),
-                                                );
-                                              },
+                                              (
+                                                context,
+                                                error,
+                                                stackTrace,
+                                              ) {
+                                            return Container(
+                                              width: screenWidth < 400
+                                                  ? 140.w
+                                                  : 160.w,
+                                              color:
+                                                  Colors.grey[300],
+                                              child: Icon(
+                                                Icons
+                                                    .image_not_supported,
+                                                size: 40.sp,
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -315,343 +448,519 @@ class HomeScreen extends GetView<HomeController> {
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
+                  ),
 
-                    SizedBox(height: 12.h),
+                  SizedBox(height: 12.h),
 
-                    // Banner Indicator Dots
-                    Obx(
-                      () => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(bannerData.length, (index) {
-                          bool isActive =
-                              controller.currentBannerIndex.value == index;
+                  // ==================================================
+                  // BANNER DOTS
+                  // ==================================================
+
+                  Obx(
+                    () => Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center,
+                      children: List.generate(
+                        bannerData.length,
+                        (index) {
+                          final isActive =
+                              homeController
+                                  .currentBannerIndex
+                                  .value ==
+                              index;
                           return AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
-                            margin: EdgeInsets.symmetric(horizontal: 3.w),
+                            duration:
+                                const Duration(
+                                  milliseconds: 300,
+                                ),
+                            margin:
+                                EdgeInsets.symmetric(
+                                  horizontal: 3.w,
+                                ),
                             height: 6.h,
-                            width: isActive ? 18 : 6,
-                            decoration: BoxDecoration(
+                            width: isActive
+                                ? 18.w
+                                : 6.w,
+                            decoration:
+                                BoxDecoration(
                               color: isActive
                                   ? AppColors.tomato
                                   : Colors.black12,
-                              borderRadius: BorderRadius.circular(3.r),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-
-                    SizedBox(height: 20.h),
-
-                    // ========== SEARCH BAR WITH FILTER ==========
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF5F5F5),
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.search,
-                              color: Colors.black38,
-                              size: 26.sp,
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: Obx(
-                                () => TextField(
-                                  onChanged: (value) {
-                                    controller.updateSearch(value);
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: controller.isFilterApplied.value
-                                        ? "Search with filters..."
-                                        : "Search products...",
-                                    hintStyle: TextStyle(
-                                      color: Colors.black38,
-                                      fontSize: 16.sp,
-                                    ),
-                                    border: InputBorder.none,
-                                    suffixIcon:
-                                        controller.searchText.value.isNotEmpty
-                                        ? IconButton(
-                                            onPressed: () {
-                                              controller.clearSearch();
-                                            },
-                                            icon: Icon(
-                                              Icons.clear,
-                                              color: Colors.black38,
-                                              size: 20.sp,
-                                            ),
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // 🔥 FILTER BUTTON WITH BADGE
-                            Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(8.r),
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      controller.showFilterBottomSheet(context);
-                                    },
-                                    icon: Obx(
-                                      () => Icon(
-                                        controller.isFilterApplied.value
-                                            ? Icons.filter_alt
-                                            : Icons.tune,
-                                        color: controller.isFilterApplied.value
-                                            ? AppColors.tomato
-                                            : Colors.black54,
-                                        size: 24.sp,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // 🔥 Filter Active Indicator Dot
-                                Obx(
-                                  () => controller.isFilterApplied.value
-                                      ? Positioned(
-                                          right: 4.w,
-                                          top: 4.h,
-                                          child: Container(
-                                            width: 10.w,
-                                            height: 10.h,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.tomato,
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox.shrink(),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // ========== ACTIVE FILTERS CHIPS ==========
-                    Obx(
-                      () => controller.isFilterApplied.value
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20.0.w,
-                                vertical: 8.0.h,
-                              ),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    if (controller.selectedCategory.value !=
-                                        'All')
-                                      _buildFilterChip(
-                                        label:
-                                            'Category: ${controller.selectedCategory.value}',
-                                        onDelete: () {
-                                          controller.selectedCategory.value =
-                                              'All';
-                                          controller.applyFilters();
-                                        },
-                                      ),
-                                    if (controller.selectedSortBy.value !=
-                                        'Popular')
-                                      _buildFilterChip(
-                                        label:
-                                            'Sort: ${controller.selectedSortBy.value}',
-                                        onDelete: () {
-                                          controller.selectedSortBy.value =
-                                              'Popular';
-                                          controller.applyFilters();
-                                        },
-                                      ),
-                                    if (controller.minPrice.value > 0 ||
-                                        controller.maxPrice.value < 100)
-                                      _buildFilterChip(
-                                        label:
-                                            'Price: £${controller.minPrice.value.toInt()} - £${controller.maxPrice.value.toInt()}',
-                                        onDelete: () {
-                                          controller.minPrice.value = 0;
-                                          controller.maxPrice.value = 100;
-                                          controller.applyFilters();
-                                        },
-                                      ),
-                                    if (controller.searchText.value.isNotEmpty)
-                                      _buildFilterChip(
-                                        label:
-                                            'Search: ${controller.searchText.value}',
-                                        onDelete: () {
-                                          controller.clearSearch();
-                                        },
-                                      ),
-                                    _buildFilterChip(
-                                      label: 'Clear All',
-                                      isClearAll: true,
-                                      onDelete: () {
-                                        controller.resetFilter();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : SizedBox.shrink(),
-                    ),
-
-                    SizedBox(height: 24.h),
-
-                    // Categories
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: categories.length,
-                        gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              mainAxisSpacing: 16.h,
-                              crossAxisSpacing: 16.w,
-                              childAspectRatio: 0.85,
-                            ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Get.to(
-                                () => ProductListScreen(),
-                                binding: ProductListBinding(),
-                                arguments: {
-                                  'name': categories[index]['name'],
-                                  'icon': categories[index]['icon'],
-                                },
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.r),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.02),
-                                    blurRadius: 8,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    categories[index]['icon']!,
-                                    style: TextStyle(fontSize: 28.sp),
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Text(
-                                    categories[index]['name']!,
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
+                              borderRadius:
+                                  BorderRadius.circular(
+                                3.r,
                               ),
                             ),
                           );
                         },
                       ),
                     ),
+                  ),
 
-                    SizedBox(height: 28.h),
+                  SizedBox(height: 20.h),
 
-                    // Special Offers Header
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                  // ==================================================
+                  // SEARCH BAR
+                  // ==================================================
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        minHeight: 58.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF5F5F5),
+                        borderRadius:
+                            BorderRadius.circular(
+                          16.r,
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                      ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Special Offers",
-                            style: TextStyle(
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                          Icon(
+                            Icons.search,
+                            color: Colors.black38,
+                            size: 26.sp,
+                          ),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Obx(
+                              () => TextField(
+                                onChanged: (value) {
+                                  homeController
+                                      .updateSearch(value);
+                                },
+                                decoration:
+                                    InputDecoration(
+                                  hintText: homeController
+                                          .isFilterApplied
+                                          .value
+                                      ? 'Search with filters...'
+                                      : 'Search products...',
+                                  hintStyle:
+                                      TextStyle(
+                                    color: Colors.black38,
+                                    fontSize: 16.sp,
+                                  ),
+                                  border:
+                                      InputBorder.none,
+                                  isDense: true,
+                                  suffixIcon: homeController
+                                          .searchText
+                                          .value
+                                          .isNotEmpty
+                                      ? IconButton(
+                                          onPressed: () {
+                                            homeController
+                                                .clearSearch();
+                                          },
+                                          icon: Icon(
+                                            Icons.clear,
+                                            color:
+                                                Colors.black38,
+                                            size: 20.sp,
+                                          ),
+                                        )
+                                      : null,
+                                ),
+                              ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.SPECIAL_OFFER);
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  "View All",
-                                  style: TextStyle(
-                                    color: AppColors.tomato,
-                                    fontSize: 15.sp,
-                                    fontWeight: FontWeight.bold,
+                          // FILTER
+                          Stack(
+                            children: [
+                              Container(
+                                width: 42.w,
+                                height: 42.w,
+                                decoration:
+                                    BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius:
+                                      BorderRadius.circular(
+                                    8.r,
                                   ),
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 14.sp,
-                                  color: AppColors.tomato,
+                                child: IconButton(
+                                  padding:
+                                      EdgeInsets.zero,
+                                  onPressed: () {
+                                    homeController
+                                        .showFilterBottomSheet(
+                                      context,
+                                    );
+                                  },
+                                  icon: Obx(
+                                    () => Icon(
+                                      homeController
+                                              .isFilterApplied
+                                              .value
+                                          ? Icons.filter_alt
+                                          : Icons.tune,
+                                      color: homeController
+                                              .isFilterApplied
+                                              .value
+                                          ? AppColors.tomato
+                                          : Colors.black54,
+                                      size: 22.sp,
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Obx(
+                                () => homeController
+                                        .isFilterApplied
+                                        .value
+                                    ? Positioned(
+                                        right: 2.w,
+                                        top: 2.h,
+                                        child: Container(
+                                          width: 9.w,
+                                          height: 9.w,
+                                          decoration:
+                                              BoxDecoration(
+                                            color:
+                                                AppColors.tomato,
+                                            shape:
+                                                BoxShape.circle,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
+                  ),
 
-                    SizedBox(height: 16.h),
+                  // ==================================================
+                  // ACTIVE FILTER CHIPS
+                  // ==================================================
 
-                    // ========== 🔥 SPECIAL OFFERS GRID (FILTERED) ==========
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                      child: Obx(() {
-                        final offers = controller.filteredOffers.isNotEmpty 
-                            ? controller.filteredOffers 
+                  Obx(
+                    () => homeController
+                            .isFilterApplied
+                            .value
+                        ? Padding(
+                            padding:
+                                EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 8.h,
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection:
+                                  Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  if (homeController
+                                          .selectedCategory
+                                          .value !=
+                                      'All')
+                                    _buildFilterChip(
+                                      label:
+                                          'Category: ${homeController.selectedCategory.value}',
+                                      onDelete: () {
+                                        homeController
+                                            .selectedCategory
+                                            .value = 'All';
+                                        homeController
+                                            .applyFilters();
+                                      },
+                                    ),
+                                  if (homeController
+                                          .selectedSortBy
+                                          .value !=
+                                      'Popular')
+                                    _buildFilterChip(
+                                      label:
+                                          'Sort: ${homeController.selectedSortBy.value}',
+                                      onDelete: () {
+                                        homeController
+                                            .selectedSortBy
+                                            .value = 'Popular';
+                                        homeController
+                                            .applyFilters();
+                                      },
+                                    ),
+                                  if (homeController
+                                              .minPrice
+                                              .value >
+                                          0 ||
+                                      homeController
+                                              .maxPrice
+                                              .value <
+                                          100)
+                                    _buildFilterChip(
+                                      label:
+                                          'Price: \$${homeController.minPrice.value.toInt()} - \$${homeController.maxPrice.value.toInt()}',
+                                      onDelete: () {
+                                        homeController
+                                            .minPrice
+                                            .value = 0;
+                                        homeController
+                                            .maxPrice
+                                            .value = 100;
+                                        homeController
+                                            .applyFilters();
+                                      },
+                                    ),
+                                  if (homeController
+                                      .searchText
+                                      .value
+                                      .isNotEmpty)
+                                    _buildFilterChip(
+                                      label:
+                                          'Search: ${homeController.searchText.value}',
+                                      onDelete: () {
+                                        homeController
+                                            .clearSearch();
+                                      },
+                                    ),
+                                  _buildFilterChip(
+                                    label: 'Clear All',
+                                    isClearAll: true,
+                                    onDelete: () {
+                                      homeController
+                                          .resetFilter();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+
+                  SizedBox(height: 24.h),
+
+                  // ==================================================
+                  // CATEGORIES
+                  // ==================================================
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics:
+                          const NeverScrollableScrollPhysics(),
+                      itemCount: categories.length,
+                      gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                            categoryColumns,
+                        mainAxisSpacing: 12.h,
+                        crossAxisSpacing: 12.w,
+                        childAspectRatio:
+                            screenWidth < 350
+                            ? 0.80
+                            : 0.85,
+                      ),
+                      itemBuilder: (context, index) {
+                        final category =
+                            categories[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              () => ProductListScreen(),
+                              binding:
+                                  ProductListBinding(),
+                              arguments: {
+                                'name':
+                                    category['name'],
+                                'icon':
+                                    category['icon'],
+                              },
+                            );
+                          },
+                          child: Container(
+                            decoration:
+                                BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.circular(
+                                16.r,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withOpacity(0.02),
+                                  blurRadius: 8.r,
+                                  offset: Offset(
+                                    0,
+                                    2.h,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  category['icon']!,
+                                  style: TextStyle(
+                                    fontSize:
+                                        screenWidth < 350
+                                        ? 24.sp
+                                        : 28.sp,
+                                  ),
+                                ),
+                                SizedBox(height: 6.h),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(
+                                    horizontal: 4.w,
+                                  ),
+                                  child: Text(
+                                    category['name']!,
+                                    maxLines: 1,
+                                    overflow:
+                                        TextOverflow.ellipsis,
+                                    textAlign:
+                                        TextAlign.center,
+                                    style: TextStyle(
+                                      color:
+                                          Colors.black87,
+                                      fontSize: 12.sp,
+                                      fontWeight:
+                                          FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  SizedBox(height: 28.h),
+
+                  // ==================================================
+                  // SPECIAL OFFERS HEADER
+                  // ==================================================
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Special Offers',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight:
+                                  FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              Routes.SPECIAL_OFFER,
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize:
+                                MainAxisSize.min,
+                            children: [
+                              Text(
+                                'View All',
+                                style: TextStyle(
+                                  color:
+                                      AppColors.tomato,
+                                  fontSize: 15.sp,
+                                  fontWeight:
+                                      FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 4.w),
+                              Icon(
+                                Icons
+                                    .arrow_forward_ios,
+                                size: 14.sp,
+                                color:
+                                    AppColors.tomato,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 16.h),
+
+                  // ==================================================
+                  // SPECIAL OFFERS GRID
+                  // ==================================================
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ),
+                    child: Obx(
+                      () {
+                        final offers = homeController
+                                .filteredOffers
+                                .isNotEmpty
+                            ? homeController
+                                .filteredOffers
                             : specialOffers;
-                        
-                        // 🔥 Show empty state when no results
-                        if (offers.isEmpty && controller.isFilterApplied.value) {
+
+                        // EMPTY FILTER RESULT
+                        if (offers.isEmpty &&
+                            homeController
+                                .isFilterApplied
+                                .value) {
                           return Center(
                             child: Padding(
-                              padding: EdgeInsets.all(40.0.r),
+                              padding:
+                                  EdgeInsets.all(
+                                40.r,
+                              ),
                               child: Column(
                                 children: [
                                   Icon(
                                     Icons.search_off,
                                     size: 64.sp,
-                                    color: Colors.black26,
+                                    color:
+                                        Colors.black26,
                                   ),
                                   SizedBox(height: 16.h),
                                   Text(
-                                    "No offers found!",
-                                    style: TextStyle(
-                                      color: Colors.black45,
+                                    'No offers found!',
+                                    style:
+                                        TextStyle(
+                                      color:
+                                          Colors.black45,
                                       fontSize: 16.sp,
                                     ),
                                   ),
+                                  SizedBox(height: 4.h),
                                   Text(
-                                    "Try adjusting your filters",
-                                    style: TextStyle(
-                                      color: Colors.black38,
+                                    'Try adjusting your filters',
+                                    style:
+                                        TextStyle(
+                                      color:
+                                          Colors.black38,
                                       fontSize: 14.sp,
                                     ),
                                   ),
@@ -660,66 +969,98 @@ class HomeScreen extends GetView<HomeController> {
                             ),
                           );
                         }
-                        
+
+                        // NO OFFERS
                         if (offers.isEmpty) {
                           return Center(
                             child: Padding(
-                              padding: EdgeInsets.all(40.0.r),
+                              padding:
+                                  EdgeInsets.all(
+                                40.r,
+                              ),
                               child: Text(
-                                "No special offers available",
-                                style: TextStyle(
-                                  color: Colors.black45,
+                                'No special offers available',
+                                style:
+                                    TextStyle(
+                                  color:
+                                      Colors.black45,
                                   fontSize: 16.sp,
                                 ),
                               ),
                             ),
                           );
                         }
-                        
+
+                        // GRID
                         return GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.8,
-                            crossAxisSpacing: 16.w,
-                            mainAxisSpacing: 16.h,
-                          ),
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics:
+                              const NeverScrollableScrollPhysics(),
                           itemCount: offers.length,
-                          itemBuilder: (context, index) {
-                            final offer = offers[index];
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                offerColumns,
+                            crossAxisSpacing:
+                                12.w,
+                            mainAxisSpacing:
+                                16.h,
+                            childAspectRatio:
+                                screenWidth < 370
+                                ? 0.70
+                                : screenWidth < 700
+                                ? 0.72
+                                : 0.78,
+                          ),
+                          itemBuilder:
+                              (context, index) {
+                            final offer =
+                                offers[index];
                             return _buildSpecialOfferCard(
-                              id: offer['id'] ?? 'offer_$index',
-                              imageUrl: offer['image'],
-                              title: offer['title'],
-                              rating: offer['rating'],
-                              price: offer['price'],
-                              discount: offer['discount'],
+                              id: offer['id'] ??
+                                  'offer_$index',
+                              imageUrl:
+                                  offer['image'],
+                              title:
+                                  offer['title'],
+                              rating:
+                                  offer['rating'],
+                              price:
+                                  offer['price'],
+                              discount:
+                                  offer['discount'],
                             );
                           },
                         );
-                      }),
+                      },
                     ),
+                  ),
 
-                    SizedBox(height: 30.h),
-                  ],
-                ),
+                  SizedBox(height: 30.h),
+                ],
               ),
+            ),
 
-              // Bottom Navigation
-              Positioned(
-                bottom: 20.h,
-                left: 20.w,
-                right: 20.w,
-                child: BottomNavigationWidget(),
-              ),
-            ],
-          ),
+            // ======================================================
+            // BOTTOM NAVIGATION - FIXED
+            // ======================================================
+
+            Positioned(
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w, // ✅ 0 (20.w → 0)
+              child: BottomNavigationWidget(),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
-  // ========== Special Offer Card ==========
+  // ============================================================
+  // SPECIAL OFFER CARD
+  // ============================================================
+
   Widget _buildSpecialOfferCard({
     required String id,
     required String imageUrl,
@@ -728,175 +1069,260 @@ class HomeScreen extends GetView<HomeController> {
     required String price,
     required String discount,
   }) {
-    final favoriteService = Get.find<FavoriteService>();
+    final favoriteService =
+        Get.find<FavoriteService>();
+
     final double priceValue =
-        double.tryParse(price.replaceAll('\$', '')) ?? 0.0;
-    final double ratingValue = double.tryParse(rating) ?? 0.0;
+        double.tryParse(
+          price.replaceAll('\$', ''),
+        ) ??
+        0.0;
 
-    return Obx(() {
-      final isFavorite = favoriteService.isFavorite(id);
+    final double ratingValue =
+        double.tryParse(rating) ?? 0.0;
 
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20.r),
-                          ),
-                          image: DecorationImage(
-                            image: NetworkImage(imageUrl),
-                            fit: BoxFit.cover,
+    return Obx(
+      () {
+        final isFavorite =
+            favoriteService.isFavorite(id);
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius:
+                BorderRadius.circular(20.r),
+            boxShadow: [
+              BoxShadow(
+                color:
+                    Colors.black.withOpacity(0.05),
+                blurRadius: 10.r,
+                offset: Offset(
+                  0,
+                  4.h,
+                ),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
+            children: [
+              // IMAGE
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.vertical(
+                          top: Radius.circular(
+                            20.r,
                           ),
                         ),
-                      ),
-                      // Discount Badge
-                      Positioned(
-                        top: 10.h,
-                        left: 10.w,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 4.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.tomato,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Text(
-                            discount,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // 🔥 Favorite Button
-                      Positioned(
-                        top: 10.h,
-                        right: 10.w,
-                        child: AnimatedFavoriteButton(
-                          isFavorite: isFavorite,
-                          size: 18.sp,
-                          navigateOnAdd: false,
-                          onTap: (newValue) async {
-                            final item = FavoriteItem(
-                              id: id,
-                              title: title,
-                              image: imageUrl,
-                              rating: ratingValue,
-                              price: priceValue,
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (
+                                context,
+                                error,
+                                stackTrace,
+                              ) {
+                            return Container(
+                              color:
+                                  Colors.grey[200],
+                              child: Center(
+                                child: Icon(
+                                  Icons
+                                      .image_not_supported,
+                                  size: 35.sp,
+                                  color:
+                                      Colors.black26,
+                                ),
+                              ),
                             );
-
-                            if (newValue) {
-                              await favoriteService.addFavorite(
-                                item,
-                                navigateToLikedScreen: false,
-                              );
-                            } else {
-                              await favoriteService.removeFavorite(id);
-                            }
                           },
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                // Details
-                Padding(
-                  padding: EdgeInsets.all(12.0.r),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp,
-                          overflow: TextOverflow.ellipsis,
+                    ),
+                    // DISCOUNT
+                    Positioned(
+                      top: 10.h,
+                      left: 10.w,
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
                         ),
-                        maxLines: 1,
-                      ),
-                      SizedBox(height: 2.h),
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.amber, size: 14.sp),
-                          Text(
-                            " $rating",
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.black54,
-                            ),
+                        decoration:
+                            BoxDecoration(
+                          color:
+                              AppColors.tomato,
+                          borderRadius:
+                              BorderRadius.circular(
+                            12.r,
                           ),
-                          Spacer(),
-                          Text(
+                        ),
+                        child: Text(
+                          discount,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10.sp,
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // FAVORITE
+                    Positioned(
+                      top: 10.h,
+                      right: 10.w,
+                      child:
+                          AnimatedFavoriteButton(
+                        isFavorite:
+                            isFavorite,
+                        size: 18.sp,
+                        navigateOnAdd: false,
+                        onTap:
+                            (newValue) async {
+                          final item =
+                              FavoriteItem(
+                            id: id,
+                            title: title,
+                            image: imageUrl,
+                            rating:
+                                ratingValue,
+                            price: priceValue,
+                          );
+                          if (newValue) {
+                            await favoriteService
+                                .addFavorite(
+                              item,
+                              navigateToLikedScreen:
+                                  false,
+                            );
+                          } else {
+                            await favoriteService
+                                .removeFavorite(
+                              id,
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // DETAILS
+              Padding(
+                padding:
+                    EdgeInsets.all(12.r),
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow:
+                          TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight:
+                            FontWeight.bold,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color:
+                              Colors.amber,
+                          size: 14.sp,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          rating,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color:
+                                Colors.black54,
+                          ),
+                        ),
+                        const Spacer(),
+                        Flexible(
+                          child: Text(
                             price,
+                            maxLines: 1,
+                            overflow:
+                                TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.tomato,
+                              fontWeight:
+                                  FontWeight.bold,
+                              color:
+                                  AppColors.tomato,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
-      );
-    });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  // ========== Filter Chip ==========
+  // ============================================================
+  // FILTER CHIP
+  // ============================================================
+
   Widget _buildFilterChip({
     required String label,
     bool isClearAll = false,
     required VoidCallback onDelete,
   }) {
     return Container(
-      margin: EdgeInsets.only(right: 8.w),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      margin: EdgeInsets.only(
+        right: 8.w,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: 12.w,
+        vertical: 6.h,
+      ),
       decoration: BoxDecoration(
         color: isClearAll
             ? Colors.red.withOpacity(0.1)
             : AppColors.tomato.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius:
+            BorderRadius.circular(20.r),
         border: Border.all(
-          color: isClearAll ? Colors.red : AppColors.tomato,
+          color: isClearAll
+              ? Colors.red
+              : AppColors.tomato,
           width: 1.w,
         ),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize:
+            MainAxisSize.min,
         children: [
           Text(
             label,
             style: TextStyle(
-              color: isClearAll ? Colors.red : AppColors.tomato,
+              color: isClearAll
+                  ? Colors.red
+                  : AppColors.tomato,
               fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
+              fontWeight:
+                  FontWeight.w500,
             ),
           ),
           SizedBox(width: 4.w),
@@ -905,7 +1331,9 @@ class HomeScreen extends GetView<HomeController> {
             child: Icon(
               Icons.close,
               size: 16.sp,
-              color: isClearAll ? Colors.red : AppColors.tomato,
+              color: isClearAll
+                  ? Colors.red
+                  : AppColors.tomato,
             ),
           ),
         ],

@@ -26,40 +26,47 @@ class YourProfileScreen extends StatelessWidget {
         bottom: false,
         child: Stack(
           children: [
+            // ==================================================
+            // MAIN CONTENT
+            // ==================================================
             Column(
               children: [
                 _buildHeader(controller),
                 Expanded(
                   child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 8.h,
+                    ),
                     child: Column(
                       children: [
                         SizedBox(height: 10.h),
                         _buildProfileAvatar(controller),
-                        SizedBox(height: 24.h),
+                        SizedBox(height: 20.h),
                         _buildNameField(controller),
-                        SizedBox(height: 14.h),
+                        SizedBox(height: 12.h),
                         _buildDobField(controller),
-                        SizedBox(height: 14.h),
+                        SizedBox(height: 12.h),
                         _buildGenderDropdown(controller),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 20.h),
+                        // ✅ Save Button (Inside Scroll)
+                        _buildSaveButton(controller),
+                        SizedBox(height: 100.h), // ✅ Space for NavBar
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+
+            // ==================================================
+            // BOTTOM NAVIGATION
+            // ==================================================
             Positioned(
-              bottom: 80.h,
-              left: 0.w,
-              right: 0.w,
-              child: _buildBottomButton(controller),
-            ),
-            Positioned(
-              bottom: 20.h,
-              left: 20.w,
-              right: 20.w,
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: BottomNavigationWidget(),
             ),
           ],
@@ -68,12 +75,18 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Header ==========
+  // ============================================================
+  // HEADER
+  // ============================================================
   Widget _buildHeader(YourProfileController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 10.h,
+      ),
       child: Row(
         children: [
+          // Back Button
           GestureDetector(
             onTap: controller.goBack,
             child: Container(
@@ -90,73 +103,96 @@ class YourProfileScreen extends StatelessWidget {
               ),
             ),
           ),
+          
+          SizedBox(width: 8.w),
+          
+          // Title
           Expanded(
             child: Text(
               'Edit Profile',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 18.sp, // ✅ 20.sp → 18.sp
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
           ),
+          
+          // Save Button in Header (Optional)
           Obx(
             () => controller.isFormValid.value
                 ? GestureDetector(
                     onTap: controller.saveProfile,
-                    child: Text(
-                      'Save',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
                         color: AppColors.tomato,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   )
-                : SizedBox(width: 40.w),
+                : SizedBox(
+                    width: 50.w,
+                  ),
           ),
         ],
       ),
     );
   }
 
-  // ========== Profile Avatar ==========
+  // ============================================================
+  // PROFILE AVATAR
+  // ============================================================
   Widget _buildProfileAvatar(YourProfileController controller) {
     return Center(
       child: Stack(
         children: [
           Obx(
             () => Container(
-              width: 120.w,
-              height: 120.h,
+              width: 110.w, // ✅ 120.w → 110.w
+              height: 110.h, // ✅ 120.h → 110.h
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: controller.profileImageUrl.value.isNotEmpty
                       ? FileImage(File(controller.profileImageUrl.value))
-                      : NetworkImage('https://i.pravatar.cc/300')
-                            as ImageProvider,
+                      : const NetworkImage('https://i.pravatar.cc/300')
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
           Positioned(
-            top: 4.h,
-            right: 4.w,
+            bottom: 0, // ✅ top → bottom
+            right: 0,
             child: GestureDetector(
               onTap: () => controller.showImagePickerOptions(Get.context!),
               child: Container(
-                width: 32.w,
-                height: 32.h,
+                width: 30.w, // ✅ 32.w → 30.w
+                height: 30.h, // ✅ 32.h → 30.h
                 decoration: BoxDecoration(
                   color: AppColors.tomato,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2.w),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2.w,
+                  ),
                 ),
                 child: Icon(
-                  Icons.edit_rounded,
+                  Icons.camera_alt_rounded, // ✅ edit → camera
                   size: 16.sp,
                   color: Colors.white,
                 ),
@@ -168,7 +204,9 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Name Field ==========
+  // ============================================================
+  // NAME FIELD
+  // ============================================================
   Widget _buildNameField(YourProfileController controller) {
     return _buildCustomCard(
       child: Column(
@@ -179,14 +217,14 @@ class YourProfileScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              color: Colors.grey.shade600,
             ),
           ),
           SizedBox(height: 4.h),
           TextField(
             controller: controller.nameController,
             style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 15.sp, // ✅ 16.sp → 15.sp
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
@@ -195,7 +233,10 @@ class YourProfileScreen extends StatelessWidget {
               isDense: true,
               contentPadding: EdgeInsets.zero,
               hintText: 'Enter your full name',
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(
+                fontSize: 14.sp,
+                color: Colors.grey.shade400,
+              ),
             ),
             onChanged: (_) => controller.onTextChanged(),
           ),
@@ -204,7 +245,9 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== DOB Field ==========
+  // ============================================================
+  // DOB FIELD
+  // ============================================================
   Widget _buildDobField(YourProfileController controller) {
     return _buildCustomCard(
       child: Column(
@@ -215,7 +258,7 @@ class YourProfileScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              color: Colors.grey.shade600,
             ),
           ),
           SizedBox(height: 4.h),
@@ -227,7 +270,7 @@ class YourProfileScreen extends StatelessWidget {
                   readOnly: true,
                   onTap: () => controller.selectDate(Get.context!),
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                     color: Colors.black87,
                   ),
@@ -236,16 +279,26 @@ class YourProfileScreen extends StatelessWidget {
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
                     hintText: 'DD/MM/YYYY',
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey.shade400,
+                    ),
                   ),
                 ),
               ),
               GestureDetector(
                 onTap: () => controller.selectDate(Get.context!),
-                child: Icon(
-                  Icons.calendar_today_outlined,
-                  size: 20.sp,
-                  color: AppColors.tomato,
+                child: Container(
+                  padding: EdgeInsets.all(6.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.tomato.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.calendar_today_outlined,
+                    size: 18.sp, // ✅ 20.sp → 18.sp
+                    color: AppColors.tomato,
+                  ),
                 ),
               ),
             ],
@@ -255,7 +308,9 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Gender Dropdown ==========
+  // ============================================================
+  // GENDER DROPDOWN
+  // ============================================================
   Widget _buildGenderDropdown(YourProfileController controller) {
     return _buildCustomCard(
       child: Column(
@@ -266,7 +321,7 @@ class YourProfileScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              color: Colors.grey.shade600,
             ),
           ),
           SizedBox(height: 4.h),
@@ -279,10 +334,10 @@ class YourProfileScreen extends StatelessWidget {
                 icon: Icon(
                   Icons.keyboard_arrow_down_rounded,
                   color: Colors.black87,
-                  size: 22.sp,
+                  size: 20.sp,
                 ),
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
@@ -290,7 +345,10 @@ class YourProfileScreen extends StatelessWidget {
                 items: controller.genderOptions.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
                   );
                 }).toList(),
               ),
@@ -301,58 +359,71 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Custom Card ==========
+  // ============================================================
+  // SAVE BUTTON (Inside Scroll)
+  // ============================================================
+  Widget _buildSaveButton(YourProfileController controller) {
+    return Obx(
+      () => SizedBox(
+        width: double.infinity,
+        height: 50.h, // ✅ 52.h → 50.h
+        child: ElevatedButton(
+          onPressed: controller.isLoading.value || !controller.isFormValid.value
+              ? null
+              : controller.saveProfile,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.tomato,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            disabledBackgroundColor: Colors.grey.shade300,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25.r), // ✅ 26.r → 25.r
+            ),
+          ),
+          child: controller.isLoading.value
+              ? SizedBox(
+                  width: 22.w,
+                  height: 22.h,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5.r,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      Colors.white,
+                    ),
+                  ),
+                )
+              : Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // CUSTOM CARD
+  // ============================================================
   Widget _buildCustomCard({required Widget child}) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 14.w, // ✅ 16.w → 14.w
+        vertical: 12.h, // ✅ 14.h → 12.h
+      ),
       decoration: BoxDecoration(
-        color: AppColors.ashLight,
-        borderRadius: BorderRadius.circular(14.r),
+        color: AppColors.ashLight ?? Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12.r), // ✅ 14.r → 12.r
       ),
       child: child,
     );
   }
 
-  // ========== Bottom Button ==========
-  Widget _buildBottomButton(YourProfileController controller) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52.h,
-        child: Obx(
-          () => ElevatedButton(
-            onPressed: controller.isLoading.value
-                ? null
-                : controller.saveProfile,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.tomato,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(26.r),
-              ),
-            ),
-            child: controller.isLoading.value
-                ? SizedBox(
-                    width: 24.w,
-                    height: 24.h,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.r,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : Text(
-                    'Save Changes',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
+  // ============================================================
+  // BOTTOM BUTTON (Old - সরিয়ে ফেলেছি)
+  // ============================================================
+  // ❌ এই widget আর প্রয়োজন নেই
 }

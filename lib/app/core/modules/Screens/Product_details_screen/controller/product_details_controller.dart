@@ -1,78 +1,16 @@
 // lib/app/core/modules/Screens/Product_details_screen/controller/product_details_controller.dart
 
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourite_service/favourite_screen_service.dart';
-
-class ProductModel {
-  final String id;
-  final String name;
-  final String category;
-  final String imageUrl;
-  final double rating;
-  final double price;
-  final double? oldPrice;
-  final String description;
-
-  ProductModel({
-    required this.id,
-    required this.name,
-    required this.category,
-    required this.imageUrl,
-    required this.rating,
-    required this.price,
-    this.oldPrice,
-    this.description = '',
-  });
-
-  // 🔥 From JSON
-  factory ProductModel.fromJson(Map<String, dynamic> json) {
-    return ProductModel(
-      id: json['id']?.toString() ?? '1',
-      name: json['name']?.toString() ?? 'Product',
-      category: json['category']?.toString() ?? 'Food',
-      imageUrl: json['imageUrl']?.toString() ?? json['image']?.toString() ?? '',
-      rating: _parseDouble(json['rating'], 4.8),
-      price: _parseDouble(json['price'], 0.0),
-      oldPrice: _parseDoubleNullable(json['oldPrice']),
-      description: json['description']?.toString() ?? '',
-    );
-  }
-
-  static double _parseDouble(dynamic value, double defaultValue) {
-    if (value == null) return defaultValue;
-    if (value is String) {
-      try {
-        return double.parse(value);
-      } catch (e) {
-        return defaultValue;
-      }
-    }
-    if (value is num) return value.toDouble();
-    return defaultValue;
-  }
-
-  static double? _parseDoubleNullable(dynamic value) {
-    if (value == null) return null;
-    if (value is String) {
-      try {
-        return double.parse(value);
-      } catch (e) {
-        return null;
-      }
-    }
-    if (value is num) return value.toDouble();
-    return null;
-  }
-}
+// ✅ Correct import path
 
 class ProductDetailsController extends GetxController {
   static ProductDetailsController get to => Get.find();
 
-  // ========== Product Data ==========
   late ProductModel product;
 
-  // ========== Observable Variables ==========
   var quantity = 1.obs;
   var isFavorite = false.obs;
   var addCheese = false.obs;
@@ -80,7 +18,6 @@ class ProductDetailsController extends GetxController {
   var addMeat = false.obs;
   var isLoading = false.obs;
 
-  // ========== Favorite Service ==========
   final FavoriteService favoriteService = Get.find<FavoriteService>();
 
   @override
@@ -88,14 +25,12 @@ class ProductDetailsController extends GetxController {
     super.onInit();
     _loadProductData();
     
-    // 🔥 Check if product is already in favorites
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isFavorite.value = favoriteService.isFavorite(product.id);
       print('⭐ Favorite status for ${product.name}: ${isFavorite.value}');
     });
   }
 
-  // ========== Load Product Data ==========
   void _loadProductData() {
     print('🔍 ====== PRODUCT DETAILS CONTROLLER ======');
     print('📦 Get.arguments: ${Get.arguments}');
@@ -105,9 +40,16 @@ class ProductDetailsController extends GetxController {
     if (args is ProductModel) {
       product = args;
       print('✅ Product Loaded: ${product.name}');
+    } else if (args is FavoriteItem) {
+      product = ProductModel.fromFavoriteItem(args);
+      print('✅ Product from FavoriteItem: ${product.name}');
     } else if (args is Map<String, dynamic>) {
+      // ✅ Now fromJson exists
       product = ProductModel.fromJson(args);
       print('✅ Product from Map: ${product.name}');
+    } else if (args is ProductModel) {
+      product = args;
+      print('✅ Product from ProductModel: ${product.name}');
     } else {
       // Default product
       product = ProductModel(
@@ -125,9 +67,11 @@ class ProductDetailsController extends GetxController {
     
     print('📦 Product Name: ${product.name}');
     print('💰 Price: ${product.price}');
+    print('🖼️ Image: ${product.imageUrl}');
   }
 
-  // ========== 🔥 Toggle Favorite - Fixed ==========
+  // ============ FAVORITE METHODS ============
+
   Future<void> toggleFavorite() async {
     print('⭐ Toggle Favorite called for: ${product.name}');
     
@@ -137,20 +81,25 @@ class ProductDetailsController extends GetxController {
       image: product.imageUrl,
       rating: product.rating,
       price: product.price,
+      originalPrice: product.oldPrice,
     );
 
-    // Toggle favorite with navigation
     final result = await favoriteService.toggleFavorite(
       item, 
-      navigateToLikedScreen: true,  // 🔥 Liked Screen এ যাবে
+      navigateToLikedScreen: false,
     );
     
     isFavorite.value = result;
     print('⭐ Favorite toggled to: ${isFavorite.value}');
   }
 
-  // ========== Quantity Methods ==========
-  void increment() => quantity.value++;
+  // ============ QUANTITY METHODS ============
+
+  void increment() {
+    if (quantity.value < 10) {
+      quantity.value++;
+    }
+  }
   
   void decrement() {
     if (quantity.value > 1) {
@@ -158,11 +107,44 @@ class ProductDetailsController extends GetxController {
     }
   }
 
-  // ========== Add to Cart ==========
+  // ============ ADD-ONS METHODS ============
+
+  double getAddOnsTotal() {
+    double total = 0.0;
+    if (addCheese.value) total += 0.50;
+    if (addBacon.value) total += 1.00;
+    if (addMeat.value) total += 2.00;
+    return total;
+  }
+
+  List<Map<String, dynamic>> getSelectedAddOns() {
+    final List<Map<String, dynamic>> selected = [];
+    if (addCheese.value) {
+      selected.add({'name': 'Add Cheese', 'price': 0.50});
+    }
+    if (addBacon.value) {
+      selected.add({'name': 'Add Bacon', 'price': 1.00});
+    }
+    if (addMeat.value) {
+      selected.add({'name': 'Add Meat (Extra Patty)', 'price': 2.00});
+    }
+    return selected;
+  }
+
+  // ============ TOTAL PRICE ============
+
+  double get totalPrice {
+    return (product.price + getAddOnsTotal()) * quantity.value;
+  }
+
+  // ============ ADD TO CART ============
+
   void addToCart() {
+    final addOns = getSelectedAddOns();
+    
     Get.snackbar(
       'Added to Cart',
-      '${product.name} added to cart!',
+      '${product.name} added to cart!${addOns.isNotEmpty ? ' with ${addOns.length} add-ons' : ''}',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
       colorText: Colors.white,
@@ -170,32 +152,19 @@ class ProductDetailsController extends GetxController {
     );
   }
 
-  // ========== Get Add-ons Total ==========
-  double getAddOnsTotal() {
-    double total = 0.0;
-    if (addCheese.value) total += 1.50;
-    if (addBacon.value) total += 2.00;
-    if (addMeat.value) total += 3.00;
-    return total;
+  // ============ NAVIGATION ============
+
+  void goBack() {
+    Get.back();
   }
 
-  // ========== Get Total Price ==========
-  double get totalPrice {
-    return (product.price + getAddOnsTotal()) * quantity.value;
+  void goToCart() {
+    Get.toNamed('/cart');
   }
 
-  // ========== Get Selected Add-ons ==========
-  List<Map<String, dynamic>> getSelectedAddOns() {
-    final List<Map<String, dynamic>> selected = [];
-    if (addCheese.value) {
-      selected.add({'name': 'Add Cheese', 'price': 1.50});
-    }
-    if (addBacon.value) {
-      selected.add({'name': 'Add Bacon', 'price': 2.00});
-    }
-    if (addMeat.value) {
-      selected.add({'name': 'Add Meat (Extra Patty)', 'price': 3.00});
-    }
-    return selected;
+  @override
+  void onClose() {
+    print('🗑️ ProductDetailsController disposed');
+    super.onClose();
   }
 }

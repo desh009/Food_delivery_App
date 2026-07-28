@@ -1,8 +1,12 @@
+// lib/app/core/modules/Screens/special_offers_screen/controller/special_offers_controller.dart
+
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/binder/product_details_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/view/product_details_view.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
+// ✅ Import ProductModel
 
 class SpecialOffersController extends GetxController {
   var specialProducts = <Map<String, dynamic>>[].obs;
@@ -127,13 +131,13 @@ class SpecialOffersController extends GetxController {
   }
 
   void _applySearchAndFilter() {
-    print('Applying search and filter...'); // Debug
-    print('Search text: ${searchText.value}'); // Debug
-    print('Selected filter: ${selectedFilter.value}'); // Debug
+    print('Applying search and filter...');
+    print('Search text: ${searchText.value}');
+    print('Selected filter: ${selectedFilter.value}');
 
     List<Map<String, dynamic>> baseList;
     if (searchText.value.isEmpty) {
-      baseList = List.from(specialProducts.value); // ✅ Copy তৈরি করুন
+      baseList = List.from(specialProducts.value);
     } else {
       final lowerQuery = searchText.value.toLowerCase();
       baseList = specialProducts
@@ -144,13 +148,12 @@ class SpecialOffersController extends GetxController {
           .toList();
     }
 
-    print('Base list length: ${baseList.length}'); // Debug
-
+    print('Base list length: ${baseList.length}');
     _applyFilterToBaseList(baseList);
   }
 
   void _applyFilterToBaseList(List<Map<String, dynamic>> baseList) {
-    print('Applying filter: ${selectedFilter.value}'); // Debug
+    print('Applying filter: ${selectedFilter.value}');
 
     switch (selectedFilter.value) {
       case 'Low to High':
@@ -181,16 +184,12 @@ class SpecialOffersController extends GetxController {
         break;
     }
 
-    // ✅ Observable Update - এভাবেই করতে হবে
     filteredProducts.assignAll(baseList);
-    print('Filtered products count: ${filteredProducts.length}'); // Debug
-    print(
-      'Filtered prices: ${filteredProducts.map((e) => e['newPrice']).toList()}',
-    ); // Debug
+    print('Filtered products count: ${filteredProducts.length}');
   }
 
   void onFilterTap() {
-    print('Filter button tapped!'); // Debug
+    print('Filter button tapped!');
     Get.bottomSheet(
       Container(
         padding: const EdgeInsets.all(20),
@@ -216,7 +215,7 @@ class SpecialOffersController extends GetxController {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  print('Clear filter tapped!'); // Debug
+                  print('Clear filter tapped!');
                   selectedFilter.value = 'All';
                   _applySearchAndFilter();
                   Get.back();
@@ -258,9 +257,9 @@ class SpecialOffersController extends GetxController {
         value: option,
         groupValue: selectedFilter.value,
         onChanged: (value) {
-          print('Option selected: $value'); // Debug
+          print('Option selected: $value');
           selectedFilter.value = value!;
-          print('Selected filter updated: ${selectedFilter.value}'); // Debug
+          print('Selected filter updated: ${selectedFilter.value}');
           _applySearchAndFilter();
           Get.back();
         },
@@ -269,20 +268,42 @@ class SpecialOffersController extends GetxController {
     );
   }
 
-  void goToProductDetails(Map<String, dynamic> product) {
+  // ============ ✅ FIXED: GO TO PRODUCT DETAILS ============
+  void goToProductDetails(Map<String, dynamic> productData) {
     try {
-      if (product.isEmpty) {
+      if (productData.isEmpty) {
         Get.snackbar('Error', 'Product data is empty');
         return;
       }
 
+      // ✅ Convert Map to ProductModel
+      final product = ProductModel(
+        id: productData['id']?.toString() ?? '',
+        name: productData['name']?.toString() ?? '',
+        category: 'Special Offer',
+        imageUrl: productData['image']?.toString() ?? '',
+        rating: double.tryParse(productData['rating']?.toString() ?? '0') ?? 0.0,
+        price: (productData['newPrice'] as num?)?.toDouble() ?? 0.0,
+        oldPrice: (productData['oldPrice'] as num?)?.toDouble(),
+        description: productData['description']?.toString() ?? '',
+      );
+
+      // ✅ Navigate with ProductModel
       Get.to(
-        () => ProductDetailsScreen(),
+        () => ProductDetailsScreen(product: product),
         binding: ProductDetailsBinding(),
-        arguments: product,
+        transition: Transition.rightToLeft,
+        duration: const Duration(milliseconds: 300),
       );
     } catch (e) {
-      Get.snackbar('Error', 'Failed to navigate');
+      print('Error navigating: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to navigate to product details',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

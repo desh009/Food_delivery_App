@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/view/product_details_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/favourite_screen/controller/favourite_screen_controller.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/favourite_screen/binder/favourite_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourite_service/favourite_screen_service.dart';
@@ -38,70 +39,116 @@ class LikedScreen extends StatelessWidget {
     });
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(controller),
-              _buildSearchBar(controller),
-              SizedBox(height: 10.h),
-              _buildItemsCount(controller),
-              Expanded(
-                child: Obx(() {
-                  if (controller.isLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(color: AppColors.tomato),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        bottom: false,  // ✅ Important
+        child: Stack(
+          children: [
+            // ==================================================
+            // MAIN CONTENT
+            // ==================================================
+            Column(
+              children: [
+                _buildHeader(controller),
+                _buildSearchBar(controller),
+                SizedBox(height: 8.h),
+                _buildItemsCount(controller),
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.tomato,
+                          strokeWidth: 3.r,
+                        ),
+                      );
+                    }
+
+                    if (controller.filteredItems.isEmpty) {
+                      return _buildEmptyState();
+                    }
+
+                    return GridView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      itemCount: controller.filteredItems.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: _getGridColumns(context),
+                        crossAxisSpacing: 14.w,
+                        mainAxisSpacing: 14.h,
+                        childAspectRatio: _getAspectRatio(context),
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = controller.filteredItems[index];
+                        final isFavorite = favoriteService.isFavorite(item.id);
+                        return _buildFoodCard(controller, item, isFavorite);
+                      },
                     );
-                  }
-      
-                  if (controller.filteredItems.isEmpty) {
-                    return _buildEmptyState();
-                  }
-      
-                  return GridView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    itemCount: controller.filteredItems.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16.w,
-                      mainAxisSpacing: 16.h,
-                      childAspectRatio: 0.74,
-                    ),
-                    itemBuilder: (context, index) {
-                      final item = controller.filteredItems[index];
-                      final isFavorite = favoriteService.isFavorite(item.id);
-                      return _buildFoodCard(controller, item, isFavorite);
-                    },
-                  );
-                }),
-              ),
-            ],
-          ),
+                  }),
+                ),
+              ],
+            ),
+            // ==================================================
+            // ✅ BOTTOM NAVIGATION - FIXED POSITION
+            // ==================================================
+            Positioned(
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,  // ✅ Always 0
+              child: const BottomNavigationWidget(),
+            ),
+          ],
         ),
-        bottomNavigationBar: BottomNavigationWidget(),
-      );
+      ),
+    );
   }
+
+  // ============================================================
+  // RESPONSIVE HELPERS
+  // ============================================================
+
+  int _getGridColumns(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    if (width < 360) return 1;
+    if (width < 600) return 2;
+    if (width < 900) return 3;
+    return 4;
+  }
+
+  double _getAspectRatio(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    if (width < 360) return 0.85;
+    if (width < 600) return 0.74;
+    if (width < 900) return 0.80;
+    return 0.85;
+  }
+
+  // ============================================================
+  // HEADER
+  // ============================================================
 
   Widget _buildHeader(LikedController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 10.h,
+      ),
       child: Row(
         children: [
           GestureDetector(
             onTap: () => Get.back(),
             child: Container(
-              width: 40.w,
-              height: 40.h,
+              width: 38.w,
+              height: 38.h,
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
-                size: 18.sp,
+                size: 16.sp,
                 color: Colors.black87,
               ),
             ),
@@ -111,7 +158,7 @@ class LikedScreen extends StatelessWidget {
               'Favorites',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20.sp,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -122,41 +169,51 @@ class LikedScreen extends StatelessWidget {
                 ? GestureDetector(
                     onTap: () => controller.clearAllLiked(),
                     child: Container(
-                      width: 40.w,
-                      height: 40.h,
+                      width: 38.w,
+                      height: 38.h,
                       decoration: BoxDecoration(
                         color: Colors.red.shade50,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.delete_outline_rounded,
-                        size: 20.sp,
+                        size: 18.sp,
                         color: Colors.red.shade400,
                       ),
                     ),
                   )
-                : SizedBox(width: 40.w),
+                : SizedBox(width: 38.w),
           ),
         ],
       ),
     );
   }
 
+  // ============================================================
+  // SEARCH BAR
+  // ============================================================
 
   Widget _buildSearchBar(LikedController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 6.h,
+      ),
       child: Container(
-        height: 48.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        height: 44.h,
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
         decoration: BoxDecoration(
-          color: Color(0xFFF4F5F7),
-          borderRadius: BorderRadius.circular(14.r),
+          color: const Color(0xFFF4F5F7),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
-            Icon(Icons.search_rounded, color: Colors.grey.shade400, size: 22.sp),
-            SizedBox(width: 10.w),
+            Icon(
+              Icons.search_rounded,
+              color: Colors.grey.shade400,
+              size: 20.sp,
+            ),
+            SizedBox(width: 8.w),
             Expanded(
               child: Obx(
                 () => TextField(
@@ -168,7 +225,7 @@ class LikedScreen extends StatelessWidget {
                     hintText: 'Search favorites...',
                     hintStyle: TextStyle(
                       color: Colors.grey.shade400,
-                      fontSize: 14.sp,
+                      fontSize: 13.sp,
                     ),
                     border: InputBorder.none,
                     isDense: true,
@@ -183,23 +240,34 @@ class LikedScreen extends StatelessWidget {
                       child: Icon(
                         Icons.clear_rounded,
                         color: Colors.grey.shade400,
-                        size: 20.sp,
+                        size: 18.sp,
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ),
-            SizedBox(width: 8.w),
-            Icon(Icons.tune_rounded, color: Colors.black87, size: 20.sp),
+            SizedBox(width: 6.w),
+            Icon(
+              Icons.tune_rounded,
+              color: Colors.black87,
+              size: 18.sp,
+            ),
           ],
         ),
       ),
     );
   }
 
+  // ============================================================
+  // ITEMS COUNT
+  // ============================================================
+
   Widget _buildItemsCount(LikedController controller) {
     return Obx(
       () => Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 4.h,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -208,7 +276,7 @@ class LikedScreen extends StatelessWidget {
                   ? '${controller.filteredItems.length} results'
                   : controller.getLikedCountText(),
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
               ),
@@ -218,14 +286,14 @@ class LikedScreen extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.sort_rounded,
-                    size: 18.sp,
+                    size: 16.sp,
                     color: Colors.grey.shade600,
                   ),
-                  SizedBox(width: 4.w),
+                  SizedBox(width: 3.w),
                   Text(
                     'Sort',
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 12.sp,
                       color: Colors.grey.shade600,
                       fontWeight: FontWeight.w500,
                     ),
@@ -238,6 +306,10 @@ class LikedScreen extends StatelessWidget {
     );
   }
 
+  // ============================================================
+  // EMPTY STATE
+  // ============================================================
+
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -245,41 +317,56 @@ class LikedScreen extends StatelessWidget {
         children: [
           Icon(
             Icons.favorite_outline_rounded,
-            size: 80.sp,
+            size: 70.sp,
             color: Colors.grey.shade300,
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 14.h),
           Text(
             'No favorites yet',
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 18.sp,
               fontWeight: FontWeight.bold,
               color: Colors.grey.shade600,
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h),
           Text(
             'Start adding your favorite items!',
-            style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade400),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: Colors.grey.shade400,
+            ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 18.h),
           ElevatedButton(
             onPressed: () => Get.offAllNamed('/home'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.tomato,
+              padding: EdgeInsets.symmetric(
+                horizontal: 24.w,
+                vertical: 12.h,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
             ),
             child: Text(
               'Browse Food',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+
+  // ============================================================
+  // FOOD CARD
+  // ============================================================
 
   Widget _buildFoodCard(
     LikedController controller,
@@ -289,50 +376,74 @@ class LikedScreen extends StatelessWidget {
     final favoriteService = Get.find<FavoriteService>();
 
     return GestureDetector(
-      onTap: () => controller.navigateToFoodDetail(item),
+      onTap: () {
+        // Convert FavoriteItem to ProductModel
+        final product = ProductModel(
+          id: item.id,
+          name: item.title,
+          category: 'Food',
+          imageUrl: item.image,
+          rating: item.rating,
+          price: item.price,
+          oldPrice: item.originalPrice,
+          description: 'Delicious ${item.title} made with fresh ingredients.',
+        );
+        
+        // Navigate to ProductDetailsScreen with product
+        Get.to(
+          () => ProductDetailsScreen(product: product),
+          transition: Transition.rightToLeft,
+          duration: const Duration(milliseconds: 300),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
-              blurRadius: 15,
-              offset: Offset(0, 5),
+              blurRadius: 12.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // IMAGE
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(14.r),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(14.r),
+                    topRight: Radius.circular(14.r),
+                  ),
                   child: Image.network(
                     item.image,
-                    height: 115.h,
+                    height: 100.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        height: 115.h,
+                        height: 100.h,
                         width: double.infinity,
                         color: Colors.grey.shade200,
                         child: Icon(
                           Icons.image_not_supported,
-                          color: Colors.grey,
+                          size: 30.sp,
+                          color: Colors.grey.shade400,
                         ),
                       );
                     },
                   ),
                 ),
                 Positioned(
-                  top: 8.h,
-                  right: 8.w,
+                  top: 6.h,
+                  right: 6.w,
                   child: AnimatedFavoriteButton(
                     isFavorite: isFavorite,
-                    size: 18.sp,
+                    size: 16.sp,
                     navigateOnAdd: false,
                     onTap: (newValue) async {
                       if (newValue) {
@@ -348,8 +459,9 @@ class LikedScreen extends StatelessWidget {
                 ),
               ],
             ),
+            // DETAILS
             Padding(
-              padding: EdgeInsets.all(10.r),
+              padding: EdgeInsets.all(8.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -359,47 +471,47 @@ class LikedScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13.sp,
+                      fontSize: 12.sp,
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 3.h),
                   Row(
                     children: [
                       Icon(
                         Icons.star_rounded,
-                        color: Color(0xFFFFB800),
-                        size: 16.sp,
+                        color: const Color(0xFFFFB800),
+                        size: 14.sp,
                       ),
-                      SizedBox(width: 4.w),
+                      SizedBox(width: 3.w),
                       Text(
                         '${item.rating}',
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey.shade700,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 6.h),
+                  SizedBox(height: 4.h),
                   Row(
                     children: [
                       if (item.originalPrice != null) ...[
                         Text(
                           '£ ${item.originalPrice!.toStringAsFixed(2)}',
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 11.sp,
                             color: Colors.grey.shade400,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                        SizedBox(width: 6.w),
+                        SizedBox(width: 4.w),
                       ],
                       Text(
                         '£ ${item.price.toStringAsFixed(2)}',
                         style: TextStyle(
-                          fontSize: 13.sp,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                           color: AppColors.tomato,
                         ),

@@ -29,112 +29,124 @@ class NotificationScreen extends StatelessWidget {
     });
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          bottom: false,
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  _buildHeader(controller),
-                  _buildSearchBar(controller),
-                  Expanded(
-                    child: Obx(() {
-                      if (controller.isLoading.value) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.tomato,
-                          ),
-                        );
-                      }
-
-                      if (controller.filteredNotifications.isEmpty) {
-                        return _buildEmptyState();
-                      }
-
-                      return SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 10.h,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Unread count
-                            if (controller.getUnreadCount() > 0)
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 12.h),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '${controller.getUnreadCount()} unread',
-                                      style: TextStyle(
-                                        fontSize: 13.sp,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: controller.markAllAsRead,
-                                      child: Text(
-                                        'Mark all as read',
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.tomato,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            // Notifications by category
-                            ...controller.getCategories().map((category) {
-                              final items = controller
-                                  .getNotificationsByCategory(category);
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildSectionHeader(category),
-                                  SizedBox(height: 12.h),
-                                  ...items.map(
-                                    (item) => _buildNotificationTile(
-                                      controller: controller,
-                                      item: item,
-                                    ),
-                                  ),
-                                  SizedBox(height: 16.h),
-                                ],
-                              );
-                            }).toList(),
-
-                            SizedBox(height: 20.h),
-                          ],
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            // ==================================================
+            // MAIN CONTENT
+            // ==================================================
+            Column(
+              children: [
+                _buildHeader(controller),
+                _buildSearchBar(controller),
+                Expanded(
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.tomato,
+                          strokeWidth: 3.r,
                         ),
                       );
-                    }),
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: 20.h,
-                left: 20.w,
-                right: 20.w,
-                child: BottomNavigationWidget(),
-              ),
-            ],
-          ),
+                    }
+
+                    if (controller.filteredNotifications.isEmpty) {
+                      return _buildEmptyState();
+                    }
+
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w, // ✅ 20.w → 16.w
+                        vertical: 8.h, // ✅ 10.h → 8.h
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Unread count
+                          if (controller.getUnreadCount() > 0)
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 10.h), // ✅ 12.h → 10.h
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${controller.getUnreadCount()} unread',
+                                    style: TextStyle(
+                                      fontSize: 12.sp, // ✅ 13.sp → 12.sp
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: controller.markAllAsRead,
+                                    child: Text(
+                                      'Mark all as read',
+                                      style: TextStyle(
+                                        fontSize: 12.sp, // ✅ 13.sp → 12.sp
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.tomato,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          // Notifications by category
+                          ...controller.getCategories().map((category) {
+                            final items = controller
+                                .getNotificationsByCategory(category);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildSectionHeader(category),
+                                SizedBox(height: 10.h), // ✅ 12.h → 10.h
+                                ...items.map(
+                                  (item) => _buildNotificationTile(
+                                    controller: controller,
+                                    item: item,
+                                  ),
+                                ),
+                                SizedBox(height: 14.h), // ✅ 16.h → 14.h
+                              ],
+                            );
+                          }).toList(),
+
+                          SizedBox(height: 16.h), // ✅ 20.h → 16.h
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+            // ==================================================
+            // BOTTOM NAVIGATION
+            // ==================================================
+            Positioned(
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,
+              child: const BottomNavigationWidget(),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
-  // ========== 🔥 Header - Obx সরানো হয়েছে (শুধু Text) ==========
+  // ============================================================
+  // HEADER - Responsive
+  // ============================================================
   Widget _buildHeader(NotificationController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w, // ✅ 20.w → 16.w
+        vertical: 10.h, // ✅ 12.h → 10.h
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -143,69 +155,76 @@ class NotificationScreen extends StatelessWidget {
               Get.offAllNamed('/home');
             },
             child: Container(
-              width: 40.w,
-              height: 40.h,
+              width: 38.w, // ✅ 40.w → 38.w
+              height: 38.h, // ✅ 40.h → 38.h
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
-                size: 20.sp,
+                size: 18.sp, // ✅ 20.sp → 18.sp
                 color: Colors.black87,
               ),
             ),
           ),
-          // 🔥 Obx সরানো হয়েছে - Text static
           Text(
             'Notification',
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 18.sp, // ✅ 20.sp → 18.sp
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          // 🔥 Obx সরানো হয়েছে - Delete button static
           Obx(
             () => controller.notifications.isNotEmpty
                 ? GestureDetector(
                     onTap: controller.clearAll,
                     child: Container(
-                      width: 40.w,
-                      height: 40.h,
+                      width: 38.w, // ✅ 40.w → 38.w
+                      height: 38.h, // ✅ 40.h → 38.h
                       decoration: BoxDecoration(
                         color: Colors.red.shade50,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.delete_outline_rounded,
-                        size: 20.sp,
+                        size: 18.sp, // ✅ 20.sp → 18.sp
                         color: Colors.red.shade400,
                       ),
                     ),
                   )
-                : SizedBox(width: 40.w),
+                : SizedBox(width: 38.w),
           ),
         ],
       ),
     );
   }
 
-  // ========== 🔥 Search Bar - Obx ঠিক করা ==========
+  // ============================================================
+  // SEARCH BAR - Responsive
+  // ============================================================
   Widget _buildSearchBar(NotificationController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 16.w, // ✅ 20.w → 16.w
+        vertical: 6.h, // ✅ 8.h → 6.h
+      ),
       child: Container(
-        height: 46.h,
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        height: 42.h, // ✅ 46.h → 42.h
+        padding: EdgeInsets.symmetric(horizontal: 12.w), // ✅ 14.w → 12.w
         decoration: BoxDecoration(
-          color: Color(0xFFF5F6F8),
+          color: const Color(0xFFF5F6F8),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
-            Icon(Icons.search, color: AppColors.ashLight, size: 20.sp),
-            SizedBox(width: 10.w),
+            Icon(
+              Icons.search,
+              color: Colors.grey.shade400,
+              size: 18.sp, // ✅ 20.sp → 18.sp
+            ),
+            SizedBox(width: 8.w), // ✅ 10.w → 8.w
             Expanded(
               child: Obx(
                 () => TextField(
@@ -213,10 +232,15 @@ class NotificationScreen extends StatelessWidget {
                   controller: TextEditingController(
                     text: controller.searchText.value,
                   ),
-                  style: TextStyle(fontSize: 14.sp),
+                  style: TextStyle(
+                    fontSize: 13.sp, // ✅ 14.sp → 13.sp
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Search notifications...',
-                    hintStyle: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 13.sp, // ✅ 14.sp → 13.sp
+                    ),
                     border: InputBorder.none,
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
@@ -224,7 +248,6 @@ class NotificationScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // 🔥 Obx ঠিক করা - শুধু clear button এ Obx
             Obx(
               () => controller.searchText.value.isNotEmpty
                   ? GestureDetector(
@@ -232,20 +255,26 @@ class NotificationScreen extends StatelessWidget {
                       child: Icon(
                         Icons.clear_rounded,
                         color: Colors.grey.shade400,
-                        size: 18.sp,
+                        size: 16.sp, // ✅ 18.sp → 16.sp
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ),
-            SizedBox(width: 8.w),
-            Icon(Icons.tune, color: Colors.black87, size: 20.sp),
+            SizedBox(width: 6.w), // ✅ 8.w → 6.w
+            Icon(
+              Icons.tune,
+              color: Colors.black87,
+              size: 18.sp, // ✅ 20.sp → 18.sp
+            ),
           ],
         ),
       ),
     );
   }
 
-  // ========== Build Empty State ==========
+  // ============================================================
+  // EMPTY STATE - Responsive
+  // ============================================================
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -253,41 +282,48 @@ class NotificationScreen extends StatelessWidget {
         children: [
           Icon(
             Icons.notifications_off_rounded,
-            size: 80.sp,
+            size: 70.sp, // ✅ 80.sp → 70.sp
             color: Colors.grey.shade300,
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 14.h), // ✅ 16.h → 14.h
           Text(
             'No Notifications',
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 18.sp, // ✅ 20.sp → 18.sp
               fontWeight: FontWeight.bold,
-              color: Colors.grey,
+              color: Colors.grey.shade600,
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 6.h), // ✅ 8.h → 6.h
           Text(
             'You are all caught up!',
-            style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 13.sp, // ✅ 14.sp → 13.sp
+              color: Colors.grey.shade400,
+            ),
           ),
         ],
       ),
     );
   }
 
-  // ========== Section Header ==========
+  // ============================================================
+  // SECTION HEADER - Responsive
+  // ============================================================
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 16.sp,
+        fontSize: 15.sp, // ✅ 16.sp → 15.sp
         fontWeight: FontWeight.bold,
         color: Colors.black87,
       ),
     );
   }
 
-  // ========== Notification Tile ==========
+  // ============================================================
+  // NOTIFICATION TILE - Responsive
+  // ============================================================
   Widget _buildNotificationTile({
     required NotificationController controller,
     required NotificationItem item,
@@ -299,20 +335,24 @@ class NotificationScreen extends StatelessWidget {
         }
       },
       child: Padding(
-        padding: EdgeInsets.only(bottom: 16.h),
+        padding: EdgeInsets.only(bottom: 14.h), // ✅ 16.h → 14.h
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 42.w,
-              height: 42.h,
+              width: 38.w, // ✅ 42.w → 38.w
+              height: 38.h, // ✅ 42.h → 38.h
               decoration: BoxDecoration(
                 color: item.iconBgColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(item.icon, color: item.iconColor, size: 20.sp),
+              child: Icon(
+                item.icon,
+                color: item.iconColor,
+                size: 18.sp, // ✅ 20.sp → 18.sp
+              ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: 10.w), // ✅ 12.w → 10.w
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +363,7 @@ class NotificationScreen extends StatelessWidget {
                         child: Text(
                           item.title,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp, // ✅ 14.sp → 13.sp
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
@@ -331,9 +371,9 @@ class NotificationScreen extends StatelessWidget {
                       ),
                       if (item.isUnread)
                         Container(
-                          width: 8.w,
-                          height: 8.h,
-                          margin: EdgeInsets.only(left: 6.w),
+                          width: 6.w, // ✅ 8.w → 6.w
+                          height: 6.h, // ✅ 8.h → 6.h
+                          margin: EdgeInsets.only(left: 4.w), // ✅ 6.w → 4.w
                           decoration: BoxDecoration(
                             color: AppColors.tomato,
                             shape: BoxShape.circle,
@@ -341,32 +381,31 @@ class NotificationScreen extends StatelessWidget {
                         ),
                     ],
                   ),
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h), // ✅ 3.h → 2.h
                   Text(
                     item.subtitle,
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 11.sp, // ✅ 12.sp → 11.sp
                       color: Colors.grey.shade600,
-                      height: 1.3.h,
+                      height: 1.2.h, // ✅ 1.3.h → 1.2.h
                     ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 3.h), // ✅ 4.h → 3.h
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         item.time,
                         style: TextStyle(
-                          fontSize: 10.sp,
+                          fontSize: 9.sp, // ✅ 10.sp → 9.sp
                           color: Colors.grey.shade500,
                         ),
                       ),
-                      // Delete button
                       GestureDetector(
                         onTap: () => controller.deleteNotification(item.id),
                         child: Icon(
                           Icons.close_rounded,
-                          size: 16.sp,
+                          size: 14.sp, // ✅ 16.sp → 14.sp
                           color: Colors.grey.shade400,
                         ),
                       ),

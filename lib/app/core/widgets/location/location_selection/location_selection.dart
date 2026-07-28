@@ -1,3 +1,5 @@
+// lib/app/core/widgets/location/location_selection/location_selection.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,6 +21,9 @@ class _LocationPickerState extends State<LocationPicker> {
   bool _isLoading = false;
   LatLng? _selectedLocation;
   GoogleMapController? _mapController;
+  
+  // ✅ For cleanup
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -26,9 +31,23 @@ class _LocationPickerState extends State<LocationPicker> {
     _getCurrentLocation();
   }
 
+  @override
+  void dispose() {
+    _isDisposed = true;  // ✅ Mark as disposed
+    _mapController?.dispose();
+    super.dispose();
+  }
+
+  // ========== Safe SetState ==========
+  void _safeSetState(VoidCallback fn) {
+    if (!_isDisposed && mounted) {
+      setState(fn);
+    }
+  }
+
   // ========== কারেন্ট লোকেশন বের করা ==========
   Future<void> _getCurrentLocation() async {
-    setState(() => _isLoading = true);
+    _safeSetState(() => _isLoading = true);
 
     // পারমিশন চেক
     var status = await Permission.location.status;
@@ -36,20 +55,20 @@ class _LocationPickerState extends State<LocationPicker> {
       status = await Permission.location.request();
     }
 
-    if (status.isGranted) {
+    if (!_isDisposed && mounted && status.isGranted) {
       try {
         Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
         );
         
-        setState(() {
+        _safeSetState(() {
           _selectedLocation = LatLng(position.latitude, position.longitude);
           _currentAddress = 
               "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
         });
 
         // ম্যাপের ক্যামেরা মুভ করুন
-        if (_mapController != null) {
+        if (_mapController != null && _selectedLocation != null) {
           _mapController!.animateCamera(
             CameraUpdate.newCameraPosition(
               CameraPosition(
@@ -62,21 +81,22 @@ class _LocationPickerState extends State<LocationPicker> {
 
       } catch (e) {
         print("Location error: $e");
-        setState(() {
+        _safeSetState(() {
           _currentAddress = "লোকেশন পাওয়া যায়নি";
         });
       }
-    } else {
-      setState(() {
+    } else if (!_isDisposed && mounted) {
+      _safeSetState(() {
         _currentAddress = "পারমিশন নেই";
       });
     }
-    setState(() => _isLoading = false);
+    
+    _safeSetState(() => _isLoading = false);
   }
 
   // ========== ম্যাপে ট্যাপ করলে ==========
   void _onMapTapped(LatLng tappedLocation) {
-    setState(() {
+    _safeSetState(() {
       _selectedLocation = tappedLocation;
       _currentAddress = 
           "Lat: ${tappedLocation.latitude.toStringAsFixed(6)}, Lng: ${tappedLocation.longitude.toStringAsFixed(6)}";
@@ -176,16 +196,16 @@ class _LocationPickerState extends State<LocationPicker> {
                     target: _selectedLocation ?? LatLng(23.8103, 90.4125),
                     zoom: 14,
                   ),
-                  onTap: _onMapTapped,  // ← ম্যাপে ট্যাপ করলে লোকেশন সিলেক্ট হবে
+                  onTap: _onMapTapped,
                   myLocationEnabled: true,
                   myLocationButtonEnabled: true,
-                  mapType: MapType.hybrid,  // ← স্যাটেলাইট ছবি
+                  mapType: MapType.hybrid,
                   markers: _selectedLocation != null
                       ? {
                           Marker(
-                            markerId: MarkerId("selected"),
+                            markerId: const MarkerId("selected"),
                             position: _selectedLocation!,
-                            infoWindow: InfoWindow(
+                            infoWindow: const InfoWindow(
                               title: "আপনার লোকেশন",
                               snippet: "এখানে ডেলিভারি নিন",
                             ),
@@ -216,7 +236,7 @@ class _LocationPickerState extends State<LocationPicker> {
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.green,
                           colorText: Colors.white,
-                          duration: Duration(seconds: 3),
+                          duration: const Duration(seconds: 3),
                         );
                       } else {
                         Get.snackbar(
@@ -228,7 +248,7 @@ class _LocationPickerState extends State<LocationPicker> {
                         );
                       }
                     },
-                    icon: Icon(Icons.check_circle),
+                    icon: const Icon(Icons.check_circle),
                     label: Text(
                       "এই লোকেশন কনফর্ম করুন",
                       style: TextStyle(fontSize: 16.sp),
