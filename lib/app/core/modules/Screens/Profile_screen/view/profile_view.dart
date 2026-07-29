@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/view/about_app_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/binder/invite_friends_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/view/invite_friends-view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
@@ -116,12 +118,9 @@ class ProfileScreen extends StatelessWidget {
                     Icons.people_outline_rounded,
                     "Invite Friends",
                     onTap: () {
-                      Get.snackbar(
-                        'Invite Friends',
-                        'Coming soon!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.blue,
-                        colorText: Colors.white,
+                      Get.to(
+                        () => const InviteFriendScreen(),
+                        binding: InviteFriendBinding(),
                       );
                     },
                   ),

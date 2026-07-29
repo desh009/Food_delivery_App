@@ -164,5 +164,12 @@ class AppPages {
       binding: VoucherBinding(),
       transition: Transition.rightToLeft,
     ),
+
+       GetPage(
+      name: Routes.INVITE_FRIENDS,
+      page: () => const VoucherScreen(),
+      binding: VoucherBinding(),
+      transition: Transition.rightToLeft,
+    ),
   ];
 }

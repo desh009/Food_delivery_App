@@ -44,10 +44,9 @@ abstract class Routes {
 
   static const ABOUT_APP = _Paths.ABOUT_APP;
 
-    static const ADD_TO_CART_LIST_ITEM = _Paths.ADD_TO_CART_LIST_ITEM;
-      static const  VOUCHER = _Paths.VOUCHER;
-
-
+  static const ADD_TO_CART_LIST_ITEM = _Paths.ADD_TO_CART_LIST_ITEM;
+  static const VOUCHER = _Paths.VOUCHER;
+  static const INVITE_FRIENDS = _Paths.INVITE_FRIENDS;
 }
 
 abstract class _Paths {
@@ -89,14 +88,12 @@ abstract class _Paths {
 
   static const PROFILE_EDIT = '/profile-edit';
 
-  static const  TRACK_ORDER = '/track-order';
-  static const  SECURITY = '/security';
+  static const TRACK_ORDER = '/track-order';
+  static const SECURITY = '/security';
 
-  static const  ABOUT_APP = '/about-app';
-  static const  VOUCHER = '/voucher';
+  static const ABOUT_APP = '/about-app';
+  static const VOUCHER = '/voucher';
 
-
-  static const  ADD_TO_CART_LIST_ITEM = '/add-to-cart-list-item';
-
-
+  static const ADD_TO_CART_LIST_ITEM = '/add-to-cart-list-item';
+  static const INVITE_FRIENDS = '/invite_friends';
 }

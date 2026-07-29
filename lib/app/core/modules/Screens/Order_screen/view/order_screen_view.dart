@@ -16,7 +16,7 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Initialize Controller with Binding
+    // ✅ Controller Initialize
     if (!Get.isRegistered<OrderDetailsController>()) {
       Get.put(OrderDetailsController());
     }
@@ -72,8 +72,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           _buildInfoCard(
                             icon: Icons.location_on,
                             iconColor: const Color(0xFFFF6B4A),
-                            title:
-                                "Deliver to -> ${controller.deliveryType.value}",
+                            title: "Deliver to",
                             subtitle: controller.deliveryAddress.value,
                           ),
                           SizedBox(height: 12.h),
@@ -100,9 +99,9 @@ class OrderDetailsScreen extends StatelessWidget {
 
             // Global Bottom Navigation Bar
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,
               child: const BottomNavigationWidget(),
             ),
           ],
@@ -111,13 +110,14 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Top App Bar ==========
+  // ============================================================
+  // TOP APP BAR - ✅ Obx ঠিক করা হয়েছে
+  // ============================================================
   Widget _buildTopAppBar(OrderDetailsController controller) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         children: [
-          // ✅ Back Button - Home Screen এ যাবে
           GestureDetector(
             onTap: () {
               BottomNavController.to.goBack();
@@ -139,9 +139,10 @@ class OrderDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(width: 8.w),
-          Obx(
-            () => Expanded(
-              child: Text(
+          // ✅ শুধু Obx যেখানে Observable ব্যবহার হচ্ছে
+          Expanded(
+            child: Obx(
+              () => Text(
                 controller.orderNumber.value,
                 style: TextStyle(
                   fontSize: 18.sp,
@@ -181,7 +182,9 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Order Summary Header ==========
+  // ============================================================
+  // ORDER SUMMARY HEADER - ✅ Obx ঠিক করা হয়েছে
+  // ============================================================
   Widget _buildOrderSummaryHeader(OrderDetailsController controller) {
     return Obx(
       () => Row(
@@ -198,7 +201,7 @@ class OrderDetailsScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: const Color(0xFFE8F5E9),
+              color: _getStatusColor(controller.orderStatus.value).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Text(
@@ -206,7 +209,7 @@ class OrderDetailsScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF2E7D32),
+                color: _getStatusColor(controller.orderStatus.value),
               ),
             ),
           ),
@@ -215,7 +218,22 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Order Item Card ==========
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return Colors.green;
+      case 'pending':
+        return Colors.orange;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.blue;
+    }
+  }
+
+  // ============================================================
+  // ORDER ITEM CARD - ✅ Obx ঠিক করা হয়েছে
+  // ============================================================
   Widget _buildOrderItemCard(
     OrderDetailsController controller,
     OrderItem item,
@@ -255,6 +273,7 @@ class OrderDetailsScreen extends StatelessWidget {
                       child: Icon(
                         Icons.image_not_supported,
                         color: Colors.grey,
+                        size: 30.sp,
                       ),
                     );
                   },
@@ -299,10 +318,19 @@ class OrderDetailsScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    if (item.quantity > 1)
+                      Text(
+                        'Qty: ${item.quantity}',
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
                   ],
                 ),
               ),
               SizedBox(width: 8.w),
+              // ✅ Obx সঠিকভাবে ব্যবহার করা হয়েছে
               Obx(
                 () => ElevatedButton.icon(
                   onPressed: controller.isReorderInProgress.value
@@ -449,7 +477,9 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Info Card ==========
+  // ============================================================
+  // INFO CARD - ✅ Obx সরানো হয়েছে (কারণ Observable নেই)
+  // ============================================================
   Widget _buildInfoCard({
     required IconData icon,
     required Color iconColor,
@@ -505,7 +535,9 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Promotions Card ==========
+  // ============================================================
+  // PROMOTIONS CARD - ✅ Obx ঠিক করা হয়েছে
+  // ============================================================
   Widget _buildPromotionsCard(OrderDetailsController controller) {
     return Obx(
       () => Container(
@@ -575,7 +607,9 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Price Summary ==========
+  // ============================================================
+  // PRICE SUMMARY - ✅ Obx ঠিক করা হয়েছে
+  // ============================================================
   Widget _buildPriceSummary(OrderDetailsController controller) {
     return Obx(
       () => Container(
@@ -633,14 +667,16 @@ class OrderDetailsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 15.sp : 12.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isTotal ? AppColors.tomato : Colors.black87,
           ),
         ),
       ],
     );
   }
 
-  // ========== Overall Rating Section ==========
+  // ============================================================
+  // OVERALL RATING SECTION - ✅ Obx ঠিক করা হয়েছে
+  // ============================================================
   Widget _buildOverallRatingSection(OrderDetailsController controller) {
     return Obx(
       () => Container(
@@ -724,8 +760,9 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ========== Dialog Methods ==========
-
+  // ============================================================
+  // REVIEW DIALOG
+  // ============================================================
   void _showReviewDialog(OrderDetailsController controller, OrderItem item) {
     final TextEditingController reviewController = TextEditingController();
     reviewController.text = item.reviewText;
@@ -738,6 +775,7 @@ class OrderDetailsScreen extends StatelessWidget {
         ),
         child: Container(
           padding: EdgeInsets.all(20.r),
+          constraints: BoxConstraints(maxWidth: 400.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -767,6 +805,8 @@ class OrderDetailsScreen extends StatelessWidget {
                               ? Colors.amber
                               : Colors.grey.shade300,
                         ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
                       ),
                     ),
                   );
@@ -781,6 +821,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
+                  contentPadding: EdgeInsets.all(12.r),
                 ),
               ),
               SizedBox(height: 16.h),
@@ -805,6 +846,9 @@ class OrderDetailsScreen extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.tomato,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
                     ),
                     child: Text("Submit"),
                   ),
@@ -817,6 +861,9 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
+  // ============================================================
+  // OVERALL REVIEW DIALOG
+  // ============================================================
   void _showOverallReviewDialog(OrderDetailsController controller) {
     final TextEditingController reviewController = TextEditingController();
     reviewController.text = controller.overallReview.value;
@@ -828,6 +875,7 @@ class OrderDetailsScreen extends StatelessWidget {
         ),
         child: Container(
           padding: EdgeInsets.all(20.r),
+          constraints: BoxConstraints(maxWidth: 400.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -845,6 +893,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
+                  contentPadding: EdgeInsets.all(12.r),
                 ),
               ),
               SizedBox(height: 16.h),
@@ -863,6 +912,9 @@ class OrderDetailsScreen extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.tomato,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
                     ),
                     child: Text("Submit"),
                   ),
