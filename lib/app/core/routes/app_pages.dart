@@ -1,9 +1,12 @@
+
 import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/binder/notification_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/view/notification_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/view/order_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/view/about_app_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
@@ -147,10 +150,16 @@ class AppPages {
       page: () => const SecurityScreen(),
       binding: SecurityBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.CHANGE_PASSWORD,
-    //   page: () => ChangePasswordView(),
-    //   binding: ChangePasswordBinding(),
+    GetPage(
+      name: _Paths.ABOUT_APP,
+      page: () => AboutAppScreen(),
+      binding: AboutAppBinding(),
+    ),
+
+    //   GetPage(
+    //   name: _Paths.ADD_TO_CART_LIST_ITEM,
+    //   page: () => CartItemsListScreen(),
+    //   binding: CartItemsListBinding(),
     // ),
   ];
 }

@@ -24,6 +24,12 @@ class ProductDetailsController extends GetxController {
   void onInit() {
     super.onInit();
     _loadProductData();
+
+
+      addCheese.value = false;
+  addBacon.value = false;
+  addMeat.value = false;
+  quantity.value = 1;
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isFavorite.value = favoriteService.isFavorite(product.id);

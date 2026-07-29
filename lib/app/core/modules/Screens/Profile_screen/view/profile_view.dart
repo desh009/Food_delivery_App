@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/view/about_app_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
@@ -9,6 +11,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Trac
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/binder/add_to_cart_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/view/add_to_cart_view.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
@@ -35,198 +39,188 @@ class ProfileScreen extends StatelessWidget {
     });
 
     return Scaffold(
-        backgroundColor: Color(0xFFFAFAFA),
-        body: SafeArea(
-          bottom: false,
-          child: Stack(
-            children: [
-              // ========== Main Content (Scrollable) ==========
-              SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.only(
-                  left: 20.w,
-                  right: 20.w,
-                  bottom: 100.h,
-                ),
-                child: Column(
-                  children: [
-                    // ========== Top Header Bar ==========
-                    _buildTopHeader(),
-                    SizedBox(height: 20.h),
+      backgroundColor: const Color(0xFFFAFAFA),
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            // ========== Main Content (Scrollable) ==========
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 100.h),
+              child: Column(
+                children: [
+                  // ========== Top Header Bar ==========
+                  _buildTopHeader(),
+                  SizedBox(height: 20.h),
 
-                    // ========== User Profile Header ==========
-                    _buildUserProfileHeader(controller),
-                    SizedBox(height: 20.h),
+                  // ========== User Profile Header ==========
+                  _buildUserProfileHeader(controller),
+                  SizedBox(height: 20.h),
 
-                    // ========== Logout Button ==========
-                    _buildLogoutButton(controller),
-                    SizedBox(height: 24.h),
+                  // ========== Logout Button ==========
+                  _buildLogoutButton(controller),
+                  SizedBox(height: 24.h),
 
-                    // ========== Primary Navigation Items ==========
-                    _buildListTile(
-                      Icons.location_on_outlined,
-                      "Track Order",
-                      onTap: () {
-                        Get.to(
-                          () => TrackOrderScreen(),
-                          binding: TrackOrderBinding(),
-                          arguments: {
-                            'orderNumber': 'ORD-2024-001',
-                            'orderStatus': 'Preparing',
-                          },
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      Icons.confirmation_number_outlined,
-                      "My Promotions",
-                      onTap: () {
-                        Get.snackbar(
-                          'My Promotions',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      Icons.account_balance_wallet_outlined,
-                      "Vouchers",
-                      onTap: () {
-                        Get.snackbar(
-                          'Payment Methods',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      Icons.chat_bubble_outline_rounded,
-                      "Messages",
-                      onTap: () {
-                        Get.snackbar(
-                          'Messages',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      Icons.people_outline_rounded,
-                      "Invite Friends",
-                      onTap: () {
-                        Get.snackbar(
-                          'Invite Friends',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      Icons.shield_outlined,
-                      "Security",
-                      onTap: () {
-                        Get.to(
-                          () => SecurityScreen(),
-                          binding: SecurityBinding(),
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      Icons.help_outline_rounded,
-                      "Help Center",
-                      onTap: () {
-                        Get.to(
-                          () => HelpCenterScreen(),
-                          binding: HelpCenterBinding(),
-                        );
-                      },
-                    ),
+                  // ========== Primary Navigation Items ==========
+                  _buildListTile(
+                    Icons.location_on_outlined,
+                    "Track Order",
+                    onTap: () {
+                      Get.to(
+                        () => const TrackOrderScreen(),
+                        binding: TrackOrderBinding(),
+                        arguments: {
+                          'orderNumber': 'ORD-2024-001',
+                          'orderStatus': 'Preparing',
+                        },
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    Icons.confirmation_number_outlined,
+                    "Add To Cart List",
+                    onTap: () {
+                      Get.to(
+                        () => const MyBasketScreen(),
+                        binding: AddToCartBinder(),
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    Icons.account_balance_wallet_outlined,
+                    "Vouchers",
+                    onTap: () {
+                      Get.snackbar(
+                        'Payment Methods',
+                        'Coming soon!',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.blue,
+                        colorText: Colors.white,
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    Icons.chat_bubble_outline_rounded,
+                    "Messages",
+                    onTap: () {
+                      Get.snackbar(
+                        'Messages',
+                        'Coming soon!',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.blue,
+                        colorText: Colors.white,
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    Icons.people_outline_rounded,
+                    "Invite Friends",
+                    onTap: () {
+                      Get.snackbar(
+                        'Invite Friends',
+                        'Coming soon!',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.blue,
+                        colorText: Colors.white,
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    Icons.shield_outlined,
+                    "Security",
+                    onTap: () {
+                      Get.to(
+                        () => const SecurityScreen(),
+                        binding: SecurityBinding(),
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    Icons.help_outline_rounded,
+                    "Help Center",
+                    onTap: () {
+                      Get.to(
+                        () => const HelpCenterScreen(),
+                        binding: HelpCenterBinding(),
+                      );
+                    },
+                  ),
 
-                    SizedBox(height: 8.h),
-                    Divider(color: Color(0xFFEEEEEE), thickness: 1.r),
-                    SizedBox(height: 8.h),
+                  SizedBox(height: 8.h),
+                  Divider(color: const Color(0xFFEEEEEE), thickness: 1.r),
+                  SizedBox(height: 8.h),
 
-                    // ========== Preferences / Settings ==========
-                    _buildLanguageDropdown(controller),
-                    _buildSwitchTile(
-                      "Push Notification",
-                      controller.pushNotification,
-                    ),
-                    _buildSwitchTile("Dark Mode", controller.darkMode),
-                    _buildSwitchTile("Sound", controller.sound),
-                    _buildSwitchTile(
-                      "Automatically Updated",
-                      controller.automaticallyUpdated,
-                    ),
+                  // ========== Preferences / Settings ==========
+                  _buildLanguageDropdown(controller),
+                  _buildSwitchTile(
+                    "Push Notification",
+                    controller.pushNotification,
+                  ),
+                  _buildSwitchTile("Dark Mode", controller.darkMode),
+                  _buildSwitchTile("Sound", controller.sound),
+                  _buildSwitchTile(
+                    "Automatically Updated",
+                    controller.automaticallyUpdated,
+                  ),
 
-                    SizedBox(height: 8.h),
-                    Divider(color: Color(0xFFEEEEEE), thickness: 1.r),
-                    SizedBox(height: 8.h),
+                  SizedBox(height: 8.h),
+                  Divider(color: const Color(0xFFEEEEEE), thickness: 1.r),
+                  SizedBox(height: 8.h),
 
-                    // ========== Secondary Items ==========
-                    _buildListTile(
-                      null,
-                      "Term of Service",
-                      onTap: () {
-                        Get.snackbar(
-                          'Term of Service',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      null,
-                      "Privacy Policy",
-                      onTap: () {
-                        Get.snackbar(
-                          'Privacy Policy',
-                          'Coming soon!',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    _buildListTile(
-                      null,
-                      "About App",
-                      onTap: () {
-                        Get.snackbar(
-                          'About App',
-                          'Version 1.0.0',
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.blue,
-                          colorText: Colors.white,
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
+                  // ========== Secondary Items ==========
+                  _buildListTile(
+                    null,
+                    "Term of Service",
+                    onTap: () {
+                      Get.snackbar(
+                        'Term of Service',
+                        'Coming soon!',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.blue,
+                        colorText: Colors.white,
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    null,
+                    "Privacy Policy",
+                    onTap: () {
+                      Get.snackbar(
+                        'Privacy Policy',
+                        'Coming soon!',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.blue,
+                        colorText: Colors.white,
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    null,
+                    "About App",
+                    onTap: () {
+                      Get.to(
+                        () => const AboutAppScreen(),
+                        binding: AboutAppBinding(),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                ],
               ),
+            ),
 
-              // ========== Global Bottom Navigation Bar ==========
-              Positioned(
-                bottom: 20.h,
-                left: 20.w,
-                right: 20.w,
-                child: BottomNavigationWidget(),
-              ),
-            ],
-          ),
+            // ========== Global Bottom Navigation Bar ==========
+            Positioned(
+              bottom: 20.h,
+              left: 20.w,
+              right: 20.w,
+              child: const BottomNavigationWidget(),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   // ========== Top App Bar ==========
@@ -234,8 +228,12 @@ class ProfileScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // ✅ Back Button - Fixed
         GestureDetector(
-          onTap: () => Get.back(),
+          onTap: () {
+            // ✅ Call goBack() from BottomNavController
+            BottomNavController.to.goBack();
+          },
           child: Container(
             padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
@@ -245,15 +243,11 @@ class ProfileScreen extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.04),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
-            child: Icon(
-              Icons.arrow_back,
-              size: 18.sp,
-              color: Colors.black87,
-            ),
+            child: Icon(Icons.arrow_back, size: 18.sp, color: Colors.black87),
           ),
         ),
         Text(
@@ -273,7 +267,7 @@ class ProfileScreen extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 8,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -283,23 +277,21 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== 🔥 Profile Info Header (No Image Picker) ==========
+  // ========== User Profile Header ==========
   Widget _buildUserProfileHeader(ProfileController controller) {
     return Row(
       children: [
-        // 🔥 Only Avatar - No Edit Option
         Obx(
           () => CircleAvatar(
             radius: 32.r,
             backgroundImage: controller.profileImagePath.value.isNotEmpty
                 ? FileImage(File(controller.profileImagePath.value))
-                : NetworkImage('https://i.pravatar.cc/300')
+                : const NetworkImage('https://i.pravatar.cc/300')
                       as ImageProvider,
           ),
         ),
         SizedBox(width: 14.w),
 
-        // Text Info
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,10 +339,7 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(width: 4.w),
                     Text(
                       controller.userEmail.value,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: Colors.black54,
-                      ),
+                      style: TextStyle(fontSize: 11.sp, color: Colors.black54),
                     ),
                   ],
                 ),
@@ -359,7 +348,6 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
 
-        // 🔥 Edit Button - Navigate to YourProfileScreen
         GestureDetector(
           onTap: () {
             Get.toNamed('/profile-edit');
@@ -373,7 +361,7 @@ class ProfileScreen extends StatelessWidget {
                 BoxShadow(
                   color: AppColors.tomato.withOpacity(0.3),
                   blurRadius: 8,
-                  offset: Offset(0, 4),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -395,7 +383,7 @@ class ProfileScreen extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: Color(0xFFFFF0EF),
+          color: const Color(0xFFFFF0EF),
           borderRadius: BorderRadius.circular(22.r),
         ),
         child: Row(
@@ -437,10 +425,7 @@ class ProfileScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
-                "Cancel",
-                style: TextStyle(color: Colors.black54),
-              ),
+              child: Text("Cancel", style: TextStyle(color: Colors.black54)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -475,10 +460,7 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: Text(
-                "Logout",
-                style: TextStyle(color: Colors.white),
-              ),
+              child: Text("Logout", style: TextStyle(color: Colors.white)),
             ),
           ],
         );

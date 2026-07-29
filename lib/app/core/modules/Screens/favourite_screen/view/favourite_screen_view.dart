@@ -41,7 +41,7 @@ class LikedScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        bottom: false,  // ✅ Important
+        bottom: false,
         child: Stack(
           children: [
             // ==================================================
@@ -96,7 +96,7 @@ class LikedScreen extends StatelessWidget {
             Positioned(
               bottom: 20.h,
               left: 20.w,
-              right: 20.w,  // ✅ Always 0
+              right: 20.w,
               child: const BottomNavigationWidget(),
             ),
           ],
@@ -131,14 +131,12 @@ class LikedScreen extends StatelessWidget {
 
   Widget _buildHeader(LikedController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 10.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Get.back(),
+            onTap: () =>
+                BottomNavController.to.goBack(), // ✅ Fixed back navigation
             child: Container(
               width: 38.w,
               height: 38.h,
@@ -195,10 +193,7 @@ class LikedScreen extends StatelessWidget {
 
   Widget _buildSearchBar(LikedController controller) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 6.h,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: Container(
         height: 44.h,
         padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -246,11 +241,7 @@ class LikedScreen extends StatelessWidget {
                   : const SizedBox.shrink(),
             ),
             SizedBox(width: 6.w),
-            Icon(
-              Icons.tune_rounded,
-              color: Colors.black87,
-              size: 18.sp,
-            ),
+            Icon(Icons.tune_rounded, color: Colors.black87, size: 18.sp),
           ],
         ),
       ),
@@ -264,10 +255,7 @@ class LikedScreen extends StatelessWidget {
   Widget _buildItemsCount(LikedController controller) {
     return Obx(
       () => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 4.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -332,20 +320,14 @@ class LikedScreen extends StatelessWidget {
           SizedBox(height: 6.h),
           Text(
             'Start adding your favorite items!',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: Colors.grey.shade400,
-            ),
+            style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade400),
           ),
           SizedBox(height: 18.h),
           ElevatedButton(
             onPressed: () => Get.offAllNamed('/home'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.tomato,
-              padding: EdgeInsets.symmetric(
-                horizontal: 24.w,
-                vertical: 12.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -388,7 +370,7 @@ class LikedScreen extends StatelessWidget {
           oldPrice: item.originalPrice,
           description: 'Delicious ${item.title} made with fresh ingredients.',
         );
-        
+
         // Navigate to ProductDetailsScreen with product
         Get.to(
           () => ProductDetailsScreen(product: product),

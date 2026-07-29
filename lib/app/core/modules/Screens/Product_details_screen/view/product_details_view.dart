@@ -15,15 +15,11 @@ import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated
 class ProductDetailsScreen extends GetView<ProductDetailsController> {
   final ProductModel product;
 
-   ProductDetailsScreen({
-    super.key,
-    required this.product,
-  });
+   ProductDetailsScreen({super.key, required this.product});
 
   final GlobalKey _cartKey = GlobalKey();
   bool _isAddingToCart = false;
 
-  // ========== CartController Getter ==========
   CartController get _cartController => CartController.instance;
 
   // ========== Fly to Cart Animation ==========
@@ -98,7 +94,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     Overlay.of(context).insert(overlayEntry);
   }
 
-  // ========== Add to Cart with Animation & Navigation ==========
+  // ========== ✅ Add to Cart (My Basket Navigate, CartItemsList Auto Save) ==========
   void _addToCartWithAnimation(BuildContext context) {
     if (_isAddingToCart) return;
     _isAddingToCart = true;
@@ -116,6 +112,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       selectedAddOns.add({"name": "Add Meat (Extra Patty)", "price": 2.00});
     }
 
+    // ✅ Save to Cart (CartItemsListScreen এ Auto Save হবে)
     cartController.addToCart(
       name: product.name,
       imageUrl: product.imageUrl,
@@ -125,17 +122,38 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       addOns: selectedAddOns,
     );
 
+    // Reset
+    controller.addCheese.value = false;
+    controller.addBacon.value = false;
+    controller.addMeat.value = false;
+    controller.quantity.value = 1;
+
+    _isAddingToCart = false;
+
+    // ✅ Fly Animation & Navigate to My Basket Screen
     _runFlyToCartAnimation(context, () {
       _isAddingToCart = false;
+
+      // ✅ শুধু My Basket Screen এ Navigate
       Get.to(
         () => const MyBasketScreen(),
         transition: Transition.rightToLeft,
         duration: const Duration(milliseconds: 300),
       );
     });
+
+    // ✅ Snackbar (শুধু Notification)
+    Get.snackbar(
+      'Added to Cart 🛒',
+      '${product.name} added to your cart!',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      duration: const Duration(seconds: 2),
+    );
   }
 
-  // ========== Navigate to Cart ==========
+  // ========== Navigate to My Basket ==========
   void _navigateToCart() {
     Get.to(
       () => const MyBasketScreen(),
@@ -150,14 +168,12 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // ========== Scrollable Content ==========
           SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.only(bottom: 110.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ========== Product Image with Header ==========
                 Stack(
                   children: [
                     Container(
@@ -172,7 +188,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                         ),
                       ),
                     ),
-                    // Back Button
                     Positioned(
                       top: 44.h,
                       left: 20.w,
@@ -192,7 +207,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                         ),
                       ),
                     ),
-                    // Wishlist Button
                     Positioned(
                       bottom: 16.h,
                       right: 20.w,
@@ -213,13 +227,11 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
 
                 SizedBox(height: 20.h),
 
-                // ========== Product Details ==========
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Product Name & Cart Icon
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -235,7 +247,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          // Cart Icon
+                          // Cart Icon - My Basket Navigate
                           GestureDetector(
                             onTap: _navigateToCart,
                             child: Container(
@@ -282,7 +294,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       ),
                       SizedBox(height: 8.h),
 
-                      // Price
                       Row(
                         children: [
                           if (product.oldPrice != null) ...[
@@ -308,7 +319,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       ),
                       SizedBox(height: 12.h),
 
-                      // Rating
                       Row(
                         children: [
                           Icon(Icons.star, color: Colors.amber, size: 20.sp),
@@ -338,7 +348,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       ),
                       SizedBox(height: 16.h),
 
-                      // Description
                       Text(
                         product.description.isNotEmpty
                             ? product.description
@@ -364,7 +373,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       Divider(color: Colors.black12),
                       SizedBox(height: 10.h),
 
-                      // Additional Options
                       Text(
                         "Additional Options :",
                         style: TextStyle(
@@ -375,7 +383,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       ),
                       SizedBox(height: 12.h),
 
-                      // Add-ons
                       Obx(
                         () => _buildOptionRow(
                           "Add Cheese",
@@ -430,7 +437,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               ),
               child: Row(
                 children: [
-                  // Quantity Selector
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF5F5F5),
@@ -460,7 +466,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                   ),
                   SizedBox(width: 16.w),
 
-                  // Add to Basket Button
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _isAddingToCart
@@ -510,7 +515,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     );
   }
 
-  // ========== Option Row Widget ==========
   Widget _buildOptionRow(
     String title,
     String price,
@@ -524,10 +528,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 15.sp,
-              color: Colors.black87,
-            ),
+            style: TextStyle(fontSize: 15.sp, color: Colors.black87),
           ),
           Row(
             children: [
