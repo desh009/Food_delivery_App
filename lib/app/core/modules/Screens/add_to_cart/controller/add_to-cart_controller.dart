@@ -22,7 +22,6 @@ class CartItem {
   })  : quantity = quantity.obs,
         addOns = addOns ?? [];
 
-  // ✅ Copy with new quantity
   CartItem copyWith({int? quantity, List<Map<String, dynamic>>? addOns}) {
     return CartItem(
       name: name,
@@ -46,11 +45,33 @@ class CartController extends GetxController {
 
   var cartItems = <CartItem>[].obs;
   var selectedPaymentMethod = ''.obs;
-
-  // ========== Delivery Fee ==========
+  var appliedVoucher = ''.obs;
+  var appliedVoucherDiscount = 0.0.obs;
+  var appliedVoucherTitle = ''.obs;
+  
   final double deliveryFee = 2.99;
 
-  // ========== ✅ Add to Cart (Fixed) ==========
+  void applyVoucher({
+    required String code,
+    required double discountAmount,
+    required String voucherTitle,
+  }) {
+    appliedVoucher.value = code;
+    appliedVoucherDiscount.value = discountAmount;
+    appliedVoucherTitle.value = voucherTitle;
+    
+    print('✅ Voucher Applied: $code');
+    print('💰 Discount: £$discountAmount');
+    print('📝 Title: $voucherTitle');
+  }
+
+  void clearVoucher() {
+    appliedVoucher.value = '';
+    appliedVoucherDiscount.value = 0.0;
+    appliedVoucherTitle.value = '';
+    print('🗑️ Voucher Cleared');
+  }
+
   void addToCart({
     required String name,
     required String imageUrl,
@@ -64,20 +85,17 @@ class CartController extends GetxController {
     print('💰 Price: £$price');
     print('📋 Add-ons: $addOns');
 
-    // ✅ Check if item already exists (same name and same add-ons)
     final existingIndex = cartItems.indexWhere((item) {
       if (item.name != name) return false;
       return _compareAddOns(item.addOns, addOns);
     });
 
     if (existingIndex != -1) {
-      // ✅ Update existing item quantity
       final existingItem = cartItems[existingIndex];
       existingItem.quantity.value += quantity;
       cartItems.refresh();
       print('✅ Updated existing item: ${existingItem.name} x${existingItem.quantity.value}');
     } else {
-      // ✅ Add new item
       cartItems.add(
         CartItem(
           name: name,
@@ -96,7 +114,6 @@ class CartController extends GetxController {
     
     cartItems.refresh();
 
-    // Show success message
     Get.snackbar(
       'Added to Cart 🛒',
       '$name added successfully!',
@@ -107,7 +124,6 @@ class CartController extends GetxController {
     );
   }
 
-  // ✅ Compare add-ons
   bool _compareAddOns(
     List<Map<String, dynamic>> addOns1,
     List<Map<String, dynamic>> addOns2,
@@ -119,7 +135,6 @@ class CartController extends GetxController {
     return true;
   }
 
-  // ========== Remove Item ==========
   void removeItem(CartItem item) {
     cartItems.remove(item);
     cartItems.refresh();
@@ -133,7 +148,6 @@ class CartController extends GetxController {
     );
   }
 
-  // ========== Update Quantity ==========
   void incrementQuantity(int index) {
     if (index < cartItems.length) {
       cartItems[index].quantity.value++;
@@ -147,13 +161,11 @@ class CartController extends GetxController {
         cartItems[index].quantity.value--;
         cartItems.refresh();
       } else {
-        // Remove if quantity becomes 0
         removeItem(cartItems[index]);
       }
     }
   }
 
-  // ========== Clear Cart ==========
   void clearCart() {
     cartItems.clear();
     selectedPaymentMethod.value = '';
@@ -168,7 +180,6 @@ class CartController extends GetxController {
     );
   }
 
-  // ========== Calculate Subtotal ==========
   double get subtotal {
     double total = 0.0;
     for (var item in cartItems) {
@@ -181,12 +192,13 @@ class CartController extends GetxController {
     return total;
   }
 
-  // ========== Calculate Total (with delivery fee) ==========
   double get total {
-    return subtotal + (cartItems.isNotEmpty ? deliveryFee : 0);
+    double totalAmount = subtotal + (cartItems.isNotEmpty ? deliveryFee : 0);
+    totalAmount -= appliedVoucherDiscount.value;
+    if (totalAmount < 0) totalAmount = 0;
+    return totalAmount;
   }
 
-  // ========== Get Total Items Count ==========
   int get totalItems {
     int count = 0;
     for (var item in cartItems) {
@@ -195,15 +207,10 @@ class CartController extends GetxController {
     return count;
   }
 
-  // ========== Check if Cart is Empty ==========
   bool get isEmpty => cartItems.isEmpty;
-
-  // ========== Get Cart Items Count ==========
   int get itemCount => cartItems.length;
 
-  // ========== Checkout ==========
   void checkout() {
-    // 1. Check if cart is empty
     if (cartItems.isEmpty) {
       Get.snackbar(
         'Error',
@@ -215,7 +222,6 @@ class CartController extends GetxController {
       return;
     }
 
-    // 2. Check if payment method is selected
     if (selectedPaymentMethod.value.isEmpty) {
       Get.snackbar(
         'Payment Required',
@@ -227,7 +233,6 @@ class CartController extends GetxController {
       return;
     }
 
-    // 3. Place Order
     Get.snackbar(
       'Order Placed! 🎉',
       'Your order has been placed successfully!\nPayment: ${selectedPaymentMethod.value}\nTotal: £${total.toStringAsFixed(2)}',
@@ -237,11 +242,9 @@ class CartController extends GetxController {
       duration: const Duration(seconds: 3),
     );
 
-    // Clear cart after successful order
     clearCart();
   }
 
-  // ========== Get Payment Method Display Name ==========
   String get paymentMethodDisplay {
     if (selectedPaymentMethod.value.isEmpty) {
       return 'Select Payment Method';

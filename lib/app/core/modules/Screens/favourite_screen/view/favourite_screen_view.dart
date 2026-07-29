@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 class LikedScreen extends StatelessWidget {
   const LikedScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     // Initialize FavoriteService
@@ -22,7 +23,16 @@ class LikedScreen extends StatelessWidget {
       Get.put<FavoriteService>(FavoriteService(), permanent: true);
     }
 
-    // Initialize Controller
+    // Initialize Controller/////
+
+
+    ///instace the method ???
+    ///
+    ///
+    ///
+    ///
+    
+    
     final LikedController controller = Get.isRegistered<LikedController>()
         ? Get.find<LikedController>()
         : Get.put(LikedController());

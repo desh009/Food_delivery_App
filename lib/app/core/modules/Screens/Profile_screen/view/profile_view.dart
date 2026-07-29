@@ -8,6 +8,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Secu
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/view/track_order_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/binder/voucher_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/view/voucher_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
@@ -91,12 +93,9 @@ class ProfileScreen extends StatelessWidget {
                     Icons.account_balance_wallet_outlined,
                     "Vouchers",
                     onTap: () {
-                      Get.snackbar(
-                        'Payment Methods',
-                        'Coming soon!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.blue,
-                        colorText: Colors.white,
+                      Get.to(
+                        () => const VoucherScreen(),
+                        binding: VoucherBinding(),
                       );
                     },
                   ),

@@ -11,6 +11,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Secu
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/view/track_order_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/binder/voucher_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/view/voucher_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/binder/profile_binder.dart';
@@ -156,10 +158,11 @@ class AppPages {
       binding: AboutAppBinding(),
     ),
 
-    //   GetPage(
-    //   name: _Paths.ADD_TO_CART_LIST_ITEM,
-    //   page: () => CartItemsListScreen(),
-    //   binding: CartItemsListBinding(),
-    // ),
+    GetPage(
+      name: Routes.VOUCHER,
+      page: () => const VoucherScreen(),
+      binding: VoucherBinding(),
+      transition: Transition.rightToLeft,
+    ),
   ];
 }
