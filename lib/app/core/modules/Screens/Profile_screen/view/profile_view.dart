@@ -1,28 +1,16 @@
 // lib/app/core/modules/Screens/Profile_screen/view/profile_view.dart
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/view/about_app_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/binder/invite_friends_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/view/invite_friends-view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/view/track_order_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/binder/voucher_screen_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/view/voucher_screen_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/binder/help_center_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/binder/add_to_cart_binder.dart';
-import 'package:food_hjoiopk/app/core/modules/Screens/add_to_cart/view/add_to_cart_view.dart';
+import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
-import 'package:get/get.dart';
-import 'dart:io';
+import 'package:food_hjoiopk/l10n/Local_Controller/local_controller.dart';
+import 'package:food_hjoiopk/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -33,9 +21,10 @@ class ProfileScreen extends StatelessWidget {
         ? Get.find<ProfileController>()
         : Get.put(ProfileController());
 
+    final localizations = AppLocalizations.of(context)!;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
-        print('ProfileScreen Loaded - Setting index to 4');
         BottomNavController.to.changeIndex(4);
       } catch (e) {
         print('Error: $e');
@@ -48,100 +37,61 @@ class ProfileScreen extends StatelessWidget {
         bottom: false,
         child: Stack(
           children: [
-            // ========== Main Content (Scrollable) ==========
+            // ========== Main Content ==========
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 100.h),
               child: Column(
                 children: [
-                  // ========== Top Header Bar ==========
-                  _buildTopHeader(),
+                  _buildTopHeader(localizations),
                   SizedBox(height: 20.h),
-
-                  // ========== User Profile Header ==========
-                  _buildUserProfileHeader(controller),
+                  _buildUserProfileHeader(controller, localizations),
                   SizedBox(height: 20.h),
-
-                  // ========== Logout Button ==========
-                  _buildLogoutButton(controller),
+                  _buildLogoutButton(controller, localizations),
                   SizedBox(height: 24.h),
 
                   // ========== Primary Navigation Items ==========
                   _buildListTile(
                     Icons.location_on_outlined,
-                    "Track Order",
+                    localizations.trackOrder,
                     onTap: () {
-                      Get.to(
-                        () => const TrackOrderScreen(),
-                        binding: TrackOrderBinding(),
-                        arguments: {
-                          'orderNumber': 'ORD-2024-001',
-                          'orderStatus': 'Preparing',
-                        },
-                      );
+                      Get.toNamed('/track-order');
                     },
                   ),
-                  _buildListTile(
-                    Icons.confirmation_number_outlined,
-                    "Add To Cart List",
-                    onTap: () {
-                      Get.to(
-                        () => const MyBasketScreen(),
-                        binding: AddToCartBinder(),
-                      );
-                    },
-                  ),
+      
                   _buildListTile(
                     Icons.account_balance_wallet_outlined,
-                    "Vouchers",
+                    localizations.vouchers,
                     onTap: () {
-                      Get.to(
-                        () => const VoucherScreen(),
-                        binding: VoucherBinding(),
-                      );
+                      Get.toNamed('/voucher');
                     },
                   ),
                   _buildListTile(
                     Icons.chat_bubble_outline_rounded,
-                    "Messages",
+                    localizations.messages,
                     onTap: () {
-                      Get.snackbar(
-                        'Messages',
-                        'Coming soon!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.blue,
-                        colorText: Colors.white,
-                      );
+                      Get.toNamed('/message');
                     },
                   ),
                   _buildListTile(
                     Icons.people_outline_rounded,
-                    "Invite Friends",
+                    localizations.inviteFriends,
                     onTap: () {
-                      Get.to(
-                        () => const InviteFriendScreen(),
-                        binding: InviteFriendBinding(),
-                      );
+                      Get.toNamed('/invite_friends');
                     },
                   ),
                   _buildListTile(
                     Icons.shield_outlined,
-                    "Security",
+                    localizations.security,
                     onTap: () {
-                      Get.to(
-                        () => const SecurityScreen(),
-                        binding: SecurityBinding(),
-                      );
+                      Get.toNamed('/security');
                     },
                   ),
                   _buildListTile(
                     Icons.help_outline_rounded,
-                    "Help Center",
+                    localizations.helpCenter,
                     onTap: () {
-                      Get.to(
-                        () => const HelpCenterScreen(),
-                        binding: HelpCenterBinding(),
-                      );
+                      Get.toNamed('/help-center');
                     },
                   ),
 
@@ -149,16 +99,22 @@ class ProfileScreen extends StatelessWidget {
                   Divider(color: const Color(0xFFEEEEEE), thickness: 1.r),
                   SizedBox(height: 8.h),
 
-                  // ========== Preferences / Settings ==========
-                  _buildLanguageDropdown(controller),
+                  // ========== Settings ==========
+                  _buildLanguageDropdown(localizations),
                   _buildSwitchTile(
-                    "Push Notification",
+                    localizations.pushNotification,
                     controller.pushNotification,
                   ),
-                  _buildSwitchTile("Dark Mode", controller.darkMode),
-                  _buildSwitchTile("Sound", controller.sound),
                   _buildSwitchTile(
-                    "Automatically Updated",
+                    localizations.darkMode,
+                    controller.darkMode,
+                  ),
+                  _buildSwitchTile(
+                    localizations.sound,
+                    controller.sound,
+                  ),
+                  _buildSwitchTile(
+                    localizations.automaticallyUpdated,
                     controller.automaticallyUpdated,
                   ),
 
@@ -169,10 +125,10 @@ class ProfileScreen extends StatelessWidget {
                   // ========== Secondary Items ==========
                   _buildListTile(
                     null,
-                    "Term of Service",
+                    localizations.termOfService,
                     onTap: () {
                       Get.snackbar(
-                        'Term of Service',
+                        localizations.termOfService,
                         'Coming soon!',
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.blue,
@@ -182,10 +138,10 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   _buildListTile(
                     null,
-                    "Privacy Policy",
+                    localizations.privacyPolicy,
                     onTap: () {
                       Get.snackbar(
-                        'Privacy Policy',
+                        localizations.privacyPolicy,
                         'Coming soon!',
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.blue,
@@ -195,12 +151,9 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   _buildListTile(
                     null,
-                    "About App",
+                    localizations.aboutApp,
                     onTap: () {
-                      Get.to(
-                        () => const AboutAppScreen(),
-                        binding: AboutAppBinding(),
-                      );
+                      Get.toNamed('/about-app');
                     },
                   ),
                   SizedBox(height: 20.h),
@@ -208,7 +161,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
 
-            // ========== Global Bottom Navigation Bar ==========
+            // ========== Bottom Navigation Bar ==========
             Positioned(
               bottom: 20.h,
               left: 20.w,
@@ -222,14 +175,12 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ========== Top App Bar ==========
-  Widget _buildTopHeader() {
+  Widget _buildTopHeader(AppLocalizations localizations) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // ✅ Back Button - Fixed
         GestureDetector(
           onTap: () {
-            // ✅ Call goBack() from BottomNavController
             BottomNavController.to.goBack();
           },
           child: Container(
@@ -249,7 +200,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         Text(
-          "Profile",
+          localizations.profile,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -276,7 +227,10 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ========== User Profile Header ==========
-  Widget _buildUserProfileHeader(ProfileController controller) {
+  Widget _buildUserProfileHeader(
+    ProfileController controller,
+    AppLocalizations localizations,
+  ) {
     return Row(
       children: [
         Obx(
@@ -285,7 +239,7 @@ class ProfileScreen extends StatelessWidget {
             backgroundImage: controller.profileImagePath.value.isNotEmpty
                 ? FileImage(File(controller.profileImagePath.value))
                 : const NetworkImage('https://i.pravatar.cc/300')
-                      as ImageProvider,
+                    as ImageProvider,
           ),
         ),
         SizedBox(width: 14.w),
@@ -371,10 +325,13 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ========== Logout Button ==========
-  Widget _buildLogoutButton(ProfileController controller) {
+  Widget _buildLogoutButton(
+    ProfileController controller,
+    AppLocalizations localizations,
+  ) {
     return InkWell(
       onTap: () {
-        _showLogoutDialog(Get.context!);
+        _showLogoutDialog(Get.context!, localizations);
       },
       borderRadius: BorderRadius.circular(22.r),
       child: Container(
@@ -390,7 +347,7 @@ class ProfileScreen extends StatelessWidget {
             Icon(Icons.logout_rounded, color: AppColors.tomato, size: 20.sp),
             SizedBox(width: 8.w),
             Text(
-              "Logout",
+              localizations.logout,
               style: TextStyle(
                 color: AppColors.tomato,
                 fontSize: 15.sp,
@@ -404,7 +361,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ========== Logout Dialog ==========
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog(BuildContext context, AppLocalizations localizations) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -413,39 +370,39 @@ class ProfileScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.r),
           ),
           title: Text(
-            "Logout",
+            localizations.logout,
             style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
           ),
           content: Text(
-            "Are you sure you want to logout?",
+            localizations.logoutConfirm,
             style: TextStyle(fontSize: 16.sp),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel", style: TextStyle(color: Colors.black54)),
+              child: Text(
+                localizations.cancel,
+                style: TextStyle(color: Colors.black54),
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
                 Navigator.pop(context);
-
                 try {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
-
                   Get.offAllNamed('/login');
-
                   Get.snackbar(
-                    'Success',
-                    'Logged out successfully',
+                    localizations.success,
+                    localizations.logoutSuccess,
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.green,
                     colorText: Colors.white,
                   );
                 } catch (e) {
                   Get.snackbar(
-                    'Error',
-                    'Failed to logout',
+                    localizations.error,
+                    localizations.logoutFailed,
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
@@ -458,7 +415,10 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-              child: Text("Logout", style: TextStyle(color: Colors.white)),
+              child: Text(
+                localizations.logout,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -466,8 +426,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Standard List Tile Item ==========
-  Widget _buildListTile(IconData? icon, String title, {VoidCallback? onTap}) {
+  // ========== List Tile ==========
+  Widget _buildListTile(
+    IconData? icon,
+    String title, {
+    VoidCallback? onTap,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: ListTile(
@@ -495,14 +459,16 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // ========== Language Dropdown ==========
-  Widget _buildLanguageDropdown(ProfileController controller) {
+  Widget _buildLanguageDropdown(AppLocalizations localizations) {
+    final localeController = LocaleController.to;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Language",
+            localizations.language,
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
@@ -518,20 +484,39 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  value: controller.selectedLanguage.value,
+                  value: localeController.currentLocale.value.languageCode,
                   isDense: true,
                   icon: Icon(Icons.keyboard_arrow_down, size: 18.sp),
-                  items: <String>['English', 'Bangla', 'Spanish'].map((
-                    String value,
-                  ) {
+                  items: LocaleController.supportedLanguages.map((language) {
+                    final code = language['code'] ?? 'en';
+                    final flag = code == 'en' ? '🇺🇸' : '🇧🇩';
+                    final name = language['name'] ?? code;
+
                     return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value, style: TextStyle(fontSize: 12.sp)),
+                      value: code,
+                      child: Row(
+                        children: [
+                          Text(flag, style: TextStyle(fontSize: 16.sp)),
+                          SizedBox(width: 6.w),
+                          Text(name, style: TextStyle(fontSize: 13.sp)),
+                        ],
+                      ),
                     );
                   }).toList(),
                   onChanged: (newValue) {
                     if (newValue != null) {
-                      controller.selectedLanguage.value = newValue;
+                      localeController.changeLanguage(newValue);
+
+                      String languageName =
+                          newValue == 'bn' ? 'বাংলা' : 'English';
+                      Get.snackbar(
+                        localizations.language,
+                        'Language changed to $languageName',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                        duration: const Duration(seconds: 2),
+                      );
                     }
                   },
                 ),
@@ -543,7 +528,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Switch Settings Tile ==========
+  // ========== Switch Tile ==========
   Widget _buildSwitchTile(String title, RxBool rxBool) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.0.h),

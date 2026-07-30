@@ -3,6 +3,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/binder
 import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/view/notification_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/view/order_screen_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/Massage_Screen/binder/massage_screen_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/Massage_Screen/view/massage_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
@@ -169,6 +171,14 @@ class AppPages {
       name: Routes.INVITE_FRIENDS,
       page: () => const VoucherScreen(),
       binding: VoucherBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+
+       GetPage(
+      name: Routes.MASSAGE,
+      page: () => const MessageScreen(),
+      binding: MessageBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

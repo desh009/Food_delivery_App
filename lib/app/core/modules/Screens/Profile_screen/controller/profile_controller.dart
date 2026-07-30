@@ -1,6 +1,8 @@
 // lib/app/core/modules/Screens/Profile_screen/controller/profile_controller.dart
 
 import 'package:flutter/material.dart';
+import 'package:food_hjoiopk/l10n/Local_Controller/local_controller.dart';
+import 'package:food_hjoiopk/l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +16,7 @@ class ProfileController extends GetxController {
   var userDob = '07/11/1997'.obs;
   var userGender = 'Male'.obs;
   
-  // ========== 🔥 Profile Image ==========
+  // ========== Profile Image ==========
   var profileImagePath = ''.obs;
   
   // ========== Settings ==========
@@ -22,7 +24,6 @@ class ProfileController extends GetxController {
   var darkMode = false.obs;
   var sound = true.obs;
   var automaticallyUpdated = true.obs;
-  var selectedLanguage = 'English'.obs;
   
   @override
   void onInit() {
@@ -43,9 +44,7 @@ class ProfileController extends GetxController {
       profileImagePath.value = prefs.getString('profileImage') ?? '';
       
       print('📂 Profile loaded: ${userName.value}');
-      print('📸 Profile image: ${profileImagePath.value.isEmpty ? 'No image' : 'Has image'}');
       
-      // 🔥 Force update UI
       update();
       
     } catch (e) {
@@ -53,7 +52,55 @@ class ProfileController extends GetxController {
     }
   }
   
-  // ========== 🔥 Save User Data and Force Update ==========
+  // ========== 🔥 Change Language with AppLocalizations ==========
+  void changeLanguage(String languageCode) {
+    try {
+      // LocaleController ব্যবহার করুন
+      final localeController = LocaleController.to;
+      localeController.changeLanguage(languageCode);
+      
+      // Get language name
+      String languageName = languageCode == 'bn' ? 'বাংলা' : 'English';
+      
+      // 🔥 AppLocalizations ব্যবহার করে Snackbar দেখান
+      final context = Get.context;
+      if (context != null) {
+        final localizations = AppLocalizations.of(context);
+        
+        // Get.snackbar(
+        //   localizations.language, // 'Language' বা 'ভাষা'
+        //   'Language changed to $languageName',
+        //   snackPosition: SnackPosition.BOTTOM,
+        //   backgroundColor: Colors.green,
+        //   colorText: Colors.white,
+        //   duration: const Duration(seconds: 2),
+        // );
+      } else {
+        // Fallback
+        Get.snackbar(
+          'Language',
+          'Language changed to $languageName',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      }
+      
+      print('🌐 Language changed to: $languageName');
+      
+    } catch (e) {
+      print('❌ Error changing language: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to change language',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+  
+  // ========== Save User Data ==========
   Future<void> saveUserData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -66,9 +113,7 @@ class ProfileController extends GetxController {
       await prefs.setString('profileImage', profileImagePath.value);
       
       print('💾 Profile saved: ${userName.value}');
-      print('📸 Image saved: ${profileImagePath.value}');
       
-      // 🔥 IMPORTANT: Force update all Obx widgets
       update();
       refresh();
       
@@ -77,7 +122,7 @@ class ProfileController extends GetxController {
     }
   }
   
-  // ========== 🔥 Update Profile Image ==========
+  // ========== Update Profile Image ==========
   void updateProfileImage(String imagePath) {
     print('🔄 Updating profile image to: $imagePath');
     profileImagePath.value = imagePath;
@@ -86,7 +131,7 @@ class ProfileController extends GetxController {
     refresh();
   }
   
-  // ========== 🔥 Remove Profile Image ==========
+  // ========== Remove Profile Image ==========
   void removeProfileImage() {
     print('🗑️ Removing profile image');
     profileImagePath.value = '';

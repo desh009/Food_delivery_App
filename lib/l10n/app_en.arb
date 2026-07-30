@@ -1,0 +1,57 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Food Delivery",
+
+  "home": "Home",
+  "orders": "Orders",
+  "favorites": "Favorites",
+  "notifications": "Notifications",
+  "profile": "Profile",
+
+  "welcomeMessage": "Welcome, {userName}!",
+  "@welcomeMessage": {
+    "placeholders": {
+      "userName": {}
+    }
+  },
+
+  "addToCart": "Add to Cart",
+  "checkout": "Checkout",
+  "sendMessage": "Send Message",
+  "typeMessage": "Type your message...",
+
+  "logout": "Logout",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+
+  "language": "Language",
+
+  "trackOrder": "Track Order",
+  "orderHistory": "Order History",
+  "addressBook": "Address Book",
+  "paymentMethods": "Payment Methods",
+  "myFavorites": "My Favorites",
+  "loyaltyPoints": "Loyalty Points",
+  "vouchers": "Vouchers",
+  "messages": "Messages",
+  "inviteFriends": "Invite Friends",
+  "security": "Security",
+  "helpCenter": "Help Center",
+
+  "pushNotification": "Push Notification",
+  "darkMode": "Dark Mode",
+  "sound": "Sound",
+  "automaticallyUpdated": "Automatically Updated",
+
+  "termOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "aboutApp": "About App",
+
+  "logoutConfirm": "Are you sure you want to logout?",
+  "logoutSuccess": "Logged out successfully.",
+  "logoutFailed": "Logout failed.",
+
+  "success": "Success",
+  "error": "Error"
+}
