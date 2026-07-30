@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/Review_Screen/view/review-screen_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Review_Screen/controller/review-screen_controller.dart';
@@ -9,88 +11,94 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
 
   @override
   Widget build(BuildContext context) {
-  
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // ১. টপ অ্যাপ বার
-              _buildAppBar(),
-      
-              Expanded(
-                child: Obx(
-                  () {
-                    if (controller.isLoading.value) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.tomato,
-                        ),
-                      );
-                    }
-                    return SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 12.h),
-      
-                          // ২. ওভারঅল রেটিং
-                          _buildRatingOverview(),
-                          SizedBox(height: 24.h),
-      
-                          // ৩. ফিল্টার চিপস
-                          _buildFilterChips(),
-                          SizedBox(height: 24.h),
-      
-                          // ৪. রিভিউ লিস্ট
-                          Obx(
-                            () {
-                              if (controller.filteredReviews.isEmpty) {
-                                return Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 40.0.h),
-                                    child: Text(
-                                      "No reviews found",
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              return ListView.separated(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: controller.filteredReviews.length,
-                                separatorBuilder: (context, index) =>
-                                    SizedBox(height: 20.h),
-                                itemBuilder: (context, index) {
-                                  return _buildReviewCard(
-                                    controller.filteredReviews[index],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          SizedBox(height: 20.h),
-                        ],
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ১. টপ অ্যাপ বার - 🔥 Dark Mode Support
+            _buildAppBar(theme, isDark),
+
+            Expanded(
+              child: Obx(
+                () {
+                  if (controller.isLoading.value) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.tomato,
                       ),
                     );
-                  },
-                ),
+                  }
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 12.h),
+
+                        // ২. ওভারঅল রেটিং - 🔥 Dark Mode Support
+                        _buildRatingOverview(theme, isDark),
+                        SizedBox(height: 24.h),
+
+                        // ৩. ফিল্টার চিপস - 🔥 Dark Mode Support
+                        _buildFilterChips(theme, isDark),
+                        SizedBox(height: 24.h),
+
+                        // ৪. রিভিউ লিস্ট - 🔥 Dark Mode Support
+                        Obx(
+                          () {
+                            if (controller.filteredReviews.isEmpty) {
+                              return Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 40.0.h),
+                                  child: Text(
+                                    "No reviews found",
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: isDark ? Colors.grey.shade500 : Colors.black45,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controller.filteredReviews.length,
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 20.h),
+                              itemBuilder: (context, index) {
+                                return _buildReviewCard(
+                                  controller.filteredReviews[index],
+                                  theme,
+                                  isDark,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20.h),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
-  // ========== ১. অ্যাপ বার উইজেট ==========
-  Widget _buildAppBar() {
+  // ============================================================
+  // ১. অ্যাপ বার উইজেট - 🔥 Dark Mode Support
+  // ============================================================
+  Widget _buildAppBar(ThemeData theme, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 12.0.h),
       child: Column(
@@ -102,7 +110,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                 child: Container(
                   padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? const Color(0xFF333333) : Colors.white,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -112,7 +120,10 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                       )
                     ],
                   ),
-                  child: Icon(Icons.arrow_back, color: Colors.black87),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                 ),
               ),
               Expanded(
@@ -122,7 +133,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
               ),
@@ -136,7 +147,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
               style: TextStyle(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
           ),
@@ -145,8 +156,10 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
     );
   }
 
-  // ========== ২. রেটিং ওভারভিউ উইজেট ==========
-  Widget _buildRatingOverview() {
+  // ============================================================
+  // ২. রেটিং ওভারভিউ উইজেট - 🔥 Dark Mode Support
+  // ============================================================
+  Widget _buildRatingOverview(ThemeData theme, bool isDark) {
     return Obx(
       () => Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -159,7 +172,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                 style: TextStyle(
                   fontSize: 40.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
               Row(
@@ -180,7 +193,10 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
               SizedBox(height: 4.h),
               Text(
                 "(${controller.getTotalReviews()})",
-                style: TextStyle(fontSize: 13.sp, color: Colors.black45),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: isDark ? Colors.grey.shade500 : Colors.black45,
+                ),
               ),
             ],
           ),
@@ -190,11 +206,11 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
           Expanded(
             child: Column(
               children: [
-                _buildProgressBarRow(5, controller.getRatingPercentage(5)),
-                _buildProgressBarRow(4, controller.getRatingPercentage(4)),
-                _buildProgressBarRow(3, controller.getRatingPercentage(3)),
-                _buildProgressBarRow(2, controller.getRatingPercentage(2)),
-                _buildProgressBarRow(1, controller.getRatingPercentage(1)),
+                _buildProgressBarRow(5, controller.getRatingPercentage(5), isDark),
+                _buildProgressBarRow(4, controller.getRatingPercentage(4), isDark),
+                _buildProgressBarRow(3, controller.getRatingPercentage(3), isDark),
+                _buildProgressBarRow(2, controller.getRatingPercentage(2), isDark),
+                _buildProgressBarRow(1, controller.getRatingPercentage(1), isDark),
               ],
             ),
           ),
@@ -203,8 +219,8 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
     );
   }
 
-  // প্রোগ্রেস বারের একক রো
-  Widget _buildProgressBarRow(int starNumber, double progress) {
+  // প্রোগ্রেস বারের একক রো - 🔥 Dark Mode Support
+  Widget _buildProgressBarRow(int starNumber, double progress, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.0.h),
       child: Row(
@@ -213,7 +229,7 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
             "$starNumber",
             style: TextStyle(
               fontSize: 12.sp,
-              color: Colors.black54,
+              color: isDark ? Colors.grey.shade400 : Colors.black54,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -224,8 +240,8 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 6.h,
-                backgroundColor: Color(0xFFE0E0E0),
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.tomato),
+                backgroundColor: isDark ? Colors.grey.shade800 : const Color(0xFFE0E0E0),
+                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.tomato),
               ),
             ),
           ),
@@ -234,12 +250,14 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
     );
   }
 
-  // ========== ৩. ফিল্টার চিপস উইজেট ==========
-  Widget _buildFilterChips() {
+  // ============================================================
+  // ৩. ফিল্টার চিপস উইজেট - 🔥 Dark Mode Support
+  // ============================================================
+  Widget _buildFilterChips(ThemeData theme, bool isDark) {
     return Obx(
       () => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Row(
           children: controller.filters.map((filter) {
             final isSelected = controller.selectedFilter.value == filter;
@@ -248,10 +266,12 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
               child: GestureDetector(
                 onTap: () => controller.filterReviews(filter),
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 200),
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.tomato : Color(0xFFF2F2F2),
+                    color: isSelected
+                        ? AppColors.tomato
+                        : (isDark ? const Color(0xFF333333) : const Color(0xFFF2F2F2)),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Row(
@@ -265,7 +285,9 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w600,
-                          color: isSelected ? Colors.white : Colors.black87,
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark ? Colors.white : Colors.black87),
                         ),
                       ),
                     ],
@@ -279,8 +301,14 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
     );
   }
 
-  // ========== ৪. ইন্ডিভিজুয়াল রিভিউ কার্ড ==========
-  Widget _buildReviewCard(Map<String, dynamic> review) {
+  // ============================================================
+  // ৪. ইন্ডিভিজুয়াল রিভিউ কার্ড - 🔥 Dark Mode Support
+  // ============================================================
+  Widget _buildReviewCard(
+    Map<String, dynamic> review,
+    ThemeData theme,
+    bool isDark,
+  ) {
     final String? avatarUrl = review["avatar"];
     final String name = review["name"];
 
@@ -293,14 +321,14 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
             // প্রোফাইল ইমেজ
             CircleAvatar(
               radius: 20.r,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
               backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
               child: avatarUrl == null
                   ? Text(
                       name[0],
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     )
                   : null,
@@ -317,13 +345,16 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     review["date"],
-                    style: TextStyle(fontSize: 12.sp, color: Colors.black38),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark ? Colors.grey.shade500 : Colors.black38,
+                    ),
                   ),
                 ],
               ),
@@ -340,12 +371,12 @@ class ProductReviewsScreen extends GetView<ProductReviewsController> {
         ),
         SizedBox(height: 10.h),
 
-        // রিভিউ কমেন্ট
+        // রিভিউ কমেন্ট - 🔥 Dark Mode Support
         Text(
           review["comment"] ?? "No comment provided.",
           style: TextStyle(
             fontSize: 13.sp,
-            color: Colors.black87,
+            color: isDark ? Colors.grey.shade300 : Colors.black87,
             height: 1.4.h,
           ),
         ),

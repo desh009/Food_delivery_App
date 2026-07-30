@@ -11,59 +11,63 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: _buildAppBar(),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(20.0.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Order Status Card
-                _buildOrderStatusCard(),
-                
-                SizedBox(height: 24.h),
-                
-                // Order Details
-                _buildOrderDetails(),
-                
-                SizedBox(height: 24.h),
-                
-                // Delivery Information
-                _buildDeliveryInfo(),
-                
-                SizedBox(height: 24.h),
-                
-                // Order Items
-                _buildOrderItems(),
-                
-                SizedBox(height: 30.h),
-                
-                // Action Buttons
-                _buildActionButtons(),
-                
-                SizedBox(height: 20.h),
-              ],
-            ),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      appBar: _buildAppBar(theme, isDark),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.0.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Order Status Card
+              _buildOrderStatusCard(theme, isDark),
+              
+              SizedBox(height: 24.h),
+              
+              // Order Details
+              _buildOrderDetails(theme, isDark),
+              
+              SizedBox(height: 24.h),
+              
+              // Delivery Information
+              _buildDeliveryInfo(theme, isDark),
+              
+              SizedBox(height: 24.h),
+              
+              // Order Items
+              _buildOrderItems(theme, isDark),
+              
+              SizedBox(height: 30.h),
+              
+              // Action Buttons
+              _buildActionButtons(theme, isDark),
+              
+              SizedBox(height: 20.h),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
-  // ========== APP BAR ==========
-  PreferredSizeWidget _buildAppBar() {
+  // ========== APP BAR - 🔥 Dark Mode Support ==========
+  PreferredSizeWidget _buildAppBar(ThemeData theme, bool isDark) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.black87),
+        icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black87),
         onPressed: controller.goBack,
       ),
       title: Text(
         "Track Order",
         style: TextStyle(
-          color: Colors.black87,
+          color: isDark ? Colors.white : Colors.black87,
           fontSize: 20.sp,
           fontWeight: FontWeight.bold,
         ),
@@ -71,15 +75,15 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
       centerTitle: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.support_agent, color: Colors.black87),
+          icon: Icon(Icons.support_agent, color: isDark ? Colors.white : Colors.black87),
           onPressed: controller.contactSupport,
         ),
       ],
     );
   }
 
-  // ========== Order Status Card ==========
-  Widget _buildOrderStatusCard() {
+  // ========== Order Status Card - 🔥 Dark Mode Support ==========
+  Widget _buildOrderStatusCard(ThemeData theme, bool isDark) {
     return Obx(() {
       final status = controller.orderStatus.value;
       final isCancelled = status == 'Cancelled';
@@ -152,15 +156,15 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               ),
             ),
             SizedBox(height: 20.h),
-            if (!isCancelled) _buildProgressTimeline(),
+            if (!isCancelled) _buildProgressTimeline(isDark),
           ],
         ),
       );
     });
   }
 
-  // ========== Progress Timeline ==========
-  Widget _buildProgressTimeline() {
+  // ========== Progress Timeline - 🔥 Dark Mode Support ==========
+  Widget _buildProgressTimeline(bool isDark) {
     return Obx(() {
       return Column(
         children: controller.timelineSteps.map((step) {
@@ -232,13 +236,13 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     });
   }
 
-  // ========== Order Details ==========
-  Widget _buildOrderDetails() {
+  // ========== Order Details - 🔥 Dark Mode Support ==========
+  Widget _buildOrderDetails(ThemeData theme, bool isDark) {
     return Obx(() {
       return Container(
         padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
@@ -256,24 +260,24 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             SizedBox(height: 16.h),
-            _buildDetailRow("Order Date", controller.orderDate.value),
-            _buildDivider(),
-            _buildDetailRow("Payment Method", controller.paymentMethod.value),
-            _buildDivider(),
-            _buildDetailRow("Payment Status", controller.paymentStatus.value),
-            _buildDivider(),
-            _buildDetailRow("Delivery Type", controller.deliveryType.value),
+            _buildDetailRow("Order Date", controller.orderDate.value, isDark),
+            _buildDivider(isDark),
+            _buildDetailRow("Payment Method", controller.paymentMethod.value, isDark),
+            _buildDivider(isDark),
+            _buildDetailRow("Payment Status", controller.paymentStatus.value, isDark),
+            _buildDivider(isDark),
+            _buildDetailRow("Delivery Type", controller.deliveryType.value, isDark),
           ],
         ),
       );
     });
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildDetailRow(String label, String value, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
@@ -282,14 +286,14 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
           Text(
             label,
             style: TextStyle(
-              color: Colors.black54,
+              color: isDark ? Colors.grey.shade400 : Colors.black54,
               fontSize: 14.sp,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              color: Colors.black87,
+              color: isDark ? Colors.white : Colors.black87,
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),
@@ -299,21 +303,21 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(bool isDark) {
     return Divider(
-      color: Colors.grey.shade200,
+      color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
       height: 1.h,
     );
   }
 
-  // ========== Delivery Information ==========
-  Widget _buildDeliveryInfo() {
+  // ========== Delivery Information - 🔥 Dark Mode Support ==========
+  Widget _buildDeliveryInfo(ThemeData theme, bool isDark) {
     return Obx(() {
       final address = controller.deliveryAddress.value;
       return Container(
         padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
@@ -331,7 +335,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             SizedBox(height: 12.h),
@@ -360,28 +364,28 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14.sp,
-                          color: Colors.black87,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       SizedBox(height: 2.h),
                       Text(
                         address['address'] ?? '',
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                           fontSize: 14.sp,
                         ),
                       ),
                       Text(
                         address['city'] ?? '',
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                           fontSize: 14.sp,
                         ),
                       ),
                       Text(
                         "Phone: ${address['phone'] ?? ''}",
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                           fontSize: 14.sp,
                         ),
                       ),
@@ -396,13 +400,13 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     });
   }
 
-  // ========== Order Items ==========
-  Widget _buildOrderItems() {
+  // ========== Order Items - 🔥 Dark Mode Support ==========
+  Widget _buildOrderItems(ThemeData theme, bool isDark) {
     return Obx(() {
       return Container(
         padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
@@ -420,21 +424,22 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             SizedBox(height: 16.h),
-            ...controller.orderItems.map((item) => _buildOrderItem(item)),
-            Divider(height: 20.h),
-            _buildTotalRow("Subtotal", "\$${controller.subtotal.value.toStringAsFixed(2)}"),
+            ...controller.orderItems.map((item) => _buildOrderItem(item, isDark)),
+            Divider(height: 20.h, color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
+            _buildTotalRow("Subtotal", "\$${controller.subtotal.value.toStringAsFixed(2)}", isDark),
             SizedBox(height: 4.h),
-            _buildTotalRow("Delivery", "\$${controller.deliveryCharge.value.toStringAsFixed(2)}"),
+            _buildTotalRow("Delivery", "\$${controller.deliveryCharge.value.toStringAsFixed(2)}", isDark),
             SizedBox(height: 4.h),
-            _buildTotalRow("Tax", "\$${controller.tax.value.toStringAsFixed(2)}"),
-            Divider(height: 16.h),
+            _buildTotalRow("Tax", "\$${controller.tax.value.toStringAsFixed(2)}", isDark),
+            Divider(height: 16.h, color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
             _buildTotalRow(
               "Total",
               "\$${controller.total.value.toStringAsFixed(2)}",
+              isDark,
               isTotal: true,
             ),
           ],
@@ -443,7 +448,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     });
   }
 
-  Widget _buildOrderItem(Map<String, dynamic> item) {
+  Widget _buildOrderItem(Map<String, dynamic> item, bool isDark) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
@@ -469,13 +474,13 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14.sp,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 Text(
                   item['quantity'],
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: isDark ? Colors.grey.shade400 : Colors.black54,
                     fontSize: 12.sp,
                   ),
                 ),
@@ -487,7 +492,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.sp,
-              color: Colors.black87,
+              color: isDark ? Colors.white : Colors.black87,
             ),
           ),
         ],
@@ -495,14 +500,14 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     );
   }
 
-  Widget _buildTotalRow(String label, String value, {bool isTotal = false}) {
+  Widget _buildTotalRow(String label, String value, bool isDark, {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
           style: TextStyle(
-            color: isTotal ? Colors.black87 : Colors.black54,
+            color: isTotal ? (isDark ? Colors.white : Colors.black87) : (isDark ? Colors.grey.shade400 : Colors.black54),
             fontSize: isTotal ? 16 : 14,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
           ),
@@ -510,7 +515,7 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
         Text(
           value,
           style: TextStyle(
-            color: isTotal ? AppColors.tomato : Colors.black87,
+            color: isTotal ? AppColors.tomato : (isDark ? Colors.white : Colors.black87),
             fontSize: isTotal ? 18 : 14,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
           ),
@@ -519,14 +524,14 @@ class TrackOrderScreen extends GetView<TrackOrderController> {
     );
   }
 
-  // ========== Action Buttons ==========
-  Widget _buildActionButtons() {
+  // ========== Action Buttons - 🔥 Dark Mode Support ==========
+  Widget _buildActionButtons(ThemeData theme, bool isDark) {
     return Obx(() {
       final isCancelled = controller.orderStatus.value == 'Cancelled';
       final isDelivered = controller.orderStatus.value == 'Delivered';
       
       if (isCancelled || isDelivered) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       }
       
       return Row(

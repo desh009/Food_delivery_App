@@ -22,6 +22,8 @@ class OrderDetailsScreen extends StatelessWidget {
     }
 
     final controller = Get.find<OrderDetailsController>();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isTablet = screenWidth > 600;
 
@@ -35,7 +37,7 @@ class OrderDetailsScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF8F9FA),
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -43,7 +45,7 @@ class OrderDetailsScreen extends StatelessWidget {
             // Main Content
             Column(
               children: [
-                _buildTopAppBar(controller),
+                _buildTopAppBar(controller, theme, isDark),
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
@@ -63,10 +65,10 @@ class OrderDetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildOrderSummaryHeader(controller),
+                          _buildOrderSummaryHeader(controller, theme, isDark),
                           SizedBox(height: 16.h),
                           ...controller.orderItems.map(
-                            (item) => _buildOrderItemCard(controller, item),
+                            (item) => _buildOrderItemCard(controller, item, theme, isDark),
                           ),
                           SizedBox(height: 20.h),
                           _buildInfoCard(
@@ -74,6 +76,8 @@ class OrderDetailsScreen extends StatelessWidget {
                             iconColor: const Color(0xFFFF6B4A),
                             title: "Deliver to",
                             subtitle: controller.deliveryAddress.value,
+                            theme: theme,
+                            isDark: isDark,
                           ),
                           SizedBox(height: 12.h),
                           _buildInfoCard(
@@ -81,13 +85,15 @@ class OrderDetailsScreen extends StatelessWidget {
                             iconColor: const Color(0xFFFF6B4A),
                             title: "Payment method",
                             subtitle: controller.paymentMethod.value,
+                            theme: theme,
+                            isDark: isDark,
                           ),
                           SizedBox(height: 12.h),
-                          _buildPromotionsCard(controller),
+                          _buildPromotionsCard(controller, theme, isDark),
                           SizedBox(height: 24.h),
-                          _buildPriceSummary(controller),
+                          _buildPriceSummary(controller, theme, isDark),
                           SizedBox(height: 24.h),
-                          _buildOverallRatingSection(controller),
+                          _buildOverallRatingSection(controller, theme, isDark),
                           SizedBox(height: 100.h),
                         ],
                       ),
@@ -111,9 +117,13 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // TOP APP BAR - ✅ Obx ঠিক করা হয়েছে
+  // TOP APP BAR - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildTopAppBar(OrderDetailsController controller) {
+  Widget _buildTopAppBar(
+    OrderDetailsController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
@@ -125,7 +135,7 @@ class OrderDetailsScreen extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(10.r),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? const Color(0xFF333333) : Colors.white,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -135,11 +145,14 @@ class OrderDetailsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(Icons.arrow_back, size: 18.sp, color: Colors.black87),
+              child: Icon(
+                Icons.arrow_back,
+                size: 18.sp,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
           ),
           SizedBox(width: 8.w),
-          // ✅ শুধু Obx যেখানে Observable ব্যবহার হচ্ছে
           Expanded(
             child: Obx(
               () => Text(
@@ -147,12 +160,16 @@ class OrderDetailsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ),
           ),
-          _buildIconButton(icon: Icons.more_horiz, onTap: () {}),
+          _buildIconButton(
+            icon: Icons.more_horiz,
+            onTap: () {},
+            isDark: isDark,
+          ),
         ],
       ),
     );
@@ -161,13 +178,14 @@ class OrderDetailsScreen extends StatelessWidget {
   Widget _buildIconButton({
     required IconData icon,
     required VoidCallback onTap,
+    required bool isDark,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(10.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF333333) : Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -177,15 +195,23 @@ class OrderDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, size: 18.sp, color: Colors.black87),
+        child: Icon(
+          icon,
+          size: 18.sp,
+          color: isDark ? Colors.white : Colors.black87,
+        ),
       ),
     );
   }
 
   // ============================================================
-  // ORDER SUMMARY HEADER - ✅ Obx ঠিক করা হয়েছে
+  // ORDER SUMMARY HEADER - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildOrderSummaryHeader(OrderDetailsController controller) {
+  Widget _buildOrderSummaryHeader(
+    OrderDetailsController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Obx(
       () => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,7 +221,7 @@ class OrderDetailsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: isDark ? Colors.white : Colors.black87,
             ),
           ),
           Container(
@@ -232,17 +258,19 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // ORDER ITEM CARD - ✅ Obx ঠিক করা হয়েছে
+  // ORDER ITEM CARD - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildOrderItemCard(
     OrderDetailsController controller,
     OrderItem item,
+    ThemeData theme,
+    bool isDark,
   ) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -269,10 +297,10 @@ class OrderDetailsScreen extends StatelessWidget {
                     return Container(
                       width: 65.w,
                       height: 65.h,
-                      color: Colors.grey.shade200,
+                      color: isDark ? Colors.grey[800] : Colors.grey.shade200,
                       child: Icon(
                         Icons.image_not_supported,
-                        color: Colors.grey,
+                        color: isDark ? Colors.grey.shade600 : Colors.grey,
                         size: 30.sp,
                       ),
                     );
@@ -291,7 +319,7 @@ class OrderDetailsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -304,7 +332,7 @@ class OrderDetailsScreen extends StatelessWidget {
                             '£ ${item.originalPrice!.toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: Colors.grey,
+                              color: isDark ? Colors.grey.shade500 : Colors.grey,
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
@@ -323,14 +351,13 @@ class OrderDetailsScreen extends StatelessWidget {
                         'Qty: ${item.quantity}',
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: Colors.grey.shade600,
+                          color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                         ),
                       ),
                   ],
                 ),
               ),
               SizedBox(width: 8.w),
-              // ✅ Obx সঠিকভাবে ব্যবহার করা হয়েছে
               Obx(
                 () => ElevatedButton.icon(
                   onPressed: controller.isReorderInProgress.value
@@ -392,7 +419,7 @@ class OrderDetailsScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                         ),
                       ),
                     ),
@@ -418,18 +445,18 @@ class OrderDetailsScreen extends StatelessWidget {
                 size: 20.sp,
                 color: index < item.rating
                     ? Colors.amber
-                    : Colors.grey.shade300,
+                    : (isDark ? Colors.grey.shade700 : Colors.grey.shade300),
               ),
             ),
           ),
           SizedBox(height: 8.h),
           GestureDetector(
-            onTap: () => _showReviewDialog(controller, item),
+            onTap: () => _showReviewDialog(controller, item, isDark),
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.all(10.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F7),
+                color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F7),
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Stack(
@@ -443,8 +470,8 @@ class OrderDetailsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: item.isReviewed
-                            ? Colors.black87
-                            : Colors.grey.shade400,
+                            ? (isDark ? Colors.white : Colors.black87)
+                            : (isDark ? Colors.grey.shade600 : Colors.grey.shade400),
                         height: 1.3.h,
                       ),
                     ),
@@ -457,13 +484,13 @@ class OrderDetailsScreen extends StatelessWidget {
                         Icon(
                           Icons.camera_alt_outlined,
                           size: 16.sp,
-                          color: Colors.grey.shade400,
+                          color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                         ),
                         SizedBox(width: 6.w),
                         Icon(
                           Icons.image_outlined,
                           size: 16.sp,
-                          color: Colors.grey.shade400,
+                          color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                         ),
                       ],
                     ),
@@ -478,19 +505,21 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // INFO CARD - ✅ Obx সরানো হয়েছে (কারণ Observable নেই)
+  // INFO CARD - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildInfoCard({
     required IconData icon,
     required Color iconColor,
     required String title,
     required String subtitle,
+    required ThemeData theme,
+    required bool isDark,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
@@ -513,7 +542,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -523,7 +552,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -536,15 +565,19 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // PROMOTIONS CARD - ✅ Obx ঠিক করা হয়েছে
+  // PROMOTIONS CARD - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildPromotionsCard(OrderDetailsController controller) {
+  Widget _buildPromotionsCard(
+    OrderDetailsController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Obx(
       () => Container(
         margin: EdgeInsets.only(bottom: 12.h),
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
@@ -570,7 +603,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
               ],
@@ -608,14 +641,18 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // PRICE SUMMARY - ✅ Obx ঠিক করা হয়েছে
+  // PRICE SUMMARY - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildPriceSummary(OrderDetailsController controller) {
+  Widget _buildPriceSummary(
+    OrderDetailsController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Obx(
       () => Container(
         padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
@@ -630,18 +667,31 @@ class OrderDetailsScreen extends StatelessWidget {
             _buildPriceRow(
               "Subtotal",
               controller.formatPrice(controller.subtotal.value),
+              isDark,
             ),
             SizedBox(height: 6.h),
-            _buildPriceRow("Delivery Fee", controller.getDeliveryFeeText()),
+            _buildPriceRow(
+              "Delivery Fee",
+              controller.getDeliveryFeeText(),
+              isDark,
+            ),
             SizedBox(height: 6.h),
-            _buildPriceRow("Discount", controller.getDiscountText()),
+            _buildPriceRow(
+              "Discount",
+              controller.getDiscountText(),
+              isDark,
+            ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0.h),
-              child: Divider(color: const Color(0xFFEEEEEE), thickness: 1.r),
+              child: Divider(
+                color: isDark ? Colors.grey.shade800 : const Color(0xFFEEEEEE),
+                thickness: 1.r,
+              ),
             ),
             _buildPriceRow(
               "Total",
               controller.formatPrice(controller.total.value),
+              isDark,
               isTotal: true,
             ),
           ],
@@ -650,7 +700,12 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceRow(String title, String price, {bool isTotal = false}) {
+  Widget _buildPriceRow(
+    String title,
+    String price,
+    bool isDark, {
+    bool isTotal = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -659,7 +714,9 @@ class OrderDetailsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 14.sp : 12.sp,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
-            color: isTotal ? Colors.black87 : Colors.black54,
+            color: isTotal
+                ? (isDark ? Colors.white : Colors.black87)
+                : (isDark ? Colors.grey.shade400 : Colors.black54),
           ),
         ),
         Text(
@@ -667,7 +724,7 @@ class OrderDetailsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 15.sp : 12.sp,
             fontWeight: FontWeight.bold,
-            color: isTotal ? AppColors.tomato : Colors.black87,
+            color: isTotal ? AppColors.tomato : (isDark ? Colors.white : Colors.black87),
           ),
         ),
       ],
@@ -675,14 +732,18 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // OVERALL RATING SECTION - ✅ Obx ঠিক করা হয়েছে
+  // OVERALL RATING SECTION - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildOverallRatingSection(OrderDetailsController controller) {
+  Widget _buildOverallRatingSection(
+    OrderDetailsController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Obx(
       () => Container(
         padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
@@ -703,19 +764,19 @@ class OrderDetailsScreen extends StatelessWidget {
                   size: 38.sp,
                   color: index < controller.overallRating.value.floor()
                       ? Colors.amber
-                      : Colors.grey.shade300,
+                      : (isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                 ),
               ),
             ),
             SizedBox(height: 14.h),
             GestureDetector(
-              onTap: () => _showOverallReviewDialog(controller),
+              onTap: () => _showOverallReviewDialog(controller, isDark),
               child: Container(
                 width: double.infinity,
                 height: 90.h,
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F7),
+                  color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F7),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Stack(
@@ -727,8 +788,8 @@ class OrderDetailsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: controller.overallReview.value.isEmpty
-                            ? Colors.grey.shade400
-                            : Colors.black87,
+                            ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400)
+                            : (isDark ? Colors.white : Colors.black87),
                       ),
                     ),
                     Positioned(
@@ -739,13 +800,13 @@ class OrderDetailsScreen extends StatelessWidget {
                           Icon(
                             Icons.camera_alt_outlined,
                             size: 18.sp,
-                            color: Colors.grey.shade400,
+                            color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                           ),
                           SizedBox(width: 8.w),
                           Icon(
                             Icons.image_outlined,
                             size: 18.sp,
-                            color: Colors.grey.shade400,
+                            color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                           ),
                         ],
                       ),
@@ -761,15 +822,20 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // REVIEW DIALOG
+  // REVIEW DIALOG - 🔥 Dark Mode Support
   // ============================================================
-  void _showReviewDialog(OrderDetailsController controller, OrderItem item) {
+  void _showReviewDialog(
+    OrderDetailsController controller,
+    OrderItem item,
+    bool isDark,
+  ) {
     final TextEditingController reviewController = TextEditingController();
     reviewController.text = item.reviewText;
     int selectedRating = item.rating;
 
     Get.dialog(
       Dialog(
+        backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
@@ -782,10 +848,20 @@ class OrderDetailsScreen extends StatelessWidget {
             children: [
               Text(
                 "Write a Review",
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
               SizedBox(height: 16.h),
-              Text("Rate ${item.title}", style: TextStyle(fontSize: 14.sp)),
+              Text(
+                "Rate ${item.title}",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
               SizedBox(height: 8.h),
               StatefulBuilder(
                 builder: (context, setState) {
@@ -803,7 +879,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           size: 40.sp,
                           color: index < selectedRating
                               ? Colors.amber
-                              : Colors.grey.shade300,
+                              : (isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                         ),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -816,12 +892,20 @@ class OrderDetailsScreen extends StatelessWidget {
               TextField(
                 controller: reviewController,
                 maxLines: 3,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
                 decoration: InputDecoration(
                   hintText: "Write your review...",
+                  hintStyle: TextStyle(
+                    color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   contentPadding: EdgeInsets.all(12.r),
+                  filled: true,
+                  fillColor: isDark ? const Color(0xFF333333) : Colors.white,
                 ),
               ),
               SizedBox(height: 16.h),
@@ -830,7 +914,12 @@ class OrderDetailsScreen extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: Text("Cancel"),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                   ElevatedButton(
@@ -850,7 +939,10 @@ class OrderDetailsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: Text("Submit"),
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -862,14 +954,18 @@ class OrderDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // OVERALL REVIEW DIALOG
+  // OVERALL REVIEW DIALOG - 🔥 Dark Mode Support
   // ============================================================
-  void _showOverallReviewDialog(OrderDetailsController controller) {
+  void _showOverallReviewDialog(
+    OrderDetailsController controller,
+    bool isDark,
+  ) {
     final TextEditingController reviewController = TextEditingController();
     reviewController.text = controller.overallReview.value;
 
     Get.dialog(
       Dialog(
+        backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
@@ -882,18 +978,30 @@ class OrderDetailsScreen extends StatelessWidget {
             children: [
               Text(
                 "Overall Review",
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
               SizedBox(height: 16.h),
               TextField(
                 controller: reviewController,
                 maxLines: 3,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
                 decoration: InputDecoration(
                   hintText: "Write your overall review...",
+                  hintStyle: TextStyle(
+                    color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   contentPadding: EdgeInsets.all(12.r),
+                  filled: true,
+                  fillColor: isDark ? const Color(0xFF333333) : Colors.white,
                 ),
               ),
               SizedBox(height: 16.h),
@@ -902,7 +1010,12 @@ class OrderDetailsScreen extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: Text("Cancel"),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                   ElevatedButton(
@@ -916,7 +1029,10 @@ class OrderDetailsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                     ),
-                    child: Text("Submit"),
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),

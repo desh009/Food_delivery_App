@@ -17,13 +17,17 @@ class _MessageScreenState extends State<MessageScreen>
     with TickerProviderStateMixin {
   late final MessageController controller;
 
+  // 🔥 Dark Mode Helpers
+  bool get isDark => Get.theme.brightness == Brightness.dark;
+  Color get textColor => isDark ? Colors.white : AppColors.darkBackground;
+  Color get bgColor => isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF9FAFB);
+  Color get cardColor => isDark ? const Color(0xFF242424) : Colors.white;
+  Color get hintColor => isDark ? Colors.grey.shade600 : Colors.grey.shade400;
+  Color get subtitleColor => isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+
   @override
   void initState() {
     super.initState();
-    // 🔥 FIX: back চাপার পর GetX যদি controller টা memory থেকে সরিয়ে দেয়
-    // (non-permanent হলে এটাই স্বাভাবিক), তাহলে Get.find() দ্বিতীয়বার
-    // exception থ্রো করে আর স্ক্রিন blank/stuck হয়ে যায়। তাই আগে registered
-    // আছে কিনা চেক করে, না থাকলে নতুন করে put করে দেওয়া হচ্ছে।
     if (!Get.isRegistered<MessageController>()) {
       Get.put<MessageController>(MessageController());
     }
@@ -33,12 +37,6 @@ class _MessageScreenState extends State<MessageScreen>
 
   @override
   void dispose() {
-    // 🔥 FIX: controller টা Get.find() দিয়ে আনা (Get.put() না), মানে এটা
-    // অন্য কোথাও registered হতে পারে, তাই GetX সবসময় controller.onClose()
-    // ট্রিগার করবে এমন গ্যারান্টি নেই। কিন্তু pulseController/waveController
-    // এই View-এর vsync (TickerProviderStateMixin) দিয়ে বানানো, তাই State
-    // dispose হওয়ার আগেই এগুলো ম্যানুয়ালি dispose করতে হবে —
-    // নাহলে "disposed with an active Ticker" error আসবে।
     controller.disposeAnimations();
     super.dispose();
   }
@@ -46,7 +44,7 @@ class _MessageScreenState extends State<MessageScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: bgColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -72,13 +70,13 @@ class _MessageScreenState extends State<MessageScreen>
   }
 
   // ============================================================
-  // HEADER - No Obx needed except for status text
+  // HEADER - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildHeader() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -95,13 +93,13 @@ class _MessageScreenState extends State<MessageScreen>
               width: 38.r,
               height: 38.r,
               decoration: BoxDecoration(
-                color: AppColors.ashLight.withOpacity(0.25),
+                color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.25),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 18.r,
-                color: AppColors.darkBackground,
+                color: textColor,
               ),
             ),
           ),
@@ -131,7 +129,7 @@ class _MessageScreenState extends State<MessageScreen>
                   decoration: BoxDecoration(
                     color: Colors.green,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2.w),
+                    border: Border.all(color: isDark ? const Color(0xFF1A1A1A) : Colors.white, width: 2.w),
                   ),
                 ),
               ),
@@ -148,11 +146,10 @@ class _MessageScreenState extends State<MessageScreen>
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.darkBackground,
+                    color: textColor,
                   ),
                 ),
                 SizedBox(height: 2.h),
-                // ✅ Only one Obx here for status text
                 Obx(
                   () => Text(
                     controller.isRecording.value ? 'Listening...' : 'Delivery Partner • Active',
@@ -173,7 +170,7 @@ class _MessageScreenState extends State<MessageScreen>
             onPressed: controller.makeCall,
             icon: Icon(
               Icons.phone_outlined,
-              color: AppColors.darkBackground,
+              color: textColor,
               size: 22.r,
             ),
           ),
@@ -183,7 +180,7 @@ class _MessageScreenState extends State<MessageScreen>
   }
 
   // ============================================================
-  // MESSAGE BUBBLE - status icon is plain (rebuilt via parent Obx)
+  // MESSAGE BUBBLE - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildMessageBubble(Map<String, dynamic> message, int index) {
     final bool isMe = message['isMe'];
@@ -208,7 +205,7 @@ class _MessageScreenState extends State<MessageScreen>
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
           constraints: BoxConstraints(maxWidth: 0.78.sw),
           decoration: BoxDecoration(
-            color: isMe ? AppColors.tomato : Colors.white,
+            color: isMe ? AppColors.tomato : cardColor,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(18.r),
               topRight: Radius.circular(18.r),
@@ -235,7 +232,7 @@ class _MessageScreenState extends State<MessageScreen>
                   style: TextStyle(
                     fontSize: 14.sp,
                     height: 1.35,
-                    color: isMe ? Colors.white : AppColors.darkBackground,
+                    color: isMe ? Colors.white : textColor,
                   ),
                 )
               else
@@ -252,13 +249,11 @@ class _MessageScreenState extends State<MessageScreen>
                       fontSize: 10.sp,
                       color: isMe
                           ? Colors.white.withOpacity(0.7)
-                          : Colors.grey.shade500,
+                          : subtitleColor,
                     ),
                   ),
                   if (isMe) ...[
                     SizedBox(width: 4.w),
-                    // 🔥 FIX: এটা plain Map value, কোনো Rx variable read হচ্ছিল না,
-                    // তাই Obx দরকার নেই — বাইরের ListView এর Obx এমনিতেই rebuild করে দেয়
                     Builder(
                       builder: (_) {
                         final status = message['status'] ?? 'sent';
@@ -284,13 +279,12 @@ class _MessageScreenState extends State<MessageScreen>
   }
 
   // ============================================================
-  // VOICE MESSAGE - With Obx for play/pause and progress
+  // VOICE MESSAGE - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildVoiceMessage(Map<String, dynamic> message, bool isMe, int index) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // ✅ Obx for play/pause button
         Obx(
           () {
             final bool isPlaying = controller.playingIndex.value == index;
@@ -302,7 +296,7 @@ class _MessageScreenState extends State<MessageScreen>
                 decoration: BoxDecoration(
                   color: isMe
                       ? Colors.white.withOpacity(0.25)
-                      : AppColors.tomato.withOpacity(0.12),
+                      : (isDark ? Colors.grey.shade800 : AppColors.tomato.withOpacity(0.12)),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -320,7 +314,6 @@ class _MessageScreenState extends State<MessageScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ✅ Obx for progress bar
               Obx(
                 () => LinearProgressIndicator(
                   value: controller.playingIndex.value == index
@@ -328,7 +321,7 @@ class _MessageScreenState extends State<MessageScreen>
                       : 0.0,
                   backgroundColor: isMe
                       ? Colors.white.withOpacity(0.3)
-                      : AppColors.ashLight.withOpacity(0.5),
+                      : (isDark ? Colors.grey.shade700 : AppColors.ashLight.withOpacity(0.5)),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     isMe ? Colors.white : AppColors.tomato,
                   ),
@@ -343,7 +336,7 @@ class _MessageScreenState extends State<MessageScreen>
                   fontWeight: FontWeight.w500,
                   color: isMe
                       ? Colors.white.withOpacity(0.85)
-                      : Colors.grey.shade600,
+                      : subtitleColor,
                 ),
               ),
             ],
@@ -354,13 +347,13 @@ class _MessageScreenState extends State<MessageScreen>
   }
 
   // ============================================================
-  // BOTTOM BAR - With Obx for dynamic UI
+  // BOTTOM BAR - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildBottomBar() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         boxShadow: [
           BoxShadow(
@@ -372,7 +365,7 @@ class _MessageScreenState extends State<MessageScreen>
       ),
       child: Row(
         children: [
-          // ✅ Obx for input container
+          // Input container
           Expanded(
             child: Obx(
               () => AnimatedContainer(
@@ -382,7 +375,7 @@ class _MessageScreenState extends State<MessageScreen>
                 decoration: BoxDecoration(
                   color: controller.isRecording.value
                       ? AppColors.tomato.withOpacity(0.08)
-                      : AppColors.ashLight.withOpacity(0.25),
+                      : (isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.25)),
                   borderRadius: BorderRadius.circular(24.r),
                   border: Border.all(
                     color: controller.isRecording.value
@@ -396,13 +389,13 @@ class _MessageScreenState extends State<MessageScreen>
                         controller: controller.messageController,
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.darkBackground,
+                          color: textColor,
                         ),
                         decoration: InputDecoration(
                           hintText: 'Type your message...',
                           hintStyle: TextStyle(
                             fontSize: 14.sp,
-                            color: Colors.grey.shade400,
+                            color: hintColor,
                           ),
                           border: InputBorder.none,
                         ),
@@ -412,7 +405,7 @@ class _MessageScreenState extends State<MessageScreen>
           ),
           SizedBox(width: 10.w),
 
-          // ✅ Single Obx for the button (not nested)
+          // Send/Mic Button
           Obx(
             () => GestureDetector(
               onTap: () {
@@ -469,13 +462,11 @@ class _MessageScreenState extends State<MessageScreen>
   }
 
   // ============================================================
-  // RECORDING UI
+  // RECORDING UI - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildRecordingUI() {
     return Row(
       children: [
-        // 🔥 FIX: waveController একটা plain AnimationController, Rx variable না।
-        // ScaleTransition নিজেই Animation শুনে rebuild হয়, তাই Obx সরিয়ে দেওয়া হলো
         Row(
           children: List.generate(
             4,
@@ -504,7 +495,6 @@ class _MessageScreenState extends State<MessageScreen>
         ),
         SizedBox(width: 10.w),
 
-        // ✅ Obx for timer
         Obx(
           () => Text(
             '0:${controller.recordSeconds.value < 10 ? '0' : ''}${controller.recordSeconds.value}',
@@ -521,8 +511,8 @@ class _MessageScreenState extends State<MessageScreen>
           onTap: controller.cancelRecording,
           child: Container(
             padding: EdgeInsets.all(6.r),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: cardColor,
               shape: BoxShape.circle,
             ),
             child: Icon(

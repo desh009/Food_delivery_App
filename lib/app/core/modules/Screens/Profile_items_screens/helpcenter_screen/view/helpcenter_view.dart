@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/view/helpcenter_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/helpcenter_screen/controller/helpcenter-controller.dart';
@@ -9,13 +11,17 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFFAFAFA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black87),
           onPressed: controller.goBack,
         ),
         title: Text(
@@ -23,7 +29,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         centerTitle: true,
@@ -33,20 +39,23 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFFF3F3F4),
+                color: isDark ? const Color(0xFF333333) : const Color(0xFFF3F3F4),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: TextField(
                 onChanged: controller.searchFAQ,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Search FAQs...',
                   hintStyle: TextStyle(
-                    color: Colors.black38,
+                    color: isDark ? Colors.grey.shade500 : Colors.black38,
                     fontSize: 14.sp,
                   ),
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Colors.black38,
+                    color: isDark ? Colors.grey.shade500 : Colors.black38,
                     size: 20.sp,
                   ),
                   border: InputBorder.none,
@@ -67,7 +76,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
           );
         }
 
-        // ===== Error State =====
+        // ===== Error State - 🔥 Dark Mode Support =====
         if (controller.errorMessage.isNotEmpty) {
           return Center(
             child: Column(
@@ -84,7 +93,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: Colors.red,
+                    color: isDark ? Colors.red.shade300 : Colors.red,
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -106,7 +115,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
           );
         }
 
-        // ===== Empty State =====
+        // ===== Empty State - 🔥 Dark Mode Support =====
         if (controller.faqList.isEmpty) {
           return Center(
             child: Column(
@@ -115,14 +124,14 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                 Icon(
                   Icons.search_off,
                   size: 60.sp,
-                  color: Colors.black26,
+                  color: isDark ? Colors.grey.shade600 : Colors.black26,
                 ),
                 SizedBox(height: 12.h),
                 Text(
                   'No FAQs found',
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: Colors.black38,
+                    color: isDark ? Colors.grey.shade400 : Colors.black38,
                   ),
                 ),
               ],
@@ -139,15 +148,16 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
               (faq) => _buildFAQItem(
                 faq['question'] ?? '',
                 faq['answer'] ?? '',
+                isDark,
               ),
             ),
             SizedBox(height: 20.h),
 
-            // ===== Contact Support Section =====
+            // ===== Contact Support Section - 🔥 Dark Mode Support =====
             Container(
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? const Color(0xFF242424) : Colors.white,
                 borderRadius: BorderRadius.circular(12.r),
                 boxShadow: [
                   BoxShadow(
@@ -169,7 +179,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   SizedBox(height: 4.h),
@@ -177,7 +187,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                     'Our support team is here for you ${controller.supportHours.value}',
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: Colors.black54,
+                      color: isDark ? Colors.grey.shade400 : Colors.black54,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -187,9 +197,21 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: controller.emailSupport,
-                          icon: Icon(Icons.email_outlined, size: 18.sp),
-                          label: Text('Email'),
+                          icon: Icon(
+                            Icons.email_outlined,
+                            size: 18.sp,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                          label: Text(
+                            'Email',
+                            style: TextStyle(
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                          ),
                           style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.r),
                             ),
@@ -240,12 +262,12 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
     );
   }
 
-  // ========== FAQ Item Widget ==========
-  Widget _buildFAQItem(String question, String answer) {
+  // ========== FAQ Item Widget - 🔥 Dark Mode Support ==========
+  Widget _buildFAQItem(String question, String answer, bool isDark) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
@@ -273,7 +295,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         children: [
@@ -283,7 +305,7 @@ class HelpCenterScreen extends GetView<HelpCenterController> {
               answer,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: Colors.black54,
+                color: isDark ? Colors.grey.shade400 : Colors.black54,
                 height: 1.6.h,
               ),
             ),

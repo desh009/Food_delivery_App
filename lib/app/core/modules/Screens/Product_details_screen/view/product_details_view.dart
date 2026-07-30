@@ -15,7 +15,7 @@ import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated
 class ProductDetailsScreen extends GetView<ProductDetailsController> {
   final ProductModel product;
 
-   ProductDetailsScreen({super.key, required this.product});
+  ProductDetailsScreen({super.key, required this.product});
 
   final GlobalKey _cartKey = GlobalKey();
   bool _isAddingToCart = false;
@@ -94,7 +94,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     Overlay.of(context).insert(overlayEntry);
   }
 
-  // ========== ✅ Add to Cart (My Basket Navigate, CartItemsList Auto Save) ==========
+  // ========== Add to Cart ==========
   void _addToCartWithAnimation(BuildContext context) {
     if (_isAddingToCart) return;
     _isAddingToCart = true;
@@ -112,7 +112,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       selectedAddOns.add({"name": "Add Meat (Extra Patty)", "price": 2.00});
     }
 
-    // ✅ Save to Cart (CartItemsListScreen এ Auto Save হবে)
     cartController.addToCart(
       name: product.name,
       imageUrl: product.imageUrl,
@@ -122,7 +121,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       addOns: selectedAddOns,
     );
 
-    // Reset
     controller.addCheese.value = false;
     controller.addBacon.value = false;
     controller.addMeat.value = false;
@@ -130,11 +128,8 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
 
     _isAddingToCart = false;
 
-    // ✅ Fly Animation & Navigate to My Basket Screen
     _runFlyToCartAnimation(context, () {
       _isAddingToCart = false;
-
-      // ✅ শুধু My Basket Screen এ Navigate
       Get.to(
         () => const MyBasketScreen(),
         transition: Transition.rightToLeft,
@@ -142,7 +137,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
       );
     });
 
-    // ✅ Snackbar (শুধু Notification)
     Get.snackbar(
       'Added to Cart 🛒',
       '${product.name} added to your cart!',
@@ -153,7 +147,6 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     );
   }
 
-  // ========== Navigate to My Basket ==========
   void _navigateToCart() {
     Get.to(
       () => const MyBasketScreen(),
@@ -164,8 +157,12 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -196,12 +193,14 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                         child: Container(
                           padding: EdgeInsets.all(10.r),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
+                            color: isDark
+                                ? Colors.black.withOpacity(0.7)
+                                : Colors.white.withOpacity(0.9),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.arrow_back,
-                            color: Colors.black87,
+                            color: isDark ? Colors.white : Colors.black87,
                             size: 20.sp,
                           ),
                         ),
@@ -241,13 +240,12 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                               style: TextStyle(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: isDark ? Colors.white : Colors.black87,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          // Cart Icon - My Basket Navigate
                           GestureDetector(
                             onTap: _navigateToCart,
                             child: Container(
@@ -301,7 +299,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                               "£ ${product.oldPrice!.toStringAsFixed(2)}",
                               style: TextStyle(
                                 fontSize: 16.sp,
-                                color: Colors.black38,
+                                color: isDark ? Colors.grey.shade500 : Colors.black38,
                                 decoration: TextDecoration.lineThrough,
                               ),
                             ),
@@ -328,7 +326,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black54,
+                              color: isDark ? Colors.grey.shade400 : Colors.black54,
                             ),
                           ),
                           const Spacer(),
@@ -354,7 +352,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             : "A delicious ${product.name} served with fresh ingredients. Made with love and care.",
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                           height: 1.5.h,
                         ),
                       ),
@@ -370,7 +368,9 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       ),
 
                       SizedBox(height: 20.h),
-                      Divider(color: Colors.black12),
+                      Divider(
+                        color: isDark ? Colors.grey.shade800 : Colors.black12,
+                      ),
                       SizedBox(height: 10.h),
 
                       Text(
@@ -378,7 +378,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       SizedBox(height: 12.h),
@@ -389,6 +389,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                           "+ £0.50",
                           controller.addCheese.value,
                           (val) => controller.addCheese.value = val!,
+                          isDark,
                         ),
                       ),
                       Obx(
@@ -397,6 +398,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                           "+ £1.00",
                           controller.addBacon.value,
                           (val) => controller.addBacon.value = val!,
+                          isDark,
                         ),
                       ),
                       Obx(
@@ -405,6 +407,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                           "+ £2.00",
                           controller.addMeat.value,
                           (val) => controller.addMeat.value = val!,
+                          isDark,
                         ),
                       ),
 
@@ -416,7 +419,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
             ),
           ),
 
-          // ========== Pinned Bottom Navigation Bar ==========
+          // ========== Pinned Bottom Navigation Bar - 🔥 Dark Mode Support ==========
           Positioned(
             bottom: 20.h,
             left: 20.w,
@@ -425,7 +428,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
               height: 80.h,
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? const Color(0xFF242424) : Colors.white,
                 borderRadius: BorderRadius.circular(24.r),
                 boxShadow: [
                   BoxShadow(
@@ -439,14 +442,18 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
+                      color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
                       borderRadius: BorderRadius.circular(30.r),
                     ),
                     child: Row(
                       children: [
                         IconButton(
                           onPressed: controller.decrement,
-                          icon: Icon(Icons.remove, size: 20.sp),
+                          icon: Icon(
+                            Icons.remove,
+                            size: 20.sp,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
                         ),
                         Obx(
                           () => Text(
@@ -454,12 +461,17 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                         ),
                         IconButton(
                           onPressed: controller.increment,
-                          icon: Icon(Icons.add, size: 20.sp),
+                          icon: Icon(
+                            Icons.add,
+                            size: 20.sp,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
                         ),
                       ],
                     ),
@@ -473,7 +485,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                           : () => _addToCartWithAnimation(context),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isAddingToCart
-                            ? Colors.grey
+                            ? (isDark ? Colors.grey.shade700 : Colors.grey)
                             : AppColors.tomato,
                         minimumSize: Size(double.infinity, 54.h),
                         shape: RoundedRectangleBorder(
@@ -520,6 +532,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
     String price,
     bool value,
     ValueChanged<bool?> onChanged,
+    bool isDark,
   ) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
@@ -528,7 +541,10 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 15.sp, color: Colors.black87),
+            style: TextStyle(
+              fontSize: 15.sp,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
           ),
           Row(
             children: [
@@ -536,7 +552,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 price,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: Colors.black54,
+                  color: isDark ? Colors.grey.shade400 : Colors.black54,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -548,6 +564,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.r),
                 ),
+                checkColor: Colors.white,
               ),
             ],
           ),

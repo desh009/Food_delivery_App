@@ -12,16 +12,20 @@ class VoucherScreen extends GetView<VoucherController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     if (!Get.isRegistered<VoucherController>()) {
       Get.put(VoucherController());
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
+            _buildHeader(theme, isDark),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -32,7 +36,7 @@ class VoucherScreen extends GetView<VoucherController> {
                     SizedBox(height: 10.h),
 
                     // Status Summary
-                    _buildStatusSummary(),
+                    _buildStatusSummary(theme, isDark),
                     SizedBox(height: 16.h),
 
                     // List Title
@@ -44,7 +48,7 @@ class VoucherScreen extends GetView<VoucherController> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.darkBackground,
+                            color: isDark ? Colors.white : AppColors.darkBackground,
                           ),
                         ),
                         Obx(
@@ -52,7 +56,7 @@ class VoucherScreen extends GetView<VoucherController> {
                             '${controller.getAvailableVouchersCount()} available',
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: Colors.grey.shade600,
+                              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                             ),
                           ),
                         ),
@@ -88,7 +92,7 @@ class VoucherScreen extends GetView<VoucherController> {
                                   'New offers coming soon!',
                                   style: TextStyle(
                                     fontSize: 13.sp,
-                                    color: Colors.grey.shade600,
+                                    color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                                   ),
                                 ),
                               ],
@@ -105,7 +109,7 @@ class VoucherScreen extends GetView<VoucherController> {
                           final code = voucher['code']!;
                           final isSelected =
                               controller.selectedVoucher.value == code;
-                          return _buildVoucherCard(voucher, index, isSelected);
+                          return _buildVoucherCard(voucher, index, isSelected, theme, isDark);
                         },
                       );
                     }),
@@ -127,7 +131,7 @@ class VoucherScreen extends GetView<VoucherController> {
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey.shade600,
+                                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                 ),
                               ),
                               GestureDetector(
@@ -146,7 +150,7 @@ class VoucherScreen extends GetView<VoucherController> {
                           SizedBox(height: 10.h),
                           ...usedVouchers.map(
                             (voucher) =>
-                                _buildUsedVoucherCard(voucher['code']!),
+                                _buildUsedVoucherCard(voucher['code']!, isDark),
                           ),
                         ],
                       );
@@ -154,7 +158,7 @@ class VoucherScreen extends GetView<VoucherController> {
 
                     SizedBox(height: 20.h),
 
-                    // Apply Button - Navigation বাদ
+                    // Apply Button
                     Obx(
                       () => controller.selectedVoucher.value.isNotEmpty
                           ? SizedBox(
@@ -163,7 +167,6 @@ class VoucherScreen extends GetView<VoucherController> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   controller.applyVoucher();
-                                  // শুধু Apply করবে, Navigate করবে না
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.tomato,
@@ -194,8 +197,8 @@ class VoucherScreen extends GetView<VoucherController> {
     );
   }
 
-  // ========== Header ==========
-  Widget _buildHeader() {
+  // ========== Header - 🔥 Dark Mode Support ==========
+  Widget _buildHeader(ThemeData theme, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: Row(
@@ -206,13 +209,13 @@ class VoucherScreen extends GetView<VoucherController> {
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
-                color: AppColors.ashLight.withOpacity(0.3),
+                color: isDark ? const Color(0xFF333333) : AppColors.ashLight.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 20.r,
-                color: AppColors.darkBackground,
+                color: isDark ? Colors.white : AppColors.darkBackground,
               ),
             ),
           ),
@@ -223,7 +226,7 @@ class VoucherScreen extends GetView<VoucherController> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.darkBackground,
+                color: isDark ? Colors.white : AppColors.darkBackground,
               ),
             ),
           ),
@@ -254,13 +257,13 @@ class VoucherScreen extends GetView<VoucherController> {
     );
   }
 
-  // ========== Status Summary ==========
-  Widget _buildStatusSummary() {
+  // ========== Status Summary - 🔥 Dark Mode Support ==========
+  Widget _buildStatusSummary(ThemeData theme, bool isDark) {
     return Obx(
       () => Container(
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(
-          color: AppColors.ashLight.withOpacity(0.15),
+          color: isDark ? const Color(0xFF242424) : AppColors.ashLight.withOpacity(0.15),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
@@ -270,16 +273,19 @@ class VoucherScreen extends GetView<VoucherController> {
               'Used',
               controller.getUsedVouchersCount().toString(),
               Colors.grey,
+              isDark,
             ),
             _buildStatusItem(
               'Available',
               controller.getAvailableVouchersCount().toString(),
               Colors.green,
+              isDark,
             ),
             _buildStatusItem(
               'Total',
               controller.availableVouchers.length.toString(),
               AppColors.tomato,
+              isDark,
             ),
           ],
         ),
@@ -287,7 +293,7 @@ class VoucherScreen extends GetView<VoucherController> {
     );
   }
 
-  Widget _buildStatusItem(String label, String count, Color color) {
+  Widget _buildStatusItem(String label, String count, Color color, bool isDark) {
     return Column(
       children: [
         Text(
@@ -302,22 +308,24 @@ class VoucherScreen extends GetView<VoucherController> {
           label,
           style: TextStyle(
             fontSize: 11.sp,
-            color: Colors.grey.shade600,
+            color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
           ),
         ),
       ],
     );
   }
 
-  // ========== Used Voucher Card ==========
-  Widget _buildUsedVoucherCard(String code) {
+  // ========== Used Voucher Card - 🔥 Dark Mode Support ==========
+  Widget _buildUsedVoucherCard(String code, bool isDark) {
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
       padding: EdgeInsets.all(10.r),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: isDark ? const Color(0xFF2A2A2A) : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+        ),
       ),
       child: Row(
         children: [
@@ -329,7 +337,7 @@ class VoucherScreen extends GetView<VoucherController> {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
+                color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
               ),
             ),
           ),
@@ -353,11 +361,13 @@ class VoucherScreen extends GetView<VoucherController> {
     );
   }
 
-  // ========== Voucher Card ==========
+  // ========== Voucher Card - 🔥 Dark Mode Support ==========
   Widget _buildVoucherCard(
     Map<String, dynamic> voucher,
     int index,
     bool isSelected,
+    ThemeData theme,
+    bool isDark,
   ) {
     final code = voucher['code']!;
     final isUsed = controller.isVoucherUsed(code);
@@ -367,7 +377,9 @@ class VoucherScreen extends GetView<VoucherController> {
       child: Container(
         margin: EdgeInsets.only(bottom: 14.h),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green.shade50 : Colors.white,
+          color: isSelected
+              ? (isDark ? Colors.green.shade900.withOpacity(0.2) : Colors.green.shade50)
+              : (isDark ? const Color(0xFF242424) : Colors.white),
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
@@ -377,7 +389,9 @@ class VoucherScreen extends GetView<VoucherController> {
             ),
           ],
           border: Border.all(
-            color: isSelected ? Colors.green : AppColors.ashLight.withOpacity(0.4),
+            color: isSelected
+                ? Colors.green
+                : (isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.4)),
             width: isSelected ? 2.w : 1.w,
           ),
         ),
@@ -431,7 +445,10 @@ class VoucherScreen extends GetView<VoucherController> {
                   ),
                 ),
 
-                Container(width: 1, color: AppColors.ashLight.withOpacity(0.5)),
+                Container(
+                  width: 1,
+                  color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.5),
+                ),
 
                 // Right Info
                 Expanded(
@@ -450,7 +467,7 @@ class VoucherScreen extends GetView<VoucherController> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.darkBackground,
+                                  color: isDark ? Colors.white : AppColors.darkBackground,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -464,7 +481,9 @@ class VoucherScreen extends GetView<VoucherController> {
                                   vertical: 4.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.ashLight.withOpacity(0.3),
+                                  color: isDark
+                                      ? Colors.grey.shade800
+                                      : AppColors.ashLight.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
                                 child: Text(
@@ -484,7 +503,7 @@ class VoucherScreen extends GetView<VoucherController> {
                           'Min spend: £${(voucher['minSpend'] as num?)?.toStringAsFixed(2) ?? '0.00'}',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: AppColors.darkBackground.withOpacity(0.7),
+                            color: isDark ? Colors.grey.shade400 : AppColors.darkBackground.withOpacity(0.7),
                           ),
                         ),
                         SizedBox(height: 6.h),
@@ -495,7 +514,7 @@ class VoucherScreen extends GetView<VoucherController> {
                               voucher['validity']!,
                               style: TextStyle(
                                 fontSize: 10.sp,
-                                color: Colors.grey.shade500,
+                                color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
                               ),
                             ),
                             if (isSelected)

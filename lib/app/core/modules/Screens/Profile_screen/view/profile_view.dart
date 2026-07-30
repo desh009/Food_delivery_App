@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
+import 'package:food_hjoiopk/app/core/theme/theme_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/nav_bar/widget/bottom_navigation_widget.dart';
 import 'package:food_hjoiopk/l10n/Local_Controller/local_controller.dart';
@@ -22,6 +23,7 @@ class ProfileScreen extends StatelessWidget {
         : Get.put(ProfileController());
 
     final localizations = AppLocalizations.of(context)!;
+    final theme = Theme.of(context); // 🔥 Theme
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
@@ -32,7 +34,7 @@ class ProfileScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: theme.scaffoldBackgroundColor, // 🔥 Theme থেকে
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -43,25 +45,26 @@ class ProfileScreen extends StatelessWidget {
               padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 100.h),
               child: Column(
                 children: [
-                  _buildTopHeader(localizations),
+                  _buildTopHeader(localizations, theme),
                   SizedBox(height: 20.h),
-                  _buildUserProfileHeader(controller, localizations),
+                  _buildUserProfileHeader(controller, localizations, theme),
                   SizedBox(height: 20.h),
-                  _buildLogoutButton(controller, localizations),
+                  _buildLogoutButton(controller, localizations, theme),
                   SizedBox(height: 24.h),
 
                   // ========== Primary Navigation Items ==========
                   _buildListTile(
                     Icons.location_on_outlined,
                     localizations.trackOrder,
+                    theme,
                     onTap: () {
                       Get.toNamed('/track-order');
                     },
                   ),
-      
                   _buildListTile(
                     Icons.account_balance_wallet_outlined,
                     localizations.vouchers,
+                    theme,
                     onTap: () {
                       Get.toNamed('/voucher');
                     },
@@ -69,6 +72,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildListTile(
                     Icons.chat_bubble_outline_rounded,
                     localizations.messages,
+                    theme,
                     onTap: () {
                       Get.toNamed('/message');
                     },
@@ -76,6 +80,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildListTile(
                     Icons.people_outline_rounded,
                     localizations.inviteFriends,
+                    theme,
                     onTap: () {
                       Get.toNamed('/invite_friends');
                     },
@@ -83,6 +88,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildListTile(
                     Icons.shield_outlined,
                     localizations.security,
+                    theme,
                     onTap: () {
                       Get.toNamed('/security');
                     },
@@ -90,42 +96,45 @@ class ProfileScreen extends StatelessWidget {
                   _buildListTile(
                     Icons.help_outline_rounded,
                     localizations.helpCenter,
+                    theme,
                     onTap: () {
                       Get.toNamed('/help-center');
                     },
                   ),
 
                   SizedBox(height: 8.h),
-                  Divider(color: const Color(0xFFEEEEEE), thickness: 1.r),
+                  Divider(color: theme.dividerColor, thickness: 1.r), // 🔥 Theme থেকে
                   SizedBox(height: 8.h),
 
                   // ========== Settings ==========
-                  _buildLanguageDropdown(localizations),
+                  _buildLanguageDropdown(localizations, theme),
                   _buildSwitchTile(
                     localizations.pushNotification,
                     controller.pushNotification,
+                    theme,
                   ),
-                  _buildSwitchTile(
-                    localizations.darkMode,
-                    controller.darkMode,
-                  ),
+                  // 🔥 Dark Mode Switch
+                  _buildDarkModeSwitch(localizations, theme),
                   _buildSwitchTile(
                     localizations.sound,
                     controller.sound,
+                    theme,
                   ),
                   _buildSwitchTile(
                     localizations.automaticallyUpdated,
                     controller.automaticallyUpdated,
+                    theme,
                   ),
 
                   SizedBox(height: 8.h),
-                  Divider(color: const Color(0xFFEEEEEE), thickness: 1.r),
+                  Divider(color: theme.dividerColor, thickness: 1.r), // 🔥 Theme থেকে
                   SizedBox(height: 8.h),
 
                   // ========== Secondary Items ==========
                   _buildListTile(
                     null,
                     localizations.termOfService,
+                    theme,
                     onTap: () {
                       Get.snackbar(
                         localizations.termOfService,
@@ -139,6 +148,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildListTile(
                     null,
                     localizations.privacyPolicy,
+                    theme,
                     onTap: () {
                       Get.snackbar(
                         localizations.privacyPolicy,
@@ -152,6 +162,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildListTile(
                     null,
                     localizations.aboutApp,
+                    theme,
                     onTap: () {
                       Get.toNamed('/about-app');
                     },
@@ -174,8 +185,12 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Top App Bar ==========
-  Widget _buildTopHeader(AppLocalizations localizations) {
+  // ============================================================
+  // 🔥 TOP APP BAR - Theme Support
+  // ============================================================
+  Widget _buildTopHeader(AppLocalizations localizations, ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -186,7 +201,7 @@ class ProfileScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF333333) : Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -196,21 +211,24 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(Icons.arrow_back, size: 18.sp, color: Colors.black87),
+            child: Icon(
+              Icons.arrow_back,
+              size: 18.sp,
+              color: theme.iconTheme.color,
+            ),
           ),
         ),
         Text(
           localizations.profile,
-          style: TextStyle(
+          style: theme.textTheme.titleLarge?.copyWith(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
           ),
         ),
         Container(
           padding: EdgeInsets.all(10.r),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? const Color(0xFF333333) : Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
@@ -220,17 +238,26 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(Icons.more_horiz, size: 18.sp, color: Colors.black87),
+          child: Icon(
+            Icons.more_horiz,
+            size: 18.sp,
+            color: theme.iconTheme.color,
+          ),
         ),
       ],
     );
   }
 
-  // ========== User Profile Header ==========
+  // ============================================================
+  // 🔥 USER PROFILE HEADER - Theme Support
+  // ============================================================
   Widget _buildUserProfileHeader(
     ProfileController controller,
     AppLocalizations localizations,
+    ThemeData theme,
   ) {
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Row(
       children: [
         Obx(
@@ -265,7 +292,7 @@ class ProfileScreen extends StatelessWidget {
                     Icon(
                       Icons.phone_outlined,
                       size: 13.sp,
-                      color: Colors.black45,
+                      color: isDark ? Colors.white54 : Colors.black45,
                     ),
                     SizedBox(width: 4.w),
                     Text(
@@ -273,7 +300,7 @@ class ProfileScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                   ],
@@ -286,12 +313,15 @@ class ProfileScreen extends StatelessWidget {
                     Icon(
                       Icons.email_outlined,
                       size: 13.sp,
-                      color: Colors.black45,
+                      color: isDark ? Colors.white54 : Colors.black45,
                     ),
                     SizedBox(width: 4.w),
                     Text(
                       controller.userEmail.value,
-                      style: TextStyle(fontSize: 11.sp, color: Colors.black54),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
                     ),
                   ],
                 ),
@@ -324,21 +354,28 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Logout Button ==========
+  // ============================================================
+  // 🔥 LOGOUT BUTTON - Theme Support
+  // ============================================================
   Widget _buildLogoutButton(
     ProfileController controller,
     AppLocalizations localizations,
+    ThemeData theme,
   ) {
+    final isDark = theme.brightness == Brightness.dark;
+    
     return InkWell(
       onTap: () {
-        _showLogoutDialog(Get.context!, localizations);
+        _showLogoutDialog(Get.context!, localizations, theme);
       },
       borderRadius: BorderRadius.circular(22.r),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF0EF),
+          color: isDark
+              ? AppColors.tomato.withOpacity(0.15)
+              : const Color(0xFFFFF0EF),
           borderRadius: BorderRadius.circular(22.r),
         ),
         child: Row(
@@ -360,29 +397,45 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Logout Dialog ==========
-  void _showLogoutDialog(BuildContext context, AppLocalizations localizations) {
+  // ============================================================
+  // 🔥 LOGOUT DIALOG - Theme Support
+  // ============================================================
+  void _showLogoutDialog(
+    BuildContext context,
+    AppLocalizations localizations,
+    ThemeData theme,
+  ) {
+    final isDark = theme.brightness == Brightness.dark;
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
           title: Text(
             localizations.logout,
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: Text(
             localizations.logoutConfirm,
-            style: TextStyle(fontSize: 16.sp),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontSize: 16.sp,
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
                 localizations.cancel,
-                style: TextStyle(color: Colors.black54),
+                style: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
               ),
             ),
             ElevatedButton(
@@ -426,41 +479,52 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== List Tile ==========
+  // ============================================================
+  // 🔥 LIST TILE - Theme Support
+  // ============================================================
   Widget _buildListTile(
     IconData? icon,
-    String title, {
+    String title,
+    ThemeData theme, {
     VoidCallback? onTap,
   }) {
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         dense: true,
         leading: icon != null
-            ? Icon(icon, size: 20.sp, color: Colors.black87)
+            ? Icon(
+                icon,
+                size: 20.sp,
+                color: isDark ? Colors.white70 : Colors.black87,
+              )
             : null,
         title: Text(
           title,
-          style: TextStyle(
+          style: theme.textTheme.bodyLarge?.copyWith(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Colors.black87,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 14.sp,
-          color: Colors.black45,
+          color: isDark ? Colors.white54 : Colors.black45,
         ),
         onTap: onTap ?? () {},
       ),
     );
   }
 
-  // ========== Language Dropdown ==========
-  Widget _buildLanguageDropdown(AppLocalizations localizations) {
+  // ============================================================
+  // 🔥 LANGUAGE DROPDOWN - Theme Support
+  // ============================================================
+  Widget _buildLanguageDropdown(AppLocalizations localizations, ThemeData theme) {
     final localeController = LocaleController.to;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0.h),
@@ -469,24 +533,33 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Text(
             localizations.language,
-            style: TextStyle(
+            style: theme.textTheme.bodyLarge?.copyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
             ),
           ),
           Obx(
             () => Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(
+                  color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                ),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: localeController.currentLocale.value.languageCode,
                   isDense: true,
-                  icon: Icon(Icons.keyboard_arrow_down, size: 18.sp),
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 18.sp,
+                    color: isDark ? Colors.white54 : Colors.black45,
+                  ),
+                  dropdownColor: isDark ? const Color(0xFF242424) : Colors.white,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 13.sp,
+                  ),
                   items: LocaleController.supportedLanguages.map((language) {
                     final code = language['code'] ?? 'en';
                     final flag = code == 'en' ? '🇺🇸' : '🇧🇩';
@@ -528,8 +601,51 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ========== Switch Tile ==========
-  Widget _buildSwitchTile(String title, RxBool rxBool) {
+  // ============================================================
+  // 🔥 DARK MODE SWITCH
+  // ============================================================
+  Widget _buildDarkModeSwitch(AppLocalizations localizations, ThemeData theme) {
+    final themeController = ThemeController.to;
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.0.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            localizations.darkMode,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Obx(
+            () => Switch(
+              value: themeController.isDarkMode,
+              activeColor: AppColors.tomato,
+              inactiveTrackColor: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
+              inactiveThumbColor: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+              onChanged: (val) async {
+                await themeController.toggleTheme();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // 🔥 SWITCH TILE - Theme Support
+  // ============================================================
+  Widget _buildSwitchTile(
+    String title,
+    RxBool rxBool,
+    ThemeData theme,
+  ) {
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 2.0.h),
       child: Row(
@@ -537,18 +653,17 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: theme.textTheme.bodyLarge?.copyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
             ),
           ),
           Obx(
             () => Switch(
               value: rxBool.value,
               activeColor: AppColors.tomato,
-              inactiveTrackColor: Colors.grey.shade200,
-              inactiveThumbColor: Colors.grey.shade400,
+              inactiveTrackColor: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
+              inactiveThumbColor: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
               onChanged: (val) {
                 rxBool.value = val;
               },

@@ -9,6 +9,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/view/about_app_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/binder/invite_friends_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/view/invite_friends-view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
@@ -169,8 +171,8 @@ class AppPages {
 
        GetPage(
       name: Routes.INVITE_FRIENDS,
-      page: () => const VoucherScreen(),
-      binding: VoucherBinding(),
+      page: () => const InviteFriendScreen(),
+      binding: InviteFriendBinding(),
       transition: Transition.rightToLeft,
     ),
 

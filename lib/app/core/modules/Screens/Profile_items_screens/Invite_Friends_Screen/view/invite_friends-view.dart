@@ -12,12 +12,16 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
+            _buildHeader(theme, isDark),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -25,19 +29,19 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
                 child: Column(
                   children: [
                     SizedBox(height: 10.h),
-                    _buildRewardBanner(),
+                    _buildRewardBanner(isDark),
                     SizedBox(height: 24.h),
-                    _buildAppLinkBox(),
+                    _buildAppLinkBox(theme, isDark),
                     SizedBox(height: 28.h),
-                    _buildStatsRow(),
+                    _buildStatsRow(isDark),
                     SizedBox(height: 20.h),
-                    _buildHowItWorks(),
+                    _buildHowItWorks(theme, isDark),
                     SizedBox(height: 10.h),
                   ],
                 ),
               ),
             ),
-            _buildBottomCTA(),
+            _buildBottomCTA(theme, isDark),
           ],
         ),
       ),
@@ -45,9 +49,9 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
   }
 
   // ============================================================
-  // HEADER
+  // HEADER - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildHeader() {
+  Widget _buildHeader(ThemeData theme, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: Row(
@@ -58,13 +62,13 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
-                color: AppColors.ashLight.withOpacity(0.3),
+                color: isDark ? const Color(0xFF333333) : AppColors.ashLight.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 20.r,
-                color: AppColors.darkBackground,
+                color: isDark ? Colors.white : AppColors.darkBackground,
               ),
             ),
           ),
@@ -75,7 +79,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.darkBackground,
+                color: isDark ? Colors.white : AppColors.darkBackground,
               ),
             ),
           ),
@@ -110,9 +114,9 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
   }
 
   // ============================================================
-  // REWARD BANNER - এখানে Obx সরানো হয়েছে
+  // REWARD BANNER
   // ============================================================
-  Widget _buildRewardBanner() {
+  Widget _buildRewardBanner(bool isDark) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
@@ -150,7 +154,6 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
             ),
           ),
           SizedBox(height: 14.h),
-          // Obx সরানো হয়েছে কারণ এখানে কোনো observable variable নেই
           Text(
             'Share With Friends',
             style: TextStyle(
@@ -175,16 +178,16 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
   }
 
   // ============================================================
-  // APP LINK BOX
+  // APP LINK BOX - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildAppLinkBox() {
+  Widget _buildAppLinkBox(ThemeData theme, bool isDark) {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.ashLight.withOpacity(0.12),
+        color: isDark ? const Color(0xFF242424) : AppColors.ashLight.withOpacity(0.12),
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
-          color: AppColors.ashLight.withOpacity(0.5),
+          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.5),
         ),
       ),
       child: Column(
@@ -196,7 +199,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               fontSize: 11.sp,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.1,
-              color: AppColors.darkBackground.withOpacity(0.6),
+              color: isDark ? Colors.grey.shade500 : AppColors.darkBackground.withOpacity(0.6),
             ),
           ),
           SizedBox(height: 10.h),
@@ -210,7 +213,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.darkBackground,
+                      color: isDark ? Colors.white : AppColors.darkBackground,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -270,9 +273,9 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
   }
 
   // ============================================================
-  // STATS ROW
+  // STATS ROW - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildStatsRow() {
+  Widget _buildStatsRow(bool isDark) {
     return Obx(
       () => Row(
         children: [
@@ -282,6 +285,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               controller.totalInvites.value.toString(),
               Icons.share_rounded,
               Colors.blue,
+              isDark,
             ),
           ),
           SizedBox(width: 12.w),
@@ -291,6 +295,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               '\$${controller.totalRewards.value.toStringAsFixed(0)}',
               Icons.monetization_on_rounded,
               Colors.green,
+              isDark,
             ),
           ),
         ],
@@ -298,14 +303,14 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(String label, String value, IconData icon, Color color, bool isDark) {
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: isDark ? color.withOpacity(0.15) : color.withOpacity(0.08),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-          color: color.withOpacity(0.2),
+          color: isDark ? color.withOpacity(0.3) : color.withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -325,7 +330,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
             label,
             style: TextStyle(
               fontSize: 11.sp,
-              color: Colors.grey.shade600,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
             ),
           ),
         ],
@@ -334,9 +339,9 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
   }
 
   // ============================================================
-  // HOW IT WORKS
+  // HOW IT WORKS - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildHowItWorks() {
+  Widget _buildHowItWorks(ThemeData theme, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -347,7 +352,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.darkBackground,
+              color: isDark ? Colors.white : AppColors.darkBackground,
             ),
           ),
         ),
@@ -357,12 +362,14 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
           title: 'Share the App',
           description: 'Share the app link with your friends via any platform.',
           icon: Icons.share_rounded,
+          isDark: isDark,
         ),
         _buildStepItem(
           stepNumber: '2',
           title: 'Friend Downloads',
           description: 'Your friend downloads and installs the app.',
           icon: Icons.download_rounded,
+          isDark: isDark,
         ),
         _buildStepItem(
           stepNumber: '3',
@@ -370,6 +377,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
           description: 'You earn rewards when your friend starts using the app.',
           icon: Icons.monetization_on_rounded,
           isLast: true,
+          isDark: isDark,
         ),
       ],
     );
@@ -381,6 +389,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
     required String description,
     required IconData icon,
     bool isLast = false,
+    required bool isDark,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,7 +400,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               width: 42.r,
               height: 42.r,
               decoration: BoxDecoration(
-                color: AppColors.ashLight.withOpacity(0.25),
+                color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.25),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: AppColors.tomato.withOpacity(0.3),
@@ -408,7 +417,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               Container(
                 width: 2.w,
                 height: 36.h,
-                color: AppColors.ashLight.withOpacity(0.5),
+                color: isDark ? Colors.grey.shade700 : AppColors.ashLight.withOpacity(0.5),
               ),
           ],
         ),
@@ -424,7 +433,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.darkBackground,
+                    color: isDark ? Colors.white : AppColors.darkBackground,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -432,7 +441,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
                   description,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: AppColors.darkBackground.withOpacity(0.7),
+                    color: isDark ? Colors.grey.shade400 : AppColors.darkBackground.withOpacity(0.7),
                     height: 1.3,
                   ),
                 ),
@@ -445,9 +454,9 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
   }
 
   // ============================================================
-  // BOTTOM CTA BUTTON
+  // BOTTOM CTA BUTTON - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildBottomCTA() {
+  Widget _buildBottomCTA(ThemeData theme, bool isDark) {
     return Obx(
       () => Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),

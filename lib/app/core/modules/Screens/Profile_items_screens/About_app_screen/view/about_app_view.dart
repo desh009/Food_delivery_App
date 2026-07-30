@@ -11,13 +11,17 @@ class AboutAppScreen extends GetView<AboutAppController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // ✅ Initialize Controller
     if (!Get.isRegistered<AboutAppController>()) {
       Get.put(AboutAppController());
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
       body: SafeArea(
         bottom: false,
         child: Obx(
@@ -28,7 +32,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
               // ==================================================
               Column(
                 children: [
-                  _buildHeader(),
+                  _buildHeader(theme, isDark),
                   Expanded(
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
@@ -36,18 +40,17 @@ class AboutAppScreen extends GetView<AboutAppController> {
                       child: Column(
                         children: [
                           SizedBox(height: 20.h),
-                          _buildAppLogo(),
+                          _buildAppLogo(isDark),
                           SizedBox(height: 14.h),
-                          _buildAppName(),
+                          _buildAppName(theme, isDark),
                           SizedBox(height: 6.h),
-                          _buildAppVersion(),
+                          _buildAppVersion(theme, isDark),
                           SizedBox(height: 24.h),
-                          _buildAppOverview(),
+                          _buildAppOverview(theme, isDark),
                           SizedBox(height: 30.h),
-                          // ✅ Menu Options সরানো হয়েছে
-                          _buildSocialMedia(),
+                          _buildSocialMedia(theme, isDark),
                           SizedBox(height: 16.h),
-                          _buildCopyright(),
+                          _buildCopyright(theme, isDark),
                           SizedBox(height: 20.h),
                         ],
                       ),
@@ -76,9 +79,9 @@ class AboutAppScreen extends GetView<AboutAppController> {
   }
 
   // ============================================================
-  // HEADER
+  // HEADER - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildHeader() {
+  Widget _buildHeader(ThemeData theme, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       child: Row(
@@ -89,13 +92,13 @@ class AboutAppScreen extends GetView<AboutAppController> {
               width: 38.w,
               height: 38.h,
               decoration: BoxDecoration(
-                color: AppColors.ashLight.withOpacity(0.3),
+                color: isDark ? const Color(0xFF333333) : AppColors.ashLight.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 18.sp,
-                color: AppColors.darkBackground,
+                color: isDark ? Colors.white : AppColors.darkBackground,
               ),
             ),
           ),
@@ -106,26 +109,25 @@ class AboutAppScreen extends GetView<AboutAppController> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.darkBackground,
+                color: isDark ? Colors.white : AppColors.darkBackground,
               ),
             ),
           ),
-          // ✅ Share button সরানো হয়েছে
-          SizedBox(width: 38.w), // Balance alignment
+          SizedBox(width: 38.w),
         ],
       ),
     );
   }
 
   // ============================================================
-  // APP LOGO
+  // APP LOGO - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildAppLogo() {
+  Widget _buildAppLogo(bool isDark) {
     return Container(
       width: 90.w,
       height: 90.h,
       decoration: BoxDecoration(
-        color: AppColors.tomato.withOpacity(0.1),
+        color: isDark ? AppColors.tomato.withOpacity(0.2) : AppColors.tomato.withOpacity(0.1),
         shape: BoxShape.circle,
         border: Border.all(
           color: AppColors.tomato.withOpacity(0.3),
@@ -141,30 +143,30 @@ class AboutAppScreen extends GetView<AboutAppController> {
   }
 
   // ============================================================
-  // APP NAME
+  // APP NAME - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildAppName() {
+  Widget _buildAppName(ThemeData theme, bool isDark) {
     return Obx(
       () => Text(
         controller.appName.value,
         style: TextStyle(
           fontSize: 22.sp,
           fontWeight: FontWeight.bold,
-          color: AppColors.darkBackground,
+          color: isDark ? Colors.white : AppColors.darkBackground,
         ),
       ),
     );
   }
 
   // ============================================================
-  // APP VERSION
+  // APP VERSION - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildAppVersion() {
+  Widget _buildAppVersion(ThemeData theme, bool isDark) {
     return Obx(
       () => Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         decoration: BoxDecoration(
-          color: AppColors.ashLight.withOpacity(0.3),
+          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.3),
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Text(
@@ -172,7 +174,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.darkBackground.withOpacity(0.8),
+            color: isDark ? Colors.grey.shade400 : AppColors.darkBackground.withOpacity(0.8),
           ),
         ),
       ),
@@ -180,16 +182,18 @@ class AboutAppScreen extends GetView<AboutAppController> {
   }
 
   // ============================================================
-  // APP OVERVIEW
+  // APP OVERVIEW - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildAppOverview() {
+  Widget _buildAppOverview(ThemeData theme, bool isDark) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.ashLight.withOpacity(0.15),
+        color: isDark ? const Color(0xFF242424) : AppColors.ashLight.withOpacity(0.15),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.ashLight.withOpacity(0.5)),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.5),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +203,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.darkBackground,
+              color: isDark ? Colors.white : AppColors.darkBackground,
             ),
           ),
           SizedBox(height: 8.h),
@@ -208,7 +212,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
             style: TextStyle(
               fontSize: 13.sp,
               height: 1.6,
-              color: AppColors.darkBackground.withOpacity(0.8),
+              color: isDark ? Colors.grey.shade400 : AppColors.darkBackground.withOpacity(0.8),
             ),
           ),
         ],
@@ -217,15 +221,16 @@ class AboutAppScreen extends GetView<AboutAppController> {
   }
 
   // ============================================================
-  // SOCIAL MEDIA
+  // SOCIAL MEDIA - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildSocialMedia() {
+  Widget _buildSocialMedia(ThemeData theme, bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: controller.socialLinks.map((social) {
         return _buildSocialIcon(
           icon: social['icon'],
           onTap: () => controller.openSocialMedia(social['url']),
+          isDark: isDark,
         );
       }).toList(),
     );
@@ -234,6 +239,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
   Widget _buildSocialIcon({
     required IconData icon,
     required VoidCallback onTap,
+    required bool isDark,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -242,21 +248,28 @@ class AboutAppScreen extends GetView<AboutAppController> {
         height: 40.h,
         margin: EdgeInsets.symmetric(horizontal: 6.w),
         decoration: BoxDecoration(
-          color: AppColors.ashLight.withOpacity(0.3),
+          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.3),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: AppColors.darkBackground, size: 20.sp),
+        child: Icon(
+          icon,
+          color: isDark ? Colors.white : AppColors.darkBackground,
+          size: 20.sp,
+        ),
       ),
     );
   }
 
   // ============================================================
-  // COPYRIGHT
+  // COPYRIGHT - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildCopyright() {
+  Widget _buildCopyright(ThemeData theme, bool isDark) {
     return Text(
       '© 2026 Perto Eats. All rights reserved.',
-      style: TextStyle(fontSize: 11.sp, color: AppColors.ashLight),
+      style: TextStyle(
+        fontSize: 11.sp,
+        color: isDark ? Colors.grey.shade600 : AppColors.ashLight,
+      ),
     );
   }
 }
