@@ -1,6 +1,9 @@
+// lib/app/core/modules/Screens/add_to_cart/controller/add_to-cart_controller.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ========== Cart Item Model ==========
 class CartItem {
   final String name;
   final String imageUrl;
@@ -14,45 +17,85 @@ class CartItem {
     required this.imageUrl,
     required this.price,
     this.oldPrice,
-    required int quantity,
-    required this.addOns,
-  }) : quantity = quantity.obs;
+    int quantity = 1,
+    List<Map<String, dynamic>>? addOns,
+  })  : quantity = quantity.obs,
+        addOns = addOns ?? [];
+
+  CartItem copyWith({int? quantity, List<Map<String, dynamic>>? addOns}) {
+    return CartItem(
+      name: name,
+      imageUrl: imageUrl,
+      price: price,
+      oldPrice: oldPrice,
+      quantity: quantity ?? this.quantity.value,
+      addOns: addOns ?? this.addOns,
+    );
+  }
 }
 
+// ========== Cart Controller ==========
 class CartController extends GetxController {
-  var cartItems = <CartItem>[].obs;
-  var selectedPaymentMethod = ''.obs;
-  
-  // ========== Delivery Fee ==========
-  final double deliveryFee = 2.99;
-
-  // ========== Singleton Pattern ==========
   static CartController get instance {
     if (!Get.isRegistered<CartController>()) {
-      Get.put(CartController());
+      Get.put(CartController(), permanent: true);
     }
     return Get.find<CartController>();
   }
 
-  // ========== Add to Cart ==========
+  var cartItems = <CartItem>[].obs;
+  var selectedPaymentMethod = ''.obs;
+  var appliedVoucher = ''.obs;
+  var appliedVoucherDiscount = 0.0.obs;
+  var appliedVoucherTitle = ''.obs;
+  
+  final double deliveryFee = 2.99;
+
+  void applyVoucher({
+    required String code,
+    required double discountAmount,
+    required String voucherTitle,
+  }) {
+    appliedVoucher.value = code;
+    appliedVoucherDiscount.value = discountAmount;
+    appliedVoucherTitle.value = voucherTitle;
+    
+    print('✅ Voucher Applied: $code');
+    print('💰 Discount: £$discountAmount');
+    print('📝 Title: $voucherTitle');
+  }
+
+  void clearVoucher() {
+    appliedVoucher.value = '';
+    appliedVoucherDiscount.value = 0.0;
+    appliedVoucherTitle.value = '';
+    print('🗑️ Voucher Cleared');
+  }
+
   void addToCart({
     required String name,
     required String imageUrl,
     required double price,
     double? oldPrice,
-    required int quantity,
-    required List<Map<String, dynamic>> addOns,
+    int quantity = 1,
+    List<Map<String, dynamic>> addOns = const [],
   }) {
-    // Check if item already exists with same add-ons
-    final existingIndex = cartItems.indexWhere(
-      (item) => item.name == name && _compareAddOns(item.addOns, addOns),
-    );
+    print('🛒 Adding to Cart: $name');
+    print('📦 Quantity: $quantity');
+    print('💰 Price: £$price');
+    print('📋 Add-ons: $addOns');
+
+    final existingIndex = cartItems.indexWhere((item) {
+      if (item.name != name) return false;
+      return _compareAddOns(item.addOns, addOns);
+    });
 
     if (existingIndex != -1) {
-      // Update quantity
-      cartItems[existingIndex].quantity.value += quantity;
+      final existingItem = cartItems[existingIndex];
+      existingItem.quantity.value += quantity;
+      cartItems.refresh();
+      print('✅ Updated existing item: ${existingItem.name} x${existingItem.quantity.value}');
     } else {
-      // Add new item
       cartItems.add(
         CartItem(
           name: name,
@@ -63,11 +106,16 @@ class CartController extends GetxController {
           addOns: addOns,
         ),
       );
+      print('✅ Added new item: $name');
     }
+
+    print('🛒 Total Items in Cart: ${cartItems.length}');
+    print('💰 Subtotal: £${subtotal.toStringAsFixed(2)}');
     
-    // Show success message
+    cartItems.refresh();
+
     Get.snackbar(
-      'Added to Cart',
+      'Added to Cart 🛒',
       '$name added successfully!',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
@@ -87,45 +135,70 @@ class CartController extends GetxController {
     return true;
   }
 
-  // ========== Remove Item ==========
   void removeItem(CartItem item) {
     cartItems.remove(item);
+    cartItems.refresh();
+    Get.snackbar(
+      'Removed',
+      '${item.name} removed from cart',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.redAccent,
+      colorText: Colors.white,
+      duration: const Duration(seconds: 2),
+    );
   }
 
-  // ========== Update Quantity ==========
   void incrementQuantity(int index) {
-    cartItems[index].quantity.value++;
-  }
-
-  void decrementQuantity(int index) {
-    if (cartItems[index].quantity.value > 1) {
-      cartItems[index].quantity.value--;
+    if (index < cartItems.length) {
+      cartItems[index].quantity.value++;
+      cartItems.refresh();
     }
   }
 
-  // ========== Clear Cart ==========
+  void decrementQuantity(int index) {
+    if (index < cartItems.length) {
+      if (cartItems[index].quantity.value > 1) {
+        cartItems[index].quantity.value--;
+        cartItems.refresh();
+      } else {
+        removeItem(cartItems[index]);
+      }
+    }
+  }
+
   void clearCart() {
     cartItems.clear();
     selectedPaymentMethod.value = '';
+    cartItems.refresh();
+    Get.snackbar(
+      'Cart Cleared',
+      'All items removed from cart',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.orange,
+      colorText: Colors.white,
+      duration: const Duration(seconds: 2),
+    );
   }
 
-  // ========== Calculate Subtotal ==========
   double get subtotal {
-    return cartItems.fold(0.0, (sum, item) {
+    double total = 0.0;
+    for (var item in cartItems) {
       double addOnsPrice = item.addOns.fold(
         0.0,
-        (s, addOn) => s + (addOn['price'] as double),
+        (sum, addOn) => sum + (addOn['price'] as double),
       );
-      return sum + ((item.price + addOnsPrice) * item.quantity.value);
-    });
+      total += (item.price + addOnsPrice) * item.quantity.value;
+    }
+    return total;
   }
 
-  // ========== Calculate Total (with delivery fee) ==========
   double get total {
-    return subtotal + (cartItems.isNotEmpty ? deliveryFee : 0);
+    double totalAmount = subtotal + (cartItems.isNotEmpty ? deliveryFee : 0);
+    totalAmount -= appliedVoucherDiscount.value;
+    if (totalAmount < 0) totalAmount = 0;
+    return totalAmount;
   }
 
-  // ========== Get Total Items Count ==========
   int get totalItems {
     int count = 0;
     for (var item in cartItems) {
@@ -134,12 +207,10 @@ class CartController extends GetxController {
     return count;
   }
 
-  // ========== Check if Cart is Empty ==========
   bool get isEmpty => cartItems.isEmpty;
+  int get itemCount => cartItems.length;
 
-  // ========== Checkout ==========
   void checkout() {
-    // 1. Check if cart is empty
     if (cartItems.isEmpty) {
       Get.snackbar(
         'Error',
@@ -151,7 +222,6 @@ class CartController extends GetxController {
       return;
     }
 
-    // 2. Check if payment method is selected
     if (selectedPaymentMethod.value.isEmpty) {
       Get.snackbar(
         'Payment Required',
@@ -163,25 +233,28 @@ class CartController extends GetxController {
       return;
     }
 
-    // 3. Place Order
     Get.snackbar(
-      'Order Placed!',
-      'Your order has been placed successfully!\nPayment: ${selectedPaymentMethod.value}',
+      'Order Placed! 🎉',
+      'Your order has been placed successfully!\nPayment: ${selectedPaymentMethod.value}\nTotal: £${total.toStringAsFixed(2)}',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green,
       colorText: Colors.white,
       duration: const Duration(seconds: 3),
     );
-    
-    // Clear cart after successful order
+
     clearCart();
   }
 
-  // ========== Get Payment Method Display Name ==========
   String get paymentMethodDisplay {
     if (selectedPaymentMethod.value.isEmpty) {
       return 'Select Payment Method';
     }
     return selectedPaymentMethod.value;
+  }
+
+  @override
+  void onClose() {
+    cartItems.close();
+    super.onClose();
   }
 }

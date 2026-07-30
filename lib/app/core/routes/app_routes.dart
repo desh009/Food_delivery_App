@@ -39,8 +39,16 @@ abstract class Routes {
   static const LIKED_SCREEN = _Paths.LIKED_SCREEN;
   static const PROFILE_EDIT = _Paths.PROFILE_EDIT;
 
-    static const TRACK_ORDER = _Paths.TRACK_ORDER;
-    static const SECURITY = _Paths.TRACK_ORDER;
+  static const TRACK_ORDER = _Paths.TRACK_ORDER;
+  static const SECURITY = _Paths.TRACK_ORDER;
+
+  static const ABOUT_APP = _Paths.ABOUT_APP;
+
+  static const ADD_TO_CART_LIST_ITEM = _Paths.ADD_TO_CART_LIST_ITEM;
+  static const VOUCHER = _Paths.VOUCHER;
+  static const INVITE_FRIENDS = _Paths.INVITE_FRIENDS;
+    static const MASSAGE = _Paths.MASSAGE;
+
 
 }
 
@@ -83,7 +91,14 @@ abstract class _Paths {
 
   static const PROFILE_EDIT = '/profile-edit';
 
-  static const String TRACK_ORDER = '/track-order';
- static const String SECURITY = '/security'; 
+  static const TRACK_ORDER = '/track-order';
+  static const SECURITY = '/security';
+
+  static const ABOUT_APP = '/about-app';
+  static const VOUCHER = '/voucher';
+
+  static const ADD_TO_CART_LIST_ITEM = '/add-to-cart-list-item';
+  static const INVITE_FRIENDS = '/invite_friends';
+    static const  MASSAGE = '/message'; // Add this line
 
 }

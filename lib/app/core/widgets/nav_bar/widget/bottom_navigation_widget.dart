@@ -14,7 +14,7 @@ class BottomNavigationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BottomNavController controller = Get.find<BottomNavController>();
-    
+
     // 🔥 ProfileController Initialize
     if (!Get.isRegistered<ProfileController>()) {
       Get.put<ProfileController>(ProfileController(), permanent: true);
@@ -41,7 +41,7 @@ class BottomNavigationWidget extends StatelessWidget {
           child: Obx(() {
             // 🔥 Get ProfileController inside Obx
             final ProfileController profileController = Get.find<ProfileController>();
-            
+
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -211,7 +211,7 @@ class BottomNavigationWidget extends StatelessWidget {
                           // 🔥 Get image path from controller
                           final String imagePath = profileController.profileImagePath.value;
                           print('📸 Active State - Image Path: $imagePath'); // Debug
-                          
+
                           if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
                             return Image.file(
                               File(imagePath),
@@ -245,7 +245,7 @@ class BottomNavigationWidget extends StatelessWidget {
                 child: Obx(() {
                   final String imagePath = profileController.profileImagePath.value;
                   print('📸 Inactive State - Image Path: $imagePath'); // Debug
-                  
+
                   if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
                     return Container(
                       width: 30.w,

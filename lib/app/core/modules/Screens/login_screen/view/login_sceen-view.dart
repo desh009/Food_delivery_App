@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/login_screen/view/login_screen_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/login_screen/controller/login_screen_controller.dart';
@@ -12,47 +14,85 @@ class Login1Screen extends GetView<Login1Controller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF1E1E1E),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24.0.r),
-          ),
+      backgroundColor: AppColors.darkBackground, // ✅ Use AppColors
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 24.0.w,
-              vertical: 24.0.h,
+              vertical: 16.0.h, // ✅ 24.h → 16.h
             ),
             child: Column(
               children: [
-                Spacer(flex: 2),
-      
-                // Title: Login
+                // ==================================================
+                // TOP SPACER (Responsive)
+                // ==================================================
+                SizedBox(height: 20.h),
+
+                // ==================================================
+                // LOGO / HEADER (Optional)
+                // ==================================================
+                Container(
+                  width: 80.w,
+                  height: 80.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.tomato.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.restaurant,
+                    size: 40.sp,
+                    color: AppColors.tomato,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                // ==================================================
+                // TITLE: Login
+                // ==================================================
                 Text(
-                  "Login",
+                  "Welcome Back!",
                   style: TextStyle(
                     color: AppColors.tomato,
-                    fontSize: 32.sp,
+                    fontSize: 28.sp, // ✅ 32.sp → 28.sp
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),
-      
+
+                SizedBox(height: 8.h),
+
+                Text(
+                  "Sign in to continue",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+
                 SizedBox(height: 32.h),
-                // intl_phone_field
+
+                // ==================================================
+                // PHONE FIELD
+                // ==================================================
                 IntlPhoneField(
                   controller: controller.phoneController,
                   decoration: InputDecoration(
                     hintText: 'Enter phone number',
                     hintStyle: TextStyle(
                       color: Colors.black26,
-                      fontSize: 16.sp,
+                      fontSize: 14.sp, // ✅ 16.sp → 14.sp
                       fontWeight: FontWeight.w400,
                     ),
                     filled: true,
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: const Color(0xFFF5F5F5),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.r),
                       borderSide: BorderSide.none,
@@ -70,10 +110,10 @@ class Login1Screen extends GetView<Login1Controller> {
                     ),
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 16.w,
-                      vertical: 16.h,
+                      vertical: 14.h, // ✅ 16.h → 14.h
                     ),
                   ),
-                  initialCountryCode: 'GB',
+                  initialCountryCode: 'BD', // ✅ GB → BD
                   onChanged: (phone) {
                     controller.completePhoneNumber.value =
                         phone.completeNumber;
@@ -82,64 +122,92 @@ class Login1Screen extends GetView<Login1Controller> {
                   dropdownIcon: Icon(
                     Icons.keyboard_arrow_down,
                     color: Colors.black87,
+                    size: 20.sp,
                   ),
                   flagsButtonPadding: EdgeInsets.only(left: 8.w),
-                  style: TextStyle(fontSize: 16.sp, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 14.sp, // ✅ 16.sp → 14.sp
+                    color: Colors.black87,
+                  ),
                 ),
-      
-                SizedBox(height: 24.h),
-      
-                // Remember Me Checkbox Row
+
+                SizedBox(height: 20.h), // ✅ 24.h → 20.h
+
+                // ==================================================
+                // REMEMBER ME
+                // ==================================================
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () => controller.toggleRememberMe(),
-                      child: Obx(
-                        () => Container(
-                          width: 22.w,
-                          height: 22.h,
-                          decoration: BoxDecoration(
-                            color: controller.isRememberMeChecked.value
-                                ? AppColors.tomato
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(6.r),
-                            border: Border.all(
-                              color: controller.isRememberMeChecked.value
-                                  ? AppColors.tomato
-                                  : Colors.black26,
-                              width: 1.5.w,
+                    // Remember Me
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => controller.toggleRememberMe(),
+                          child: Obx(
+                            () => Container(
+                              width: 20.w, // ✅ 22.w → 20.w
+                              height: 20.h, // ✅ 22.h → 20.h
+                              decoration: BoxDecoration(
+                                color: controller.isRememberMeChecked.value
+                                    ? AppColors.tomato
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(6.r),
+                                border: Border.all(
+                                  color: controller.isRememberMeChecked.value
+                                      ? AppColors.tomato
+                                      : Colors.black26,
+                                  width: 1.5.w,
+                                ),
+                              ),
+                              child: controller.isRememberMeChecked.value
+                                  ? Icon(
+                                      Icons.check,
+                                      size: 14.sp, // ✅ 16.sp → 14.sp
+                                      color: Colors.white,
+                                    )
+                                  : null,
                             ),
                           ),
-                          child: controller.isRememberMeChecked.value
-                              ? Icon(
-                                  Icons.check,
-                                  size: 16.sp,
-                                  color: Colors.white,
-                                )
-                              : null,
                         ),
-                      ),
+                        SizedBox(width: 10.w), // ✅ 12.w → 10.w
+                        Text(
+                          "Remember me",
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 14.sp, // ✅ 16.sp → 14.sp
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 12.w),
-                    Text(
-                      "Remember me",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
+
+                    // Forgot Password
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.FORGOT_PASSWORD);
+                      },
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: AppColors.tomato,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
                 ),
-      
-                Spacer(flex: 5),
-      
-                // Sign In Button
+
+                SizedBox(height: 32.h), // ✅ Spacer → SizedBox
+
+                // ==================================================
+                // SIGN IN BUTTON
+                // ==================================================
                 Obx(
                   () => SizedBox(
                     width: double.infinity,
-                    height: 56.h,
+                    height: 52.h, // ✅ 56.h → 52.h
                     child: ElevatedButton(
                       onPressed: controller.isLoading.value
                           ? null
@@ -147,56 +215,47 @@ class Login1Screen extends GetView<Login1Controller> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: controller.isRememberMeChecked.value
                             ? AppColors.tomato
-                            : Colors.white,
-                        foregroundColor: controller.isRememberMeChecked.value
-                            ? Colors.white
-                            : Colors.black,
-                        elevation: controller.isRememberMeChecked.value ? 4 : 0,
-                        shadowColor: controller.isRememberMeChecked.value
-                            ? AppColors.tomato.withOpacity(0.4)
-                            : Colors.transparent,
-                        side: BorderSide(
-                          color: controller.isRememberMeChecked.value
-                              ? AppColors.tomato
-                              : Colors.black26,
-                          width: 1.5.w,
-                        ),
+                            : AppColors.tomato.withOpacity(0.5),
+                        foregroundColor: Colors.white,
+                        elevation: 4,
+                        shadowColor: AppColors.tomato.withOpacity(0.4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28.0.r),
                         ),
                       ),
                       child: controller.isLoading.value
                           ? SizedBox(
-                              height: 24.h,
-                              width: 24.w,
+                              height: 22.h,
+                              width: 22.w,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.5.r,
-                                color: controller.isRememberMeChecked.value
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Colors.white,
                               ),
                             )
                           : Text(
-                              "Sign in",
+                              "Sign In",
                               style: TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 16.sp, // ✅ 18.sp → 16.sp
                                 fontWeight: FontWeight.bold,
-                                color: controller.isRememberMeChecked.value
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                     ),
                   ),
                 ),
-      
-                SizedBox(height: 24.h),
-      
-                // "Or sign in with" Divider
+
+                SizedBox(height: 20.h), // ✅ 24.h → 20.h
+
+                // ==================================================
+                // OR DIVIDER
+                // ==================================================
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: Colors.black12, thickness: 1.r),
+                      child: Divider(
+                        color: Colors.black12,
+                        thickness: 1.r,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0.w),
@@ -204,60 +263,88 @@ class Login1Screen extends GetView<Login1Controller> {
                         "Or sign in with",
                         style: TextStyle(
                           color: Colors.black38,
-                          fontSize: 14.sp,
+                          fontSize: 13.sp, // ✅ 14.sp → 13.sp
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: Colors.black12, thickness: 1.r),
+                      child: Divider(
+                        color: Colors.black12,
+                        thickness: 1.r,
+                      ),
                     ),
                   ],
                 ),
-      
-                SizedBox(height: 24.h),
-      
-                // Social Media Buttons
+
+                SizedBox(height: 20.h), // ✅ 24.h → 20.h
+
+                // ==================================================
+                // SOCIAL MEDIA BUTTONS
+                // ==================================================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildSocialButton(
                       fallbackIcon: Icons.g_mobiledata,
                       iconColor: Colors.red,
+                      label: 'Google',
                       onTap: () {
-                        Get.snackbar('Info', 'Google Sign-in coming soon!');
+                        Get.snackbar(
+                          'Info',
+                          'Google Sign-in coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.tomato,
+                          colorText: Colors.white,
+                        );
                       },
                     ),
                     SizedBox(width: 16.w),
                     _buildSocialButton(
                       fallbackIcon: Icons.facebook,
-                      iconColor: Colors.blue,
+                      iconColor: Colors.blue.shade700,
+                      label: 'Facebook',
                       onTap: () {
-                        Get.snackbar('Info', 'Facebook Sign-in coming soon!');
+                        Get.snackbar(
+                          'Info',
+                          'Facebook Sign-in coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.tomato,
+                          colorText: Colors.white,
+                        );
                       },
                     ),
                     SizedBox(width: 16.w),
                     _buildSocialButton(
                       fallbackIcon: Icons.apple,
                       iconColor: Colors.black,
+                      label: 'Apple',
                       onTap: () {
-                        Get.snackbar('Info', 'Apple Sign-in coming soon!');
+                        Get.snackbar(
+                          'Info',
+                          'Apple Sign-in coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.tomato,
+                          colorText: Colors.white,
+                        );
                       },
                     ),
                   ],
                 ),
-      
-                SizedBox(height: 28.h),
-      
-                // Footer Text
+
+                SizedBox(height: 24.h), // ✅ 28.h → 24.h
+
+                // ==================================================
+                // FOOTER
+                // ==================================================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don’t have an account? ",
+                      "Don't have an account? ",
                       style: TextStyle(
                         color: Colors.black87,
-                        fontSize: 15.sp,
+                        fontSize: 14.sp, // ✅ 15.sp → 14.sp
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -269,36 +356,73 @@ class Login1Screen extends GetView<Login1Controller> {
                         "Register",
                         style: TextStyle(
                           color: AppColors.tomato,
-                          fontSize: 15.sp,
+                          fontSize: 14.sp, // ✅ 15.sp → 14.sp
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
+
+                SizedBox(height: 16.h),
               ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
+
+  // ============================================================
+  // SOCIAL BUTTON
+  // ============================================================
 
   Widget _buildSocialButton({
     required IconData fallbackIcon,
     required Color iconColor,
+    required String label,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 52.w,
-        height: 52.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.black12, width: 1.w),
-        ),
-        child: Center(child: Icon(fallbackIcon, size: 28.sp, color: iconColor)),
+      child: Column(
+        children: [
+          Container(
+            width: 48.w, // ✅ 52.w → 48.w
+            height: 48.h, // ✅ 52.h → 48.h
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.black12,
+                width: 1.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 8.r,
+                  offset: Offset(0, 2.h),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Icon(
+                fallbackIcon,
+                size: 24.sp, // ✅ 28.sp → 24.sp
+                color: iconColor,
+              ),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: Colors.black54,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

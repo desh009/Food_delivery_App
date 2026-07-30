@@ -1,5 +1,15 @@
+// lib/app/core/widgets/nav_bar/controller/bottom_navigation_controller.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+class BottomNavItem {
+  final IconData icon;
+  final String label;
+  final String route;
+
+  BottomNavItem({required this.icon, required this.label, required this.route});
+}
 
 class BottomNavController extends GetxController {
   static BottomNavController get to => Get.find();
@@ -34,8 +44,10 @@ class BottomNavController extends GetxController {
   void onInit() {
     super.onInit();
     _updateIndexFromRoute(Get.currentRoute);
+    print('📍 Initial Index: ${currentIndex.value}');
   }
 
+  // ========== Change Index ==========
   void changeIndex(int index) {
     if (currentIndex.value != index) {
       currentIndex.value = index;
@@ -43,8 +55,23 @@ class BottomNavController extends GetxController {
     }
   }
 
+  // ========== ✅ Back Button - Home Screen এ যাবে ==========
+  void goBack() {
+    print('🔙 Back Button Pressed - Going to Home');
+    
+    // ✅ Home Index (0) এ যাবে
+    currentIndex.value = 0;
+    
+    // ✅ Home Screen এ Navigate
+    Get.offAllNamed('/home');
+    
+    print('📍 Navigated to Home - Index: ${currentIndex.value}');
+  }
+
+  // ========== Navigate to Screen ==========
   void navigateToScreen(int index, BuildContext context) {
     print('🔄 Navigating to index: $index');
+    
     switch (index) {
       case 0: // Home
         if (Get.currentRoute != '/home') {
@@ -57,19 +84,16 @@ class BottomNavController extends GetxController {
         }
         break;
       case 2: // Favorites
-        print('⭐ Navigating to Favorites');
         if (Get.currentRoute != '/liked-screen') {
-          Get.toNamed('/liked-screen'); // ← এখানে `/favorites` ব্যবহার করুন
+          Get.toNamed('/liked-screen');
         }
         break;
       case 3: // Notification
-        print('🔔 Navigating to Notifications');
         if (Get.currentRoute != '/notification') {
           Get.toNamed('/notification');
         }
         break;
       case 4: // Profile
-        print('👤 Navigating to Profile - Index: 4');
         if (Get.currentRoute != '/my-account') {
           Get.toNamed('/my-account');
         }
@@ -79,6 +103,7 @@ class BottomNavController extends GetxController {
     }
   }
 
+  // ========== Update Index from Route ==========
   void _updateIndexFromRoute(String route) {
     print('📍 Current Route: $route');
     switch (route) {
@@ -95,7 +120,7 @@ class BottomNavController extends GetxController {
         currentIndex.value = 3;
         break;
       case '/my-account':
-        currentIndex.value = 4; // 🔥 এখানে 4 আছে নিশ্চিত করুন
+        currentIndex.value = 4;
         break;
       default:
         currentIndex.value = 0;
@@ -104,15 +129,19 @@ class BottomNavController extends GetxController {
     print('📌 Updated Index: ${currentIndex.value}');
   }
 
+  // ========== Route Changed Listener ==========
   void onRouteChanged(String route) {
     _updateIndexFromRoute(route);
   }
-}
 
-class BottomNavItem {
-  final IconData icon;
-  final String label;
-  final String route;
+  // ========== Reset Navigation ==========
+  void resetNavigation() {
+    currentIndex.value = 0;
+    Get.offAllNamed('/home');
+  }
 
-  BottomNavItem({required this.icon, required this.label, required this.route});
+  @override
+  void onClose() {
+    super.onClose();
+  }
 }

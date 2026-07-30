@@ -2,245 +2,250 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/controller/product_list_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
 class ProductListScreen extends GetView<ProductListController> {
-  const ProductListScreen({super.key});
-
+  const ProductListScreen({super.key, });
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              SizedBox(height: 16.h),
 
-              // Header Section
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        width: 44.w,
-                        height: 44.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.06),
-                              blurRadius: 10,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            controller.categoryIcon,
-                            style: TextStyle(fontSize: 26.sp),
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 16.h),
+
+            // Header Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child: Container(
+                      width: 44.w,
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.06),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
                           ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            controller.categoryName,
-                            style: TextStyle(
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(width: 44.w),
                         ],
                       ),
+                      child: Icon(Icons.arrow_back, color: Colors.black87),
                     ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          controller.categoryIcon,
+                          style: TextStyle(fontSize: 26.sp),
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          controller.categoryName,
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        SizedBox(width: 44.w),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+
+            // Search Bar with Filter Button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF5F5F5),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  children: [
+                    Icon(Icons.search, color: Colors.black38, size: 26.sp),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) =>
+                            controller.searchQuery.value = value,
+                        decoration: InputDecoration(
+                          hintText: "Search products...",
+                          hintStyle: TextStyle(
+                            color: Colors.black38,
+                            fontSize: 16.sp,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    // Filter Button with Badge
+                    Obx(() {
+                      final filterCount = controller.getActiveFilterCount();
+                      return Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.filter_list,
+                                color: Colors.black54,
+                                size: 24.sp,
+                              ),
+                              onPressed: () => _showFilterBottomSheet(context),
+                            ),
+                          ),
+                          if (filterCount > 0)
+                            Positioned(
+                              right: 4.w,
+                              top: 4.h,
+                              child: Container(
+                                padding: EdgeInsets.all(3.r),
+                                decoration: BoxDecoration(
+                                  color: AppColors.tomato,
+                                  shape: BoxShape.circle,
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 16.w,
+                                  minHeight: 16.h,
+                                ),
+                                child: Text(
+                                  filterCount.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
                   ],
                 ),
               ),
+            ),
 
-              SizedBox(height: 20.h),
+            SizedBox(height: 10.h),
 
-              // Search Bar with Filter Button
-              Padding(
+            // Active Filters Chips
+            Obx(() {
+              if (controller.activeFilters.isEmpty) return SizedBox.shrink();
+              return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: [
-                      Icon(Icons.search, color: Colors.black38, size: 26.sp),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: TextField(
-                          onChanged: (value) =>
-                              controller.searchQuery.value = value,
-                          decoration: InputDecoration(
-                            hintText: "Search products...",
-                            hintStyle: TextStyle(
-                              color: Colors.black38,
-                              fontSize: 16.sp,
-                            ),
-                            border: InputBorder.none,
+                    children: controller.activeFilters.entries.map((entry) {
+                      return Padding(
+                        padding: EdgeInsets.only(right: 8.0.w),
+                        child: Chip(
+                          label: Text(
+                            '${_getFilterLabel(entry.key)}: ${entry.value}',
+                            style: TextStyle(fontSize: 12.sp),
                           ),
+                          backgroundColor: AppColors.tomato.withOpacity(0.1),
+                          deleteIcon: Icon(
+                            Icons.close,
+                            size: 16.sp,
+                            color: AppColors.tomato,
+                          ),
+                          onDeleted: () {
+                            controller.clearFilter(entry.key);
+                          },
                         ),
-                      ),
-                      // Filter Button with Badge
-                      Obx(() {
-                        final filterCount = controller.getActiveFilterCount();
-                        return Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.filter_list,
-                                  color: Colors.black54,
-                                  size: 24.sp,
-                                ),
-                                onPressed: () => _showFilterBottomSheet(context),
-                              ),
-                            ),
-                            if (filterCount > 0)
-                              Positioned(
-                                right: 4.w,
-                                top: 4.h,
-                                child: Container(
-                                  padding: EdgeInsets.all(3.r),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.tomato,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  constraints: BoxConstraints(
-                                    minWidth: 16.w,
-                                    minHeight: 16.h,
-                                  ),
-                                  child: Text(
-                                    filterCount.toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                    ],
+                      );
+                    }).toList(),
                   ),
                 ),
-              ),
+              );
+            }),
 
-              SizedBox(height: 10.h),
+            SizedBox(height: 10.h),
 
-              // Active Filters Chips
-              Obx(() {
-                if (controller.activeFilters.isEmpty) return SizedBox.shrink();
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: controller.activeFilters.entries.map((entry) {
-                        return Padding(
-                          padding: EdgeInsets.only(right: 8.0.w),
-                          child: Chip(
-                            label: Text(
-                              '${_getFilterLabel(entry.key)}: ${entry.value}',
-                              style: TextStyle(fontSize: 12.sp),
-                            ),
-                            backgroundColor: AppColors.tomato.withOpacity(0.1),
-                            deleteIcon: Icon(
-                              Icons.close,
-                              size: 16.sp,
-                              color: AppColors.tomato,
-                            ),
-                            onDeleted: () {
-                              controller.clearFilter(entry.key);
-                            },
+            // Products Grid
+            Expanded(
+              child: Obx(() {
+                final products = controller.filteredProducts;
+
+                if (products.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search_off,
+                          size: 64.sp,
+                          color: Colors.black26,
+                        ),
+                        SizedBox(height: 16.h),
+                        Text(
+                          "No products found!",
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 16.sp,
                           ),
-                        );
-                      }).toList(),
+                        ),
+                        Text(
+                          "Try adjusting your filters",
+                          style: TextStyle(
+                            color: Colors.black38,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
                     ),
+                  );
+                }
+
+                return GridView.builder(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 10.h,
                   ),
+                  itemCount: products.length,
+                  physics: BouncingScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: 0.76,
+                  ),
+                  itemBuilder: (context, index) {
+                    return _buildProductCard(products[index]);
+                  },
                 );
               }),
-
-              SizedBox(height: 10.h),
-
-              // Products Grid
-              Expanded(
-                child: Obx(() {
-                  final products = controller.filteredProducts;
-
-                  if (products.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.search_off,
-                            size: 64.sp,
-                            color: Colors.black26,
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            "No products found!",
-                            style: TextStyle(color: Colors.black45, fontSize: 16.sp),
-                          ),
-                          Text(
-                            "Try adjusting your filters",
-                            style: TextStyle(color: Colors.black38, fontSize: 14.sp),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return GridView.builder(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
-                    ),
-                    itemCount: products.length,
-                    physics: BouncingScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16.w,
-                      mainAxisSpacing: 16.h,
-                      childAspectRatio: 0.76,
-                    ),
-                    itemBuilder: (context, index) {
-                      return _buildProductCard(products[index]);
-                    },
-                  );
-                }),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
   // Filter Bottom Sheet
@@ -257,9 +262,7 @@ class ProductListScreen extends GetView<ProductListController> {
           return Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25.r),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
             ),
             child: Column(
               children: [
@@ -319,28 +322,43 @@ class ProductListScreen extends GetView<ProductListController> {
                                   children: [
                                     _buildFilterChip(
                                       label: "All",
-                                      isSelected: controller.selectedPriceRange.value == 'all',
-                                      onSelected: () => controller.setPriceRange('all'),
+                                      isSelected:
+                                          controller.selectedPriceRange.value ==
+                                          'all',
+                                      onSelected: () =>
+                                          controller.setPriceRange('all'),
                                     ),
                                     _buildFilterChip(
                                       label: "Under £10",
-                                      isSelected: controller.selectedPriceRange.value == 'under10',
-                                      onSelected: () => controller.setPriceRange('under10'),
+                                      isSelected:
+                                          controller.selectedPriceRange.value ==
+                                          'under10',
+                                      onSelected: () =>
+                                          controller.setPriceRange('under10'),
                                     ),
                                     _buildFilterChip(
                                       label: "£10-£25",
-                                      isSelected: controller.selectedPriceRange.value == '10to25',
-                                      onSelected: () => controller.setPriceRange('10to25'),
+                                      isSelected:
+                                          controller.selectedPriceRange.value ==
+                                          '10to25',
+                                      onSelected: () =>
+                                          controller.setPriceRange('10to25'),
                                     ),
                                     _buildFilterChip(
                                       label: "£25-£50",
-                                      isSelected: controller.selectedPriceRange.value == '25to50',
-                                      onSelected: () => controller.setPriceRange('25to50'),
+                                      isSelected:
+                                          controller.selectedPriceRange.value ==
+                                          '25to50',
+                                      onSelected: () =>
+                                          controller.setPriceRange('25to50'),
                                     ),
                                     _buildFilterChip(
                                       label: "Over £50",
-                                      isSelected: controller.selectedPriceRange.value == 'over50',
-                                      onSelected: () => controller.setPriceRange('over50'),
+                                      isSelected:
+                                          controller.selectedPriceRange.value ==
+                                          'over50',
+                                      onSelected: () =>
+                                          controller.setPriceRange('over50'),
                                     ),
                                   ],
                                 ),
@@ -361,32 +379,38 @@ class ProductListScreen extends GetView<ProductListController> {
                               children: [
                                 _buildFilterChip(
                                   label: "All",
-                                  isSelected: controller.selectedRating.value == 0,
+                                  isSelected:
+                                      controller.selectedRating.value == 0,
                                   onSelected: () => controller.setRating(0),
                                 ),
                                 _buildFilterChip(
                                   label: "3+ ⭐",
-                                  isSelected: controller.selectedRating.value == 3,
+                                  isSelected:
+                                      controller.selectedRating.value == 3,
                                   onSelected: () => controller.setRating(3),
                                 ),
                                 _buildFilterChip(
                                   label: "3.5+ ⭐",
-                                  isSelected: controller.selectedRating.value == 3.5,
+                                  isSelected:
+                                      controller.selectedRating.value == 3.5,
                                   onSelected: () => controller.setRating(3.5),
                                 ),
                                 _buildFilterChip(
                                   label: "4+ ⭐",
-                                  isSelected: controller.selectedRating.value == 4,
+                                  isSelected:
+                                      controller.selectedRating.value == 4,
                                   onSelected: () => controller.setRating(4),
                                 ),
                                 _buildFilterChip(
                                   label: "4.5+ ⭐",
-                                  isSelected: controller.selectedRating.value == 4.5,
+                                  isSelected:
+                                      controller.selectedRating.value == 4.5,
                                   onSelected: () => controller.setRating(4.5),
                                 ),
                                 _buildFilterChip(
                                   label: "5 ⭐",
-                                  isSelected: controller.selectedRating.value == 5,
+                                  isSelected:
+                                      controller.selectedRating.value == 5,
                                   onSelected: () => controller.setRating(5),
                                 ),
                               ],
@@ -406,23 +430,34 @@ class ProductListScreen extends GetView<ProductListController> {
                               children: [
                                 _buildFilterChip(
                                   label: "Popular",
-                                  isSelected: controller.selectedSort.value == 'popular',
-                                  onSelected: () => controller.setSort('popular'),
+                                  isSelected:
+                                      controller.selectedSort.value ==
+                                      'popular',
+                                  onSelected: () =>
+                                      controller.setSort('popular'),
                                 ),
                                 _buildFilterChip(
                                   label: "Price: Low-High",
-                                  isSelected: controller.selectedSort.value == 'priceAsc',
-                                  onSelected: () => controller.setSort('priceAsc'),
+                                  isSelected:
+                                      controller.selectedSort.value ==
+                                      'priceAsc',
+                                  onSelected: () =>
+                                      controller.setSort('priceAsc'),
                                 ),
                                 _buildFilterChip(
                                   label: "Price: High-Low",
-                                  isSelected: controller.selectedSort.value == 'priceDesc',
-                                  onSelected: () => controller.setSort('priceDesc'),
+                                  isSelected:
+                                      controller.selectedSort.value ==
+                                      'priceDesc',
+                                  onSelected: () =>
+                                      controller.setSort('priceDesc'),
                                 ),
                                 _buildFilterChip(
                                   label: "Rating",
-                                  isSelected: controller.selectedSort.value == 'rating',
-                                  onSelected: () => controller.setSort('rating'),
+                                  isSelected:
+                                      controller.selectedSort.value == 'rating',
+                                  onSelected: () =>
+                                      controller.setSort('rating'),
                                 ),
                               ],
                             );
@@ -468,10 +503,7 @@ class ProductListScreen extends GetView<ProductListController> {
     );
   }
 
-  Widget _buildFilterSection({
-    required String title,
-    required Widget child,
-  }) {
+  Widget _buildFilterSection({required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -507,9 +539,7 @@ class ProductListScreen extends GetView<ProductListController> {
       onSelected: (_) => onSelected(),
       backgroundColor: Colors.grey[100],
       selectedColor: AppColors.tomato,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       side: BorderSide(
         color: isSelected ? AppColors.tomato : Colors.transparent,
       ),

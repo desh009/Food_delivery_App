@@ -1,0 +1,57 @@
+{
+  "@@locale": "bn",
+
+  "appTitle": "ফুড ডেলিভারি",
+
+  "home": "হোম",
+  "orders": "অর্ডার",
+  "favorites": "পছন্দের",
+  "notifications": "নোটিফিকেশন",
+  "profile": "প্রোফাইল",
+
+  "welcomeMessage": "স্বাগতম, {userName}!",
+  "@welcomeMessage": {
+    "placeholders": {
+      "userName": {}
+    }
+  },
+
+  "addToCart": "কার্টে যোগ করুন",
+  "checkout": "চেকআউট",
+  "sendMessage": "মেসেজ পাঠান",
+  "typeMessage": "আপনার মেসেজ লিখুন...",
+
+  "logout": "লগ আউট",
+  "cancel": "বাতিল",
+  "confirm": "নিশ্চিত করুন",
+
+  "language": "ভাষা",
+
+  "trackOrder": "অর্ডার ট্র্যাক করুন",
+  "orderHistory": "অর্ডারের ইতিহাস",
+  "addressBook": "ঠিকানার তালিকা",
+  "paymentMethods": "পেমেন্ট পদ্ধতি",
+  "myFavorites": "আমার পছন্দের",
+  "loyaltyPoints": "লয়্যালটি পয়েন্ট",
+  "vouchers": "ভাউচার",
+  "messages": "মেসেজ",
+  "inviteFriends": "বন্ধুদের আমন্ত্রণ করুন",
+  "security": "নিরাপত্তা",
+  "helpCenter": "সহায়তা কেন্দ্র",
+
+  "pushNotification": "পুশ নোটিফিকেশন",
+  "darkMode": "ডার্ক মোড",
+  "sound": "সাউন্ড",
+  "automaticallyUpdated": "স্বয়ংক্রিয় আপডেট",
+
+  "termOfService": "সেবার শর্তাবলী",
+  "privacyPolicy": "গোপনীয়তা নীতি",
+  "aboutApp": "অ্যাপ সম্পর্কে",
+
+  "logoutConfirm": "আপনি কি নিশ্চিত যে লগ আউট করতে চান?",
+  "logoutSuccess": "সফলভাবে লগ আউট হয়েছে।",
+  "logoutFailed": "লগ আউট ব্যর্থ হয়েছে।",
+
+  "success": "সফল",
+  "error": "ত্রুটি"
+}
