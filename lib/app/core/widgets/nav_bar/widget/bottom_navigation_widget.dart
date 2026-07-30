@@ -28,7 +28,7 @@ class BottomNavigationWidget extends StatelessWidget {
           height: 60.h,
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(24.r),
             boxShadow: [
               BoxShadow(
@@ -40,7 +40,8 @@ class BottomNavigationWidget extends StatelessWidget {
           ),
           child: Obx(() {
             // 🔥 Get ProfileController inside Obx
-            final ProfileController profileController = Get.find<ProfileController>();
+            final ProfileController profileController =
+                Get.find<ProfileController>();
 
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -157,7 +158,9 @@ class BottomNavigationWidget extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              Center(child: Icon(icon, color: Colors.grey.shade400, size: 24.sp)),
+              Center(
+                child: Icon(icon, color: Colors.grey.shade400, size: 24.sp),
+              ),
             ],
           ],
         ),
@@ -209,10 +212,14 @@ class BottomNavigationWidget extends StatelessWidget {
                       child: ClipOval(
                         child: Obx(() {
                           // 🔥 Get image path from controller
-                          final String imagePath = profileController.profileImagePath.value;
-                          print('📸 Active State - Image Path: $imagePath'); // Debug
+                          final String imagePath =
+                              profileController.profileImagePath.value;
+                          print(
+                            '📸 Active State - Image Path: $imagePath',
+                          ); // Debug
 
-                          if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+                          if (imagePath.isNotEmpty &&
+                              File(imagePath).existsSync()) {
                             return Image.file(
                               File(imagePath),
                               fit: BoxFit.cover,
@@ -243,7 +250,8 @@ class BottomNavigationWidget extends StatelessWidget {
               // 🔥 Inactive State - Always show updated image
               Center(
                 child: Obx(() {
-                  final String imagePath = profileController.profileImagePath.value;
+                  final String imagePath =
+                      profileController.profileImagePath.value;
                   print('📸 Inactive State - Image Path: $imagePath'); // Debug
 
                   if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
@@ -282,11 +290,7 @@ class BottomNavigationWidget extends StatelessWidget {
       errorBuilder: (context, error, stackTrace) {
         return Container(
           color: Colors.grey.shade200,
-          child: Icon(
-            Icons.person,
-            color: Colors.grey.shade400,
-            size: 30.sp,
-          ),
+          child: Icon(Icons.person, color: Colors.grey.shade400, size: 30.sp),
         );
       },
     );

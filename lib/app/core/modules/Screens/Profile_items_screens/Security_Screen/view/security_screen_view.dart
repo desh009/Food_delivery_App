@@ -11,73 +11,54 @@ class SecurityScreen extends GetView<SecurityController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-        backgroundColor: Color(0xFFFAFAFA),
-        appBar: _buildAppBar(),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(20.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Security Overview
-                _buildSecurityOverview(),
-
-                SizedBox(height: 24.h),
-
-                // Biometric Authentication
-                _buildBiometricSection(),
-
-                SizedBox(height: 20.h),
-
-                // PIN/Password
-                _buildPinSection(),
-
-                SizedBox(height: 20.h),
-
-                // Two Factor Authentication
-                _buildTwoFactorSection(),
-
-                SizedBox(height: 20.h),
-
-                // Security Questions
-                _buildSecurityQuestions(),
-
-                SizedBox(height: 20.h),
-
-                // Session Management
-                _buildSessionManagement(),
-
-                SizedBox(height: 20.h),
-
-                // Login History
-                _buildLoginHistory(),
-
-                SizedBox(height: 20.h),
-
-                // Change Password
-                _buildChangePasswordButton(),
-
-                SizedBox(height: 30.h),
-              ],
-            ),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFFAFAFA),
+      appBar: _buildAppBar(theme, isDark),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(20.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSecurityOverview(theme, isDark),
+              SizedBox(height: 24.h),
+              _buildBiometricSection(theme, isDark),
+              SizedBox(height: 20.h),
+              _buildPinSection(theme, isDark),
+              SizedBox(height: 20.h),
+              _buildTwoFactorSection(theme, isDark),
+              SizedBox(height: 20.h),
+              _buildSecurityQuestions(theme, isDark),
+              SizedBox(height: 20.h),
+              _buildSessionManagement(theme, isDark),
+              SizedBox(height: 20.h),
+              _buildLoginHistory(theme, isDark),
+              SizedBox(height: 20.h),
+              _buildChangePasswordButton(theme, isDark),
+              SizedBox(height: 30.h),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(ThemeData theme, bool isDark) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF242424) : Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.black87),
+        icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black87),
         onPressed: controller.goBack,
       ),
       title: Text(
         "Security",
         style: TextStyle(
-          color: Colors.black87,
+          color: isDark ? Colors.white : Colors.black87,
           fontSize: 20.sp,
           fontWeight: FontWeight.bold,
         ),
@@ -85,7 +66,7 @@ class SecurityScreen extends GetView<SecurityController> {
       centerTitle: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.help_outline, color: Colors.black87),
+          icon: Icon(Icons.help_outline, color: isDark ? Colors.white : Colors.black87),
           onPressed: () {
             Get.snackbar(
               'Security Help',
@@ -100,8 +81,8 @@ class SecurityScreen extends GetView<SecurityController> {
     );
   }
 
-  // ========== Security Overview ==========
-  Widget _buildSecurityOverview() {
+  // ========== Security Overview - 🔥 Dark Mode Support ==========
+  Widget _buildSecurityOverview(ThemeData theme, bool isDark) {
     return Obx(() {
       final securityLevel = _calculateSecurityLevel();
 
@@ -205,11 +186,12 @@ class SecurityScreen extends GetView<SecurityController> {
     }
   }
 
-  // ========== Biometric Section ==========
-  Widget _buildBiometricSection() {
+  // ========== Biometric Section - 🔥 Dark Mode Support ==========
+  Widget _buildBiometricSection(ThemeData theme, bool isDark) {
     return _buildSection(
       icon: Icons.fingerprint,
       title: "Biometric Authentication",
+      isDark: isDark,
       child: Column(
         children: [
           Row(
@@ -217,7 +199,7 @@ class SecurityScreen extends GetView<SecurityController> {
             children: [
               Text(
                 "Enable Fingerprint/Face ID",
-                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                style: TextStyle(fontSize: 14.sp, color: isDark ? Colors.white : Colors.black87),
               ),
               Obx(
                 () => Switch(
@@ -232,17 +214,17 @@ class SecurityScreen extends GetView<SecurityController> {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: isDark ? const Color(0xFF333333) : Colors.grey.shade50,
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Row(
               children: [
-                Icon(Icons.info_outline, color: Colors.black54, size: 16.sp),
+                Icon(Icons.info_outline, color: isDark ? Colors.grey.shade400 : Colors.black54, size: 16.sp),
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
                     "Use your fingerprint or face to quickly sign in",
-                    style: TextStyle(color: Colors.black54, fontSize: 13.sp),
+                    style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.black54, fontSize: 13.sp),
                   ),
                 ),
               ],
@@ -253,11 +235,12 @@ class SecurityScreen extends GetView<SecurityController> {
     );
   }
 
-  // ========== PIN Section ==========
-  Widget _buildPinSection() {
+  // ========== PIN Section - 🔥 Dark Mode Support ==========
+  Widget _buildPinSection(ThemeData theme, bool isDark) {
     return _buildSection(
       icon: Icons.pin,
       title: "PIN/Password Lock",
+      isDark: isDark,
       child: Column(
         children: [
           Row(
@@ -265,7 +248,7 @@ class SecurityScreen extends GetView<SecurityController> {
             children: [
               Text(
                 "Enable PIN Lock",
-                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                style: TextStyle(fontSize: 14.sp, color: isDark ? Colors.white : Colors.black87),
               ),
               Obx(
                 () => Switch(
@@ -283,9 +266,9 @@ class SecurityScreen extends GetView<SecurityController> {
                 child: Container(
                   padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade50,
+                    color: isDark ? Colors.green.shade900.withOpacity(0.3) : Colors.green.shade50,
                     borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: Colors.green.shade200),
+                    border: Border.all(color: isDark ? Colors.green.shade700 : Colors.green.shade200),
                   ),
                   child: Row(
                     children: [
@@ -300,18 +283,19 @@ class SecurityScreen extends GetView<SecurityController> {
                 ),
               );
             }
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }),
         ],
       ),
     );
   }
 
-  // ========== Two Factor Section ==========
-  Widget _buildTwoFactorSection() {
+  // ========== Two Factor Section - 🔥 Dark Mode Support ==========
+  Widget _buildTwoFactorSection(ThemeData theme, bool isDark) {
     return _buildSection(
       icon: Icons.security,
       title: "Two-Factor Authentication",
+      isDark: isDark,
       child: Column(
         children: [
           Row(
@@ -319,7 +303,7 @@ class SecurityScreen extends GetView<SecurityController> {
             children: [
               Text(
                 "Enable 2FA",
-                style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                style: TextStyle(fontSize: 14.sp, color: isDark ? Colors.white : Colors.black87),
               ),
               Obx(
                 () => Switch(
@@ -337,9 +321,9 @@ class SecurityScreen extends GetView<SecurityController> {
                 child: Container(
                   padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
+                    color: isDark ? Colors.blue.shade900.withOpacity(0.3) : Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: Colors.blue.shade200),
+                    border: Border.all(color: isDark ? Colors.blue.shade700 : Colors.blue.shade200),
                   ),
                   child: Row(
                     children: [
@@ -359,21 +343,21 @@ class SecurityScreen extends GetView<SecurityController> {
                 ),
               );
             }
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }),
         ],
       ),
     );
   }
 
-  // ========== Security Questions ==========
-  Widget _buildSecurityQuestions() {
+  // ========== Security Questions - 🔥 Dark Mode Support ==========
+  Widget _buildSecurityQuestions(ThemeData theme, bool isDark) {
     return _buildSection(
       icon: Icons.question_answer,
       title: "Security Questions",
+      isDark: isDark,
       child: Column(
         children: [
-          // শুধুমাত্র যেখানে observable change হয় সেখানে Obx ব্যবহার করুন
           Obx(() {
             return Column(
               children: controller.securityQuestions.map((question) {
@@ -388,16 +372,25 @@ class SecurityScreen extends GetView<SecurityController> {
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       SizedBox(height: 4.h),
-                      // এখানে Obx এর প্রয়োজন নেই কারণ TextFormField এর onChanged ই update করে
                       TextFormField(
                         initialValue: question['answer'],
+                        style: TextStyle(
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Enter your answer',
+                          hintStyle: TextStyle(
+                            color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+                          ),
+                          filled: true,
+                          fillColor: isDark ? const Color(0xFF333333) : Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide.none,
                           ),
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12.w,
@@ -419,7 +412,10 @@ class SecurityScreen extends GetView<SecurityController> {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: controller.resetSecurityQuestions,
-              child: Text('Reset All'),
+              child: Text(
+                'Reset All',
+                style: TextStyle(color: AppColors.tomato),
+              ),
             ),
           ),
         ],
@@ -427,21 +423,30 @@ class SecurityScreen extends GetView<SecurityController> {
     );
   }
 
-  // ========== Session Management ==========
-  Widget _buildSessionManagement() {
+  // ========== Session Management - 🔥 Dark Mode Support ==========
+  Widget _buildSessionManagement(ThemeData theme, bool isDark) {
     return _buildSection(
       icon: Icons.timer,
       title: "Session Management",
+      isDark: isDark,
       child: Column(
         children: [
           Obx(
             () => ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.timer_outlined, color: Colors.black54),
-              title: Text('Session Timeout'),
-              subtitle: Text('${controller.sessionTimeout.value} minutes'),
+              leading: Icon(Icons.timer_outlined, color: isDark ? Colors.grey.shade400 : Colors.black54),
+              title: Text(
+                'Session Timeout',
+                style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+              ),
+              subtitle: Text(
+                '${controller.sessionTimeout.value} minutes',
+                style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.black54),
+              ),
               trailing: DropdownButton<int>(
                 value: controller.sessionTimeout.value,
+                dropdownColor: isDark ? const Color(0xFF242424) : Colors.white,
+                style: TextStyle(color: isDark ? Colors.white : Colors.black87),
                 items: [
                   DropdownMenuItem(value: 15, child: Text('15 min')),
                   DropdownMenuItem(value: 30, child: Text('30 min')),
@@ -456,12 +461,18 @@ class SecurityScreen extends GetView<SecurityController> {
               ),
             ),
           ),
-          Divider(height: 1.h),
+          Divider(height: 1.h, color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: Icon(Icons.power_settings_new, color: Colors.red),
-            title: Text('End Current Session'),
-            subtitle: Text('Sign out from all devices'),
+            title: Text(
+              'End Current Session',
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            ),
+            subtitle: Text(
+              'Sign out from all devices',
+              style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.black54),
+            ),
             trailing: OutlinedButton(
               onPressed: controller.endSession,
               style: OutlinedButton.styleFrom(
@@ -475,11 +486,12 @@ class SecurityScreen extends GetView<SecurityController> {
     );
   }
 
-  // ========== Login History ==========
-  Widget _buildLoginHistory() {
+  // ========== Login History - 🔥 Dark Mode Support ==========
+  Widget _buildLoginHistory(ThemeData theme, bool isDark) {
     return _buildSection(
       icon: Icons.history,
       title: "Login History",
+      isDark: isDark,
       child: Column(
         children: controller.loginHistory.map((login) {
           final isFailed = login['status'] == 'Failed';
@@ -491,7 +503,9 @@ class SecurityScreen extends GetView<SecurityController> {
                   width: 40.w,
                   height: 40.h,
                   decoration: BoxDecoration(
-                    color: isFailed ? Colors.red.shade50 : Colors.green.shade50,
+                    color: isFailed
+                        ? (isDark ? Colors.red.shade900.withOpacity(0.3) : Colors.red.shade50)
+                        : (isDark ? Colors.green.shade900.withOpacity(0.3) : Colors.green.shade50),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
@@ -509,12 +523,13 @@ class SecurityScreen extends GetView<SecurityController> {
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       Text(
                         '${login['location']} • ${login['time']}',
                         style: TextStyle(
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                           fontSize: 12.sp,
                         ),
                       ),
@@ -528,8 +543,8 @@ class SecurityScreen extends GetView<SecurityController> {
                   ),
                   decoration: BoxDecoration(
                     color: isFailed
-                        ? Colors.red.shade100
-                        : Colors.green.shade100,
+                        ? (isDark ? Colors.red.shade800.withOpacity(0.5) : Colors.red.shade100)
+                        : (isDark ? Colors.green.shade800.withOpacity(0.5) : Colors.green.shade100),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
@@ -549,8 +564,8 @@ class SecurityScreen extends GetView<SecurityController> {
     );
   }
 
-  // ========== Change Password Button ==========
-  Widget _buildChangePasswordButton() {
+  // ========== Change Password Button - 🔥 Dark Mode Support ==========
+  Widget _buildChangePasswordButton(ThemeData theme, bool isDark) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
@@ -581,17 +596,18 @@ class SecurityScreen extends GetView<SecurityController> {
     );
   }
 
-  // ========== HELPER WIDGETS ==========
+  // ========== HELPER WIDGETS - 🔥 Dark Mode Support ==========
 
   Widget _buildSection({
     required IconData icon,
     required String title,
     required Widget child,
+    required bool isDark,
   }) {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
@@ -613,12 +629,12 @@ class SecurityScreen extends GetView<SecurityController> {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ],
           ),
-          Divider(height: 16.h),
+          Divider(height: 16.h, color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
           child,
         ],
       ),

@@ -8,65 +8,65 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileController extends GetxController {
   static ProfileController get to => Get.find();
-  
+
   // ========== User Info ==========
   var userName = 'Thomas K. Wilson'.obs;
   var userPhone = '20 1234 5629'.obs;
   var userEmail = 'thomas.abc.inc@gmail.com'.obs;
   var userDob = '07/11/1997'.obs;
   var userGender = 'Male'.obs;
-  
+
   // ========== Profile Image ==========
   var profileImagePath = ''.obs;
-  
+
   // ========== Settings ==========
   var pushNotification = true.obs;
-  var darkMode = false.obs;
+  // var darkMode = false.obs;
   var sound = true.obs;
   var automaticallyUpdated = true.obs;
-  
+
   @override
   void onInit() {
     super.onInit();
     _loadUserData();
   }
-  
+
   // ========== Load User Data ==========
   void _loadUserData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       userName.value = prefs.getString('userName') ?? 'Thomas K. Wilson';
       userPhone.value = prefs.getString('userPhone') ?? '20 1234 5629';
-      userEmail.value = prefs.getString('userEmail') ?? 'thomas.abc.inc@gmail.com';
+      userEmail.value =
+          prefs.getString('userEmail') ?? 'thomas.abc.inc@gmail.com';
       userDob.value = prefs.getString('userDob') ?? '07/11/1997';
       userGender.value = prefs.getString('userGender') ?? 'Male';
       profileImagePath.value = prefs.getString('profileImage') ?? '';
-      
+
       print('📂 Profile loaded: ${userName.value}');
-      
+
       update();
-      
     } catch (e) {
       print('❌ Error loading profile: $e');
     }
   }
-  
+
   // ========== 🔥 Change Language with AppLocalizations ==========
   void changeLanguage(String languageCode) {
     try {
       // LocaleController ব্যবহার করুন
       final localeController = LocaleController.to;
       localeController.changeLanguage(languageCode);
-      
+
       // Get language name
       String languageName = languageCode == 'bn' ? 'বাংলা' : 'English';
-      
+
       // 🔥 AppLocalizations ব্যবহার করে Snackbar দেখান
       final context = Get.context;
       if (context != null) {
         final localizations = AppLocalizations.of(context);
-        
+
         // Get.snackbar(
         //   localizations.language, // 'Language' বা 'ভাষা'
         //   'Language changed to $languageName',
@@ -85,9 +85,8 @@ class ProfileController extends GetxController {
           colorText: Colors.white,
         );
       }
-      
+
       print('🌐 Language changed to: $languageName');
-      
     } catch (e) {
       print('❌ Error changing language: $e');
       Get.snackbar(
@@ -99,29 +98,28 @@ class ProfileController extends GetxController {
       );
     }
   }
-  
+
   // ========== Save User Data ==========
   Future<void> saveUserData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       await prefs.setString('userName', userName.value);
       await prefs.setString('userPhone', userPhone.value);
       await prefs.setString('userEmail', userEmail.value);
       await prefs.setString('userDob', userDob.value);
       await prefs.setString('userGender', userGender.value);
       await prefs.setString('profileImage', profileImagePath.value);
-      
+
       print('💾 Profile saved: ${userName.value}');
-      
+
       update();
       refresh();
-      
     } catch (e) {
       print('❌ Error saving profile: $e');
     }
   }
-  
+
   // ========== Update Profile Image ==========
   void updateProfileImage(String imagePath) {
     print('🔄 Updating profile image to: $imagePath');
@@ -130,7 +128,7 @@ class ProfileController extends GetxController {
     update();
     refresh();
   }
-  
+
   // ========== Remove Profile Image ==========
   void removeProfileImage() {
     print('🗑️ Removing profile image');
@@ -139,28 +137,28 @@ class ProfileController extends GetxController {
     update();
     refresh();
   }
-  
+
   // ========== Update Methods ==========
   void updateUserName(String name) {
     userName.value = name;
     saveUserData();
   }
-  
+
   void updateUserPhone(String phone) {
     userPhone.value = phone;
     saveUserData();
   }
-  
+
   void updateUserEmail(String email) {
     userEmail.value = email;
     saveUserData();
   }
-  
+
   void updateUserDob(String dob) {
     userDob.value = dob;
     saveUserData();
   }
-  
+
   void updateUserGender(String gender) {
     userGender.value = gender;
     saveUserData();

@@ -13,6 +13,10 @@ class MyBasketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final CartController cartController;
     if (Get.isRegistered<CartController>()) {
       cartController = Get.find<CartController>();
@@ -21,7 +25,7 @@ class MyBasketScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -37,17 +41,15 @@ class MyBasketScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(),
+                  _buildHeader(theme, isDark),
                   SizedBox(height: 20.h),
-                  _buildOrderSummaryHeader(),
+                  _buildOrderSummaryHeader(theme, isDark),
                   SizedBox(height: 14.h),
-
-                  // ❌ Applied Voucher এখানে দেখানো হবে না
 
                   // Cart Items
                   Obx(() {
                     if (cartController.cartItems.isEmpty) {
-                      return _buildEmptyState();
+                      return _buildEmptyState(theme, isDark);
                     }
                     return ListView.builder(
                       shrinkWrap: true,
@@ -57,7 +59,7 @@ class MyBasketScreen extends StatelessWidget {
                         final item = cartController.cartItems[index];
                         return Padding(
                           padding: EdgeInsets.only(bottom: 14.h),
-                          child: _buildCartItem(item, cartController),
+                          child: _buildCartItem(item, cartController, theme, isDark),
                         );
                       },
                     );
@@ -65,8 +67,8 @@ class MyBasketScreen extends StatelessWidget {
 
                   SizedBox(height: 20.h),
 
-                  // ✅ Manual Voucher Input (User Manual)
-                  _buildManualVoucherInput(),
+                  // Manual Voucher Input
+                  _buildManualVoucherInput(theme, isDark),
 
                   SizedBox(height: 10.h),
 
@@ -74,25 +76,29 @@ class MyBasketScreen extends StatelessWidget {
                     Icons.location_on_rounded,
                     "Deliver to",
                     "Select Your Location",
+                    theme,
+                    isDark,
                   ),
                   SizedBox(height: 10.h),
 
-                  _buildPaymentMethodTile(context, cartController),
+                  _buildPaymentMethodTile(context, cartController, theme, isDark),
                   SizedBox(height: 10.h),
 
                   _buildInfoTile(
                     Icons.confirmation_number_rounded,
                     "Promotions",
                     "Select Your Discounts",
+                    theme,
+                    isDark,
                   ),
                   SizedBox(height: 20.h),
 
-                  Obx(() => _buildBillDetails(cartController)),
+                  Obx(() => _buildBillDetails(cartController, theme, isDark)),
                   SizedBox(height: 16.h),
                 ],
               ),
             ),
-            Obx(() => _buildPinnedBottomBar(cartController, context)),
+            Obx(() => _buildPinnedBottomBar(cartController, context, theme, isDark)),
           ],
         ),
       ),
@@ -100,19 +106,19 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // ✅ Manual Voucher Input - ইউজার ম্যানুয়ালি কোড ইনপুট করবে
+  // MANUAL VOUCHER INPUT - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildManualVoucherInput() {
+  Widget _buildManualVoucherInput(ThemeData theme, bool isDark) {
     final cartController = Get.find<CartController>();
-    final voucherController = Get.isRegistered<VoucherController>() 
-        ? Get.find<VoucherController>() 
+    final voucherController = Get.isRegistered<VoucherController>()
+        ? Get.find<VoucherController>()
         : Get.put(VoucherController());
     final TextEditingController codeController = TextEditingController();
-    
+
     return Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
@@ -138,7 +144,7 @@ class MyBasketScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ],
@@ -149,26 +155,43 @@ class MyBasketScreen extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: codeController,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'ভাউচার কোড লিখুন (যেমন: WELCOME20)',
+                    hintStyle: TextStyle(
+                      color: isDark ? Colors.grey.shade600 : Colors.grey.shade500,
+                    ),
+                    filled: true,
+                    fillColor: isDark ? const Color(0xFF333333) : Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
+                      borderSide: BorderSide(
+                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
-                      borderSide: BorderSide(color: AppColors.tomato, width: 2.w),
+                      borderSide: BorderSide(
+                        color: AppColors.tomato,
+                        width: 2.w,
+                      ),
                     ),
                     contentPadding: EdgeInsets.symmetric(
-                      horizontal: 12.w, 
+                      horizontal: 12.w,
                       vertical: 12.h,
                     ),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.close, size: 16.sp),
+                      icon: Icon(
+                        Icons.close,
+                        size: 16.sp,
+                        color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                      ),
                       onPressed: () => codeController.clear(),
                     ),
                   ),
-                  style: TextStyle(fontSize: 13.sp),
                   textCapitalization: TextCapitalization.characters,
                 ),
               ),
@@ -176,7 +199,7 @@ class MyBasketScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   String code = codeController.text.trim().toUpperCase();
-                  
+
                   if (code.isEmpty) {
                     Get.snackbar(
                       'Error',
@@ -187,13 +210,10 @@ class MyBasketScreen extends StatelessWidget {
                     );
                     return;
                   }
-                  
-                  final voucher = voucherController.availableVouchers.firstWhere(
-                    (v) => v['code'] == code,
-                    orElse: () => {},
-                  );
-                  
-                  // ❌ ভাউচার পাওয়া যায়নি - Error
+
+                  final voucher = voucherController.availableVouchers
+                      .firstWhere((v) => v['code'] == code, orElse: () => {});
+
                   if (voucher.isEmpty) {
                     Get.snackbar(
                       '❌ Invalid Code',
@@ -204,7 +224,7 @@ class MyBasketScreen extends StatelessWidget {
                     );
                     return;
                   }
-                  
+
                   if (voucherController.isVoucherUsed(code)) {
                     Get.snackbar(
                       'Already Used ❌',
@@ -215,8 +235,7 @@ class MyBasketScreen extends StatelessWidget {
                     );
                     return;
                   }
-                  
-                  // ========== ✅ Price Match চেক করুন ==========
+
                   final minSpend = voucher['minSpend'] as double;
                   if (cartController.subtotal < minSpend) {
                     Get.snackbar(
@@ -229,24 +248,22 @@ class MyBasketScreen extends StatelessWidget {
                     );
                     return;
                   }
-                  
-                  // ✅ ডিসকাউন্ট ক্যালকুলেট করুন
+
                   final discountValue = voucher['discountValue'] as double;
                   final discountType = voucher['type'] as String;
-                  double discountAmount = discountType == 'percentage' 
-                      ? (cartController.subtotal * discountValue) / 100 
+                  double discountAmount = discountType == 'percentage'
+                      ? (cartController.subtotal * discountValue) / 100
                       : discountValue;
-                  
-                  // ✅ ভাউচার Apply করুন
+
                   cartController.applyVoucher(
                     code: code,
                     discountAmount: discountAmount,
                     voucherTitle: voucher['title']!,
                   );
-                  
+
                   voucherController.usedVouchers.add(code);
                   voucherController.saveUsedVouchers();
-                  
+
                   Get.snackbar(
                     '✅ Voucher Applied!',
                     '$code সফলভাবে এপ্লাই করা হয়েছে!\nডিসকাউন্ট: £${discountAmount.toStringAsFixed(2)}',
@@ -255,7 +272,7 @@ class MyBasketScreen extends StatelessWidget {
                     colorText: Colors.white,
                     duration: const Duration(seconds: 3),
                   );
-                  
+
                   codeController.clear();
                 },
                 style: ElevatedButton.styleFrom(
@@ -263,7 +280,10 @@ class MyBasketScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 12.h,
+                  ),
                 ),
                 child: Text(
                   'Apply',
@@ -282,7 +302,7 @@ class MyBasketScreen extends StatelessWidget {
               '💡 ভাউচার কোড ম্যানুয়ালি ইনপুট করুন (যেমন: WELCOME20, PERTO50)',
               style: TextStyle(
                 fontSize: 10.sp,
-                color: Colors.grey.shade500,
+                color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
               ),
             ),
           ),
@@ -292,9 +312,9 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // EMPTY STATE
+  // EMPTY STATE - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(ThemeData theme, bool isDark) {
     return Center(
       child: Padding(
         padding: EdgeInsets.only(top: 40.h),
@@ -303,7 +323,7 @@ class MyBasketScreen extends StatelessWidget {
             Icon(
               Icons.shopping_basket_outlined,
               size: 80.sp,
-              color: Colors.grey.shade300,
+              color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
             ),
             SizedBox(height: 16.h),
             Text(
@@ -311,7 +331,7 @@ class MyBasketScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
               ),
             ),
             SizedBox(height: 8.h),
@@ -319,7 +339,7 @@ class MyBasketScreen extends StatelessWidget {
               "কিছু সুস্বাদু আইটেম যোগ করুন",
               style: TextStyle(
                 fontSize: 14.sp,
-                color: Colors.grey.shade400,
+                color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
               ),
             ),
             SizedBox(height: 20.h),
@@ -330,10 +350,7 @@ class MyBasketScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24.w,
-                  vertical: 12.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
               ),
               child: Text(
                 "খাবার ব্রাউজ করুন",
@@ -351,9 +368,9 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // HEADER
+  // HEADER - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildHeader() {
+  Widget _buildHeader(ThemeData theme, bool isDark) {
     return Row(
       children: [
         GestureDetector(
@@ -361,7 +378,7 @@ class MyBasketScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(8.r),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF333333) : Colors.white,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -373,7 +390,7 @@ class MyBasketScreen extends StatelessWidget {
             ),
             child: Icon(
               Icons.arrow_back,
-              color: Colors.black87,
+              color: isDark ? Colors.white : Colors.black87,
               size: 20.sp,
             ),
           ),
@@ -385,7 +402,7 @@ class MyBasketScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: isDark ? Colors.white : Colors.black87,
             ),
           ),
         ),
@@ -395,9 +412,9 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // ORDER SUMMARY HEADER
+  // ORDER SUMMARY HEADER - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildOrderSummaryHeader() {
+  Widget _buildOrderSummaryHeader(ThemeData theme, bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -406,7 +423,7 @@ class MyBasketScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 15.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         TextButton(
@@ -416,10 +433,7 @@ class MyBasketScreen extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.r),
             ),
-            padding: EdgeInsets.symmetric(
-              horizontal: 10.w,
-              vertical: 3.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
           ),
           child: Text(
             "Add Items",
@@ -435,15 +449,17 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // PAYMENT METHOD TILE
+  // PAYMENT METHOD TILE - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildPaymentMethodTile(
     BuildContext context,
     CartController controller,
+    ThemeData theme,
+    bool isDark,
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
@@ -454,7 +470,7 @@ class MyBasketScreen extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        onTap: () => _showPaymentBottomSheet(context, controller),
+        onTap: () => _showPaymentBottomSheet(context, controller, isDark),
         leading: Container(
           padding: EdgeInsets.all(6.r),
           decoration: BoxDecoration(
@@ -472,7 +488,7 @@ class MyBasketScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         subtitle: Obx(
@@ -482,29 +498,27 @@ class MyBasketScreen extends StatelessWidget {
                 : controller.selectedPaymentMethod.value,
             style: TextStyle(
               fontSize: 11.sp,
-              color: Colors.black38,
+              color: isDark ? Colors.grey.shade500 : Colors.black38,
             ),
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 14.sp,
-          color: Colors.black38,
+          color: isDark ? Colors.grey.shade500 : Colors.black38,
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 4.h,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       ),
     );
   }
 
   // ============================================================
-  // PAYMENT BOTTOM SHEET
+  // PAYMENT BOTTOM SHEET - 🔥 Dark Mode Support
   // ============================================================
   void _showPaymentBottomSheet(
     BuildContext context,
     CartController controller,
+    bool isDark,
   ) {
     final RxString tempSelected =
         (controller.selectedPaymentMethod.value.isEmpty
@@ -517,12 +531,9 @@ class MyBasketScreen extends StatelessWidget {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.85,
         ),
-        padding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 14.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         child: SingleChildScrollView(
@@ -538,7 +549,7 @@ class MyBasketScreen extends StatelessWidget {
                     child: Container(
                       padding: EdgeInsets.all(6.r),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? const Color(0xFF333333) : Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -551,7 +562,7 @@ class MyBasketScreen extends StatelessWidget {
                       child: Icon(
                         Icons.arrow_back,
                         size: 18.sp,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                   ),
@@ -562,7 +573,7 @@ class MyBasketScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                   ),
@@ -585,6 +596,7 @@ class MyBasketScreen extends StatelessWidget {
                       value: "Cash",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
+                      isDark: isDark,
                     ),
                     SizedBox(height: 10.h),
                     _buildBottomSheetOptionItem(
@@ -597,6 +609,7 @@ class MyBasketScreen extends StatelessWidget {
                       value: "PayPal",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
+                      isDark: isDark,
                     ),
                     SizedBox(height: 10.h),
                     _buildBottomSheetOptionItem(
@@ -609,18 +622,20 @@ class MyBasketScreen extends StatelessWidget {
                       value: "Google Pay",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
+                      isDark: isDark,
                     ),
                     SizedBox(height: 10.h),
                     _buildBottomSheetOptionItem(
                       title: "Apple Pay",
                       iconWidget: Icon(
                         Icons.apple_rounded,
-                        color: Colors.black,
+                        color: isDark ? Colors.white : Colors.black,
                         size: 22.sp,
                       ),
                       value: "Apple Pay",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
+                      isDark: isDark,
                     ),
                     SizedBox(height: 10.h),
                     _buildBottomSheetOptionItem(
@@ -633,6 +648,7 @@ class MyBasketScreen extends StatelessWidget {
                       value: "**** **** **** 0895",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
+                      isDark: isDark,
                     ),
                     SizedBox(height: 10.h),
                     _buildBottomSheetOptionItem(
@@ -645,6 +661,7 @@ class MyBasketScreen extends StatelessWidget {
                       value: "**** **** **** 2259",
                       groupValue: tempSelected.value,
                       onSelect: (val) => tempSelected.value = val,
+                      isDark: isDark,
                     ),
                   ],
                 ),
@@ -669,11 +686,7 @@ class MyBasketScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.add,
-                        color: AppColors.tomato,
-                        size: 16.sp,
-                      ),
+                      Icon(Icons.add, color: AppColors.tomato, size: 16.sp),
                       SizedBox(width: 6.w),
                       Text(
                         "Add New Card",
@@ -736,7 +749,7 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // BOTTOM SHEET OPTION ITEM
+  // BOTTOM SHEET OPTION ITEM - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildBottomSheetOptionItem({
     required String title,
@@ -744,21 +757,19 @@ class MyBasketScreen extends StatelessWidget {
     required String value,
     required String groupValue,
     required Function(String) onSelect,
+    required bool isDark,
   }) {
     final isSelected = groupValue == value;
 
     return GestureDetector(
       onTap: () => onSelect(value),
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 14.w,
-          vertical: 12.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected ? AppColors.tomato : Colors.grey.shade200,
+            color: isSelected ? AppColors.tomato : (isDark ? Colors.grey.shade700 : Colors.grey.shade200),
             width: isSelected ? 2.w : 1.w,
           ),
         ),
@@ -776,7 +787,7 @@ class MyBasketScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ),
@@ -786,7 +797,7 @@ class MyBasketScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.tomato : Colors.grey.shade300,
+                  color: isSelected ? AppColors.tomato : (isDark ? Colors.grey.shade600 : Colors.grey.shade300),
                   width: isSelected ? 6 : 1.5,
                 ),
               ),
@@ -798,12 +809,18 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // INFO TILE
+  // INFO TILE - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildInfoTile(IconData icon, String title, String subtitle) {
+  Widget _buildInfoTile(
+    IconData icon,
+    String title,
+    String subtitle,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
@@ -830,47 +847,45 @@ class MyBasketScreen extends StatelessWidget {
             color: AppColors.tomato.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            color: AppColors.tomato,
-            size: 18.sp,
-          ),
+          child: Icon(icon, color: AppColors.tomato, size: 18.sp),
         ),
         title: Text(
           title,
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         subtitle: Text(
           subtitle,
           style: TextStyle(
             fontSize: 11.sp,
-            color: Colors.black38,
+            color: isDark ? Colors.grey.shade500 : Colors.black38,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 14.sp,
-          color: Colors.black38,
+          color: isDark ? Colors.grey.shade500 : Colors.black38,
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 2.h,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
       ),
     );
   }
 
   // ============================================================
-  // CART ITEM
+  // CART ITEM - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildCartItem(CartItem item, CartController controller) {
+  Widget _buildCartItem(
+    CartItem item,
+    CartController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
@@ -897,10 +912,10 @@ class MyBasketScreen extends StatelessWidget {
                     return Container(
                       width: 60.w,
                       height: 60.h,
-                      color: Colors.grey[200],
+                      color: isDark ? Colors.grey[800] : Colors.grey[200],
                       child: Icon(
                         Icons.image,
-                        color: Colors.grey,
+                        color: isDark ? Colors.grey.shade600 : Colors.grey,
                         size: 24.sp,
                       ),
                     );
@@ -917,7 +932,7 @@ class MyBasketScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                     SizedBox(height: 3.h),
@@ -928,7 +943,7 @@ class MyBasketScreen extends StatelessWidget {
                             "£ ${item.oldPrice!.toStringAsFixed(2)}",
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: Colors.black38,
+                              color: isDark ? Colors.grey.shade500 : Colors.black38,
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
@@ -953,23 +968,22 @@ class MyBasketScreen extends StatelessWidget {
                               item.quantity.value--;
                               controller.cartItems.refresh();
                             }
-                          }),
+                          }, isDark),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                             child: Text(
                               "${item.quantity.value}",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
                           ),
                           _buildCounterButton(Icons.add, () {
                             item.quantity.value++;
                             controller.cartItems.refresh();
-                          }),
+                          }, isDark),
                         ],
                       ),
                     ),
@@ -982,7 +996,7 @@ class MyBasketScreen extends StatelessWidget {
                     icon: Icon(
                       Icons.edit_outlined,
                       size: 16.sp,
-                      color: Colors.black38,
+                      color: isDark ? Colors.grey.shade500 : Colors.black38,
                     ),
                     onPressed: () {},
                     padding: EdgeInsets.zero,
@@ -992,7 +1006,7 @@ class MyBasketScreen extends StatelessWidget {
                     icon: Icon(
                       Icons.close,
                       size: 16.sp,
-                      color: Colors.black38,
+                      color: isDark ? Colors.grey.shade500 : Colors.black38,
                     ),
                     onPressed: () => controller.removeItem(item),
                     padding: EdgeInsets.zero,
@@ -1006,7 +1020,9 @@ class MyBasketScreen extends StatelessWidget {
           if (item.addOns.isNotEmpty) ...[
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6.h),
-              child: Divider(color: const Color(0xFFF5F5F5)),
+              child: Divider(
+                color: isDark ? Colors.grey.shade800 : const Color(0xFFF5F5F5),
+              ),
             ),
             Column(
               children: item.addOns.map((addOn) {
@@ -1019,7 +1035,7 @@ class MyBasketScreen extends StatelessWidget {
                         addOn["name"]!,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: Colors.black54,
+                          color: isDark ? Colors.grey.shade400 : Colors.black54,
                         ),
                       ),
                       Text(
@@ -1041,32 +1057,34 @@ class MyBasketScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCounterButton(IconData icon, VoidCallback onTap) {
+  Widget _buildCounterButton(IconData icon, VoidCallback onTap, bool isDark) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(3.r),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.black12),
+          border: Border.all(
+            color: isDark ? Colors.grey.shade700 : Colors.black12,
+          ),
         ),
         child: Icon(
           icon,
           size: 12.sp,
-          color: Colors.black87,
+          color: isDark ? Colors.white : Colors.black87,
         ),
       ),
     );
   }
 
   // ============================================================
-  // BILL DETAILS
+  // BILL DETAILS - 🔥 Dark Mode Support
   // ============================================================
-  Widget _buildBillDetails(CartController controller) {
+  Widget _buildBillDetails(CartController controller, ThemeData theme, bool isDark) {
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF242424) : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
@@ -1082,36 +1100,42 @@ class MyBasketScreen extends StatelessWidget {
             "Subtotal",
             "£ ${controller.subtotal.toStringAsFixed(2)}",
             isBold: true,
+            isDark: isDark,
           ),
           SizedBox(height: 6.h),
           _buildBillRow(
             "Delivery Fee",
             controller.selectedPaymentMethod.value.isEmpty ? "—" : "£ 0.00",
+            isDark: isDark,
           ),
           SizedBox(height: 6.h),
-          // ✅ Discount দেখাবে কিন্তু Voucher Code দেখাবে না
           Obx(() {
             if (controller.appliedVoucherDiscount.value > 0) {
               return _buildBillRow(
                 "Discount",
                 "- £ ${controller.appliedVoucherDiscount.value.toStringAsFixed(2)}",
                 isDiscount: true,
+                isDark: isDark,
               );
             }
-            return _buildBillRow("Discount", "—");
+            return _buildBillRow("Discount", "—", isDark: isDark);
           }),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: Divider(color: Colors.black12),
+            child: Divider(
+              color: isDark ? Colors.grey.shade800 : Colors.black12,
+            ),
           ),
           Obx(() {
-            double totalWithDiscount = controller.total - controller.appliedVoucherDiscount.value;
+            double totalWithDiscount =
+                controller.total - controller.appliedVoucherDiscount.value;
             if (totalWithDiscount < 0) totalWithDiscount = 0;
             return _buildBillRow(
               "Total",
               "£ ${totalWithDiscount.toStringAsFixed(2)}",
               isBold: true,
               fontSize: 15.sp,
+              isDark: isDark,
             );
           }),
         ],
@@ -1125,6 +1149,7 @@ class MyBasketScreen extends StatelessWidget {
     bool isBold = false,
     bool isDiscount = false,
     double fontSize = 13.0,
+    required bool isDark,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1134,7 +1159,11 @@ class MyBasketScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            color: isDiscount ? Colors.green.shade700 : (isBold ? Colors.black87 : Colors.black54),
+            color: isDiscount
+                ? Colors.green.shade700
+                : (isBold
+                    ? (isDark ? Colors.white : Colors.black87)
+                    : (isDark ? Colors.grey.shade400 : Colors.black54)),
           ),
         ),
         Text(
@@ -1142,7 +1171,9 @@ class MyBasketScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            color: isDiscount ? Colors.green.shade700 : (isBold ? AppColors.tomato : Colors.black87),
+            color: isDiscount
+                ? Colors.green.shade700
+                : (isBold ? AppColors.tomato : (isDark ? Colors.white : Colors.black87)),
           ),
         ),
       ],
@@ -1150,11 +1181,13 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // PINNED BOTTOM BAR
+  // PINNED BOTTOM BAR - 🔥 Dark Mode Support
   // ============================================================
   Widget _buildPinnedBottomBar(
     CartController controller,
     BuildContext context,
+    ThemeData theme,
+    bool isDark,
   ) {
     return Positioned(
       bottom: 0,
@@ -1162,15 +1195,10 @@ class MyBasketScreen extends StatelessWidget {
       right: 0,
       child: Container(
         height: 70.h,
-        padding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 10.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20.r),
-          ),
+          color: isDark ? const Color(0xFF242424) : Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.06),
@@ -1183,27 +1211,25 @@ class MyBasketScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Obx(() {
-              double totalWithDiscount = controller.total - controller.appliedVoucherDiscount.value;
+              double totalWithDiscount =
+                  controller.total - controller.appliedVoucherDiscount.value;
               if (totalWithDiscount < 0) totalWithDiscount = 0;
               return Text(
                 "£ ${totalWithDiscount.toStringAsFixed(2)}",
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               );
             }),
             ElevatedButton(
               onPressed: controller.cartItems.isEmpty
                   ? null
-                  : () => _showPlaceOrderDialog(context, controller),
+                  : () => _showPlaceOrderDialog(context, controller, isDark),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.tomato,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 28.w,
-                  vertical: 12.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.r),
                 ),
@@ -1224,9 +1250,13 @@ class MyBasketScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // PLACE ORDER DIALOG
+  // PLACE ORDER DIALOG - 🔥 Dark Mode Support
   // ============================================================
-  void _showPlaceOrderDialog(BuildContext context, CartController controller) {
+  void _showPlaceOrderDialog(
+    BuildContext context,
+    CartController controller,
+    bool isDark,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -1240,7 +1270,7 @@ class MyBasketScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF242424) : Colors.white,
               borderRadius: BorderRadius.circular(20.r),
               boxShadow: [
                 BoxShadow(
@@ -1257,12 +1287,12 @@ class MyBasketScreen extends StatelessWidget {
                   width: 70.w,
                   height: 70.h,
                   decoration: BoxDecoration(
-                    color: Colors.green[50],
+                    color: isDark ? Colors.green.shade900.withOpacity(0.3) : Colors.green[50],
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.check_circle,
-                    color: Colors.green[600],
+                    color: isDark ? Colors.green.shade400 : Colors.green[600],
                     size: 44.sp,
                   ),
                 ),
@@ -1272,7 +1302,7 @@ class MyBasketScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 SizedBox(height: 6.h),
@@ -1280,7 +1310,7 @@ class MyBasketScreen extends StatelessWidget {
                   "Your order has been placed successfully!",
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: Colors.grey[600],
+                    color: isDark ? Colors.grey.shade400 : Colors.grey[600],
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -1295,7 +1325,8 @@ class MyBasketScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Obx(() {
-                    double totalWithDiscount = controller.total - controller.appliedVoucherDiscount.value;
+                    double totalWithDiscount =
+                        controller.total - controller.appliedVoucherDiscount.value;
                     if (totalWithDiscount < 0) totalWithDiscount = 0;
                     return Text(
                       "Total: £${totalWithDiscount.toStringAsFixed(2)}",
@@ -1311,7 +1342,7 @@ class MyBasketScreen extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Column(
@@ -1323,7 +1354,7 @@ class MyBasketScreen extends StatelessWidget {
                             "Items",
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: Colors.black54,
+                              color: isDark ? Colors.grey.shade400 : Colors.black54,
                             ),
                           ),
                           Text(
@@ -1331,7 +1362,7 @@ class MyBasketScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black87,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                         ],
@@ -1344,7 +1375,7 @@ class MyBasketScreen extends StatelessWidget {
                             "Estimated Delivery",
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: Colors.black54,
+                              color: isDark ? Colors.grey.shade400 : Colors.black54,
                             ),
                           ),
                           Text(
@@ -1352,7 +1383,7 @@ class MyBasketScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black87,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                         ],
@@ -1366,7 +1397,7 @@ class MyBasketScreen extends StatelessWidget {
                               "Payment Method",
                               style: TextStyle(
                                 fontSize: 12.sp,
-                                color: Colors.black54,
+                                color: isDark ? Colors.grey.shade400 : Colors.black54,
                               ),
                             ),
                             Text(
@@ -1376,7 +1407,7 @@ class MyBasketScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.black87,
+                                color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
                           ],

@@ -15,24 +15,17 @@ import 'package:get/get.dart';
 class LikedScreen extends StatelessWidget {
   const LikedScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Initialize FavoriteService
     if (!Get.isRegistered<FavoriteService>()) {
       Get.put<FavoriteService>(FavoriteService(), permanent: true);
     }
 
-    // Initialize Controller/////
-
-
-    ///instace the method ???
-    ///
-    ///
-    ///
-    ///
-    
-    
     final LikedController controller = Get.isRegistered<LikedController>()
         ? Get.find<LikedController>()
         : Get.put(LikedController());
@@ -49,7 +42,7 @@ class LikedScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -59,10 +52,10 @@ class LikedScreen extends StatelessWidget {
             // ==================================================
             Column(
               children: [
-                _buildHeader(controller),
-                _buildSearchBar(controller),
+                _buildHeader(controller, theme, isDark),
+                _buildSearchBar(controller, theme, isDark),
                 SizedBox(height: 8.h),
-                _buildItemsCount(controller),
+                _buildItemsCount(controller, theme, isDark),
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading) {
@@ -75,7 +68,7 @@ class LikedScreen extends StatelessWidget {
                     }
 
                     if (controller.filteredItems.isEmpty) {
-                      return _buildEmptyState();
+                      return _buildEmptyState(theme, isDark);
                     }
 
                     return GridView.builder(
@@ -93,7 +86,13 @@ class LikedScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final item = controller.filteredItems[index];
                         final isFavorite = favoriteService.isFavorite(item.id);
-                        return _buildFoodCard(controller, item, isFavorite);
+                        return _buildFoodCard(
+                          controller,
+                          item,
+                          isFavorite,
+                          theme,
+                          isDark,
+                        );
                       },
                     );
                   }),
@@ -101,7 +100,7 @@ class LikedScreen extends StatelessWidget {
               ],
             ),
             // ==================================================
-            // ✅ BOTTOM NAVIGATION - FIXED POSITION
+            // BOTTOM NAVIGATION
             // ==================================================
             Positioned(
               bottom: 20.h,
@@ -136,28 +135,31 @@ class LikedScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // HEADER
+  // HEADER - 🔥 Dark Mode Support
   // ============================================================
 
-  Widget _buildHeader(LikedController controller) {
+  Widget _buildHeader(
+    LikedController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       child: Row(
         children: [
           GestureDetector(
-            onTap: () =>
-                BottomNavController.to.goBack(), // ✅ Fixed back navigation
+            onTap: () => BottomNavController.to.goBack(),
             child: Container(
               width: 38.w,
               height: 38.h,
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: isDark ? const Color(0xFF333333) : Colors.grey.shade100,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 16.sp,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
           ),
@@ -168,7 +170,7 @@ class LikedScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
           ),
@@ -180,13 +182,15 @@ class LikedScreen extends StatelessWidget {
                       width: 38.w,
                       height: 38.h,
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50,
+                        color: isDark
+                            ? Colors.red.shade900.withOpacity(0.3)
+                            : Colors.red.shade50,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.delete_outline_rounded,
                         size: 18.sp,
-                        color: Colors.red.shade400,
+                        color: isDark ? Colors.red.shade400 : Colors.red.shade400,
                       ),
                     ),
                   )
@@ -198,24 +202,28 @@ class LikedScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // SEARCH BAR
+  // SEARCH BAR - 🔥 Dark Mode Support
   // ============================================================
 
-  Widget _buildSearchBar(LikedController controller) {
+  Widget _buildSearchBar(
+    LikedController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: Container(
         height: 44.h,
         padding: EdgeInsets.symmetric(horizontal: 14.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF4F5F7),
+          color: isDark ? const Color(0xFF333333) : const Color(0xFFF4F5F7),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
             Icon(
               Icons.search_rounded,
-              color: Colors.grey.shade400,
+              color: isDark ? Colors.white54 : Colors.grey.shade400,
               size: 20.sp,
             ),
             SizedBox(width: 8.w),
@@ -226,10 +234,13 @@ class LikedScreen extends StatelessWidget {
                   controller: TextEditingController(
                     text: controller.searchQuery.value,
                   ),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Search favorites...',
                     hintStyle: TextStyle(
-                      color: Colors.grey.shade400,
+                      color: isDark ? Colors.white54 : Colors.grey.shade400,
                       fontSize: 13.sp,
                     ),
                     border: InputBorder.none,
@@ -244,14 +255,18 @@ class LikedScreen extends StatelessWidget {
                       onTap: () => controller.clearSearch(),
                       child: Icon(
                         Icons.clear_rounded,
-                        color: Colors.grey.shade400,
+                        color: isDark ? Colors.white54 : Colors.grey.shade400,
                         size: 18.sp,
                       ),
                     )
                   : const SizedBox.shrink(),
             ),
             SizedBox(width: 6.w),
-            Icon(Icons.tune_rounded, color: Colors.black87, size: 18.sp),
+            Icon(
+              Icons.tune_rounded,
+              color: isDark ? Colors.white : Colors.black87,
+              size: 18.sp,
+            ),
           ],
         ),
       ),
@@ -259,10 +274,14 @@ class LikedScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // ITEMS COUNT
+  // ITEMS COUNT - 🔥 Dark Mode Support
   // ============================================================
 
-  Widget _buildItemsCount(LikedController controller) {
+  Widget _buildItemsCount(
+    LikedController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Obx(
       () => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
@@ -276,7 +295,7 @@ class LikedScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
               ),
             ),
             if (controller.likedItems.isNotEmpty)
@@ -285,14 +304,14 @@ class LikedScreen extends StatelessWidget {
                   Icon(
                     Icons.sort_rounded,
                     size: 16.sp,
-                    color: Colors.grey.shade600,
+                    color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                   ),
                   SizedBox(width: 3.w),
                   Text(
                     'Sort',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: Colors.grey.shade600,
+                      color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -305,10 +324,10 @@ class LikedScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // EMPTY STATE
+  // EMPTY STATE - 🔥 Dark Mode Support
   // ============================================================
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(ThemeData theme, bool isDark) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -316,7 +335,7 @@ class LikedScreen extends StatelessWidget {
           Icon(
             Icons.favorite_outline_rounded,
             size: 70.sp,
-            color: Colors.grey.shade300,
+            color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
           ),
           SizedBox(height: 14.h),
           Text(
@@ -324,13 +343,16 @@ class LikedScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.grey.shade600,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
             ),
           ),
           SizedBox(height: 6.h),
           Text(
             'Start adding your favorite items!',
-            style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade400),
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+            ),
           ),
           SizedBox(height: 18.h),
           ElevatedButton(
@@ -357,19 +379,20 @@ class LikedScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // FOOD CARD
+  // FOOD CARD - 🔥 Dark Mode Support
   // ============================================================
 
   Widget _buildFoodCard(
     LikedController controller,
     FavoriteItem item,
     bool isFavorite,
+    ThemeData theme,
+    bool isDark,
   ) {
     final favoriteService = Get.find<FavoriteService>();
 
     return GestureDetector(
       onTap: () {
-        // Convert FavoriteItem to ProductModel
         final product = ProductModel(
           id: item.id,
           name: item.title,
@@ -381,7 +404,6 @@ class LikedScreen extends StatelessWidget {
           description: 'Delicious ${item.title} made with fresh ingredients.',
         );
 
-        // Navigate to ProductDetailsScreen with product
         Get.to(
           () => ProductDetailsScreen(product: product),
           transition: Transition.rightToLeft,
@@ -390,7 +412,7 @@ class LikedScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF242424) : Colors.white,
           borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
@@ -420,11 +442,11 @@ class LikedScreen extends StatelessWidget {
                       return Container(
                         height: 100.h,
                         width: double.infinity,
-                        color: Colors.grey.shade200,
+                        color: isDark ? Colors.grey[800] : Colors.grey.shade200,
                         child: Icon(
                           Icons.image_not_supported,
                           size: 30.sp,
-                          color: Colors.grey.shade400,
+                          color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                         ),
                       );
                     },
@@ -451,7 +473,7 @@ class LikedScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // DETAILS
+            // DETAILS - 🔥 Dark Mode Support
             Padding(
               padding: EdgeInsets.all(8.r),
               child: Column(
@@ -464,7 +486,7 @@ class LikedScreen extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12.sp,
-                      color: Colors.black87,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   SizedBox(height: 3.h),
@@ -481,7 +503,7 @@ class LikedScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: Colors.grey.shade700,
+                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade700,
                         ),
                       ),
                     ],
@@ -494,7 +516,7 @@ class LikedScreen extends StatelessWidget {
                           '£ ${item.originalPrice!.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: Colors.grey.shade400,
+                            color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
