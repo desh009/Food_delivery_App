@@ -48,7 +48,10 @@ abstract class Routes {
   static const VOUCHER = _Paths.VOUCHER;
   static const INVITE_FRIENDS = _Paths.INVITE_FRIENDS;
     static const MASSAGE = _Paths.MASSAGE;
+    
+    static const TERMS_AND_SERVICES = _Paths.TERMS_AND_SERVICES;
 
+    static const PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
 
 }
 
@@ -100,5 +103,10 @@ abstract class _Paths {
   static const ADD_TO_CART_LIST_ITEM = '/add-to-cart-list-item';
   static const INVITE_FRIENDS = '/invite_friends';
     static const  MASSAGE = '/message'; // Add this line
+  static const  TERMS_AND_SERVICES = '/terms-and-services';
+
+  static const  PRIVACY_AND_POLICY = '/privacy-policy';
+
+
 
 }
