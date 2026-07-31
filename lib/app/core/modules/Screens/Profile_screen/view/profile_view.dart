@@ -103,7 +103,10 @@ class ProfileScreen extends StatelessWidget {
                   ),
 
                   SizedBox(height: 8.h),
-                  Divider(color: theme.dividerColor, thickness: 1.r), // 🔥 Theme থেকে
+                  Divider(
+                    color: theme.dividerColor,
+                    thickness: 1.r,
+                  ), // 🔥 Theme থেকে
                   SizedBox(height: 8.h),
 
                   // ========== Settings ==========
@@ -127,7 +130,10 @@ class ProfileScreen extends StatelessWidget {
                   ),
 
                   SizedBox(height: 8.h),
-                  Divider(color: theme.dividerColor, thickness: 1.r), // 🔥 Theme থেকে
+                  Divider(
+                    color: theme.dividerColor,
+                    thickness: 1.r,
+                  ), // 🔥 Theme থেকে
                   SizedBox(height: 8.h),
 
                   // ========== Secondary Items ==========
@@ -136,13 +142,7 @@ class ProfileScreen extends StatelessWidget {
                     localizations.termOfService,
                     theme,
                     onTap: () {
-                      Get.snackbar(
-                        localizations.termOfService,
-                        'Coming soon!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.blue,
-                        colorText: Colors.white,
-                      );
+                      Get.toNamed('/terms-and-services');
                     },
                   ),
                   _buildListTile(
@@ -150,13 +150,7 @@ class ProfileScreen extends StatelessWidget {
                     localizations.privacyPolicy,
                     theme,
                     onTap: () {
-                      Get.snackbar(
-                        localizations.privacyPolicy,
-                        'Coming soon!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.blue,
-                        colorText: Colors.white,
-                      );
+                      Get.toNamed('/privacy-policy');
                     },
                   ),
                   _buildListTile(
@@ -190,7 +184,7 @@ class ProfileScreen extends StatelessWidget {
   // ============================================================
   Widget _buildTopHeader(AppLocalizations localizations, ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -257,7 +251,7 @@ class ProfileScreen extends StatelessWidget {
     ThemeData theme,
   ) {
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Row(
       children: [
         Obx(
@@ -266,7 +260,7 @@ class ProfileScreen extends StatelessWidget {
             backgroundImage: controller.profileImagePath.value.isNotEmpty
                 ? FileImage(File(controller.profileImagePath.value))
                 : const NetworkImage('https://i.pravatar.cc/300')
-                    as ImageProvider,
+                      as ImageProvider,
           ),
         ),
         SizedBox(width: 14.w),
@@ -363,7 +357,7 @@ class ProfileScreen extends StatelessWidget {
     ThemeData theme,
   ) {
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return InkWell(
       onTap: () {
         _showLogoutDialog(Get.context!, localizations, theme);
@@ -406,7 +400,7 @@ class ProfileScreen extends StatelessWidget {
     ThemeData theme,
   ) {
     final isDark = theme.brightness == Brightness.dark;
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -424,9 +418,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           content: Text(
             localizations.logoutConfirm,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontSize: 16.sp,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16.sp),
           ),
           actions: [
             TextButton(
@@ -489,7 +481,7 @@ class ProfileScreen extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.0.h),
       child: ListTile(
@@ -522,7 +514,10 @@ class ProfileScreen extends StatelessWidget {
   // ============================================================
   // 🔥 LANGUAGE DROPDOWN - Theme Support
   // ============================================================
-  Widget _buildLanguageDropdown(AppLocalizations localizations, ThemeData theme) {
+  Widget _buildLanguageDropdown(
+    AppLocalizations localizations,
+    ThemeData theme,
+  ) {
     final localeController = LocaleController.to;
     final isDark = theme.brightness == Brightness.dark;
 
@@ -556,10 +551,10 @@ class ProfileScreen extends StatelessWidget {
                     size: 18.sp,
                     color: isDark ? Colors.white54 : Colors.black45,
                   ),
-                  dropdownColor: isDark ? const Color(0xFF242424) : Colors.white,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 13.sp,
-                  ),
+                  dropdownColor: isDark
+                      ? const Color(0xFF242424)
+                      : Colors.white,
+                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 13.sp),
                   items: LocaleController.supportedLanguages.map((language) {
                     final code = language['code'] ?? 'en';
                     final flag = code == 'en' ? '🇺🇸' : '🇧🇩';
@@ -580,8 +575,9 @@ class ProfileScreen extends StatelessWidget {
                     if (newValue != null) {
                       localeController.changeLanguage(newValue);
 
-                      String languageName =
-                          newValue == 'bn' ? 'বাংলা' : 'English';
+                      String languageName = newValue == 'bn'
+                          ? 'বাংলা'
+                          : 'English';
                       Get.snackbar(
                         localizations.language,
                         'Language changed to $languageName',
@@ -624,8 +620,12 @@ class ProfileScreen extends StatelessWidget {
             () => Switch(
               value: themeController.isDarkMode,
               activeColor: AppColors.tomato,
-              inactiveTrackColor: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
-              inactiveThumbColor: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+              inactiveTrackColor: isDark
+                  ? Colors.grey.shade700
+                  : Colors.grey.shade200,
+              inactiveThumbColor: isDark
+                  ? Colors.grey.shade500
+                  : Colors.grey.shade400,
               onChanged: (val) async {
                 await themeController.toggleTheme();
               },
@@ -639,11 +639,7 @@ class ProfileScreen extends StatelessWidget {
   // ============================================================
   // 🔥 SWITCH TILE - Theme Support
   // ============================================================
-  Widget _buildSwitchTile(
-    String title,
-    RxBool rxBool,
-    ThemeData theme,
-  ) {
+  Widget _buildSwitchTile(String title, RxBool rxBool, ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
@@ -662,8 +658,12 @@ class ProfileScreen extends StatelessWidget {
             () => Switch(
               value: rxBool.value,
               activeColor: AppColors.tomato,
-              inactiveTrackColor: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
-              inactiveThumbColor: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+              inactiveTrackColor: isDark
+                  ? Colors.grey.shade700
+                  : Colors.grey.shade200,
+              inactiveThumbColor: isDark
+                  ? Colors.grey.shade500
+                  : Colors.grey.shade400,
               onChanged: (val) {
                 rxBool.value = val;
               },

@@ -11,8 +11,12 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Abou
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/view/about_app_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/binder/invite_friends_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Invite_Friends_Screen/view/invite_friends-view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Privacy_and_policy/binder/privacy_policy_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Privacy_and_policy/view/privacy_policy_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/binder/security_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Security_Screen/view/security_screen_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Terms_and_service/binder/terms_and_service_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Terms_and_service/view/terms_and_service_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/binder/track_order_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Track_order/view/track_order_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/Voucher_screen/binder/voucher_screen_binder.dart';
@@ -181,6 +185,21 @@ class AppPages {
       name: Routes.MASSAGE,
       page: () => const MessageScreen(),
       binding: MessageBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+       GetPage(
+      name: Routes.TERMS_AND_SERVICES,
+      page: () => const TermsAndServicesScreen(),
+      binding: TermsAndServicesBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+
+       GetPage(
+      name: Routes.PRIVACY_AND_POLICY,
+      page: () => const PrivacyPolicyScreen(),
+      binding: PrivacyPolicyBinding(),
       transition: Transition.rightToLeft,
     ),
   ];
