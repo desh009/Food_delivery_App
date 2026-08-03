@@ -123,7 +123,7 @@ class AppPages {
             imageUrl: '',
             rating: 0.0,
             price: 0.0,
-            description: '',
+            description: '', image: '', title: '',
           );
         }
 

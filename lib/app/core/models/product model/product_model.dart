@@ -11,6 +11,7 @@ class ProductModel {
   final double price;
   final double? oldPrice;
   final String description;
+  final bool? isFavorite; // 🔥 যোগ করুন
 
   ProductModel({
     required this.id,
@@ -21,6 +22,9 @@ class ProductModel {
     required this.price,
     this.oldPrice,
     this.description = '',
+    required String image,
+    required String title,
+    this.isFavorite,
   });
 
   // ========== ✅ FROM JSON - Factory Constructor ==========
@@ -32,8 +36,12 @@ class ProductModel {
       imageUrl: json['imageUrl']?.toString() ?? json['image']?.toString() ?? '',
       rating: (json['rating'] ?? 0.0).toDouble(),
       price: (json['price'] ?? 0.0).toDouble(),
-      oldPrice: json['oldPrice'] != null ? (json['oldPrice'] as num).toDouble() : null,
+      oldPrice: json['oldPrice'] != null
+          ? (json['oldPrice'] as num).toDouble()
+          : null,
       description: json['description']?.toString() ?? '',
+      image: '',
+      title: '',
     );
   }
 
@@ -48,6 +56,8 @@ class ProductModel {
       price: item.price,
       oldPrice: item.originalPrice,
       description: 'Delicious ${item.title} made with fresh ingredients.',
+      image: '',
+      title: '',
     );
   }
 

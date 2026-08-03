@@ -401,7 +401,7 @@ class LikedScreen extends StatelessWidget {
           rating: item.rating,
           price: item.price,
           oldPrice: item.originalPrice,
-          description: 'Delicious ${item.title} made with fresh ingredients.',
+          description: 'Delicious ${item.title} made with fresh ingredients.', isFavorite: isFavorite, image: item.image, title: item.title,
         );
 
         Get.to(

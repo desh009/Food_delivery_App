@@ -25,12 +25,11 @@ class ProductDetailsController extends GetxController {
     super.onInit();
     _loadProductData();
 
+    addCheese.value = false;
+    addBacon.value = false;
+    addMeat.value = false;
+    quantity.value = 1;
 
-      addCheese.value = false;
-  addBacon.value = false;
-  addMeat.value = false;
-  quantity.value = 1;
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isFavorite.value = favoriteService.isFavorite(product.id);
       print('⭐ Favorite status for ${product.name}: ${isFavorite.value}');
@@ -40,7 +39,7 @@ class ProductDetailsController extends GetxController {
   void _loadProductData() {
     print('🔍 ====== PRODUCT DETAILS CONTROLLER ======');
     print('📦 Get.arguments: ${Get.arguments}');
-    
+
     final args = Get.arguments;
 
     if (args is ProductModel) {
@@ -62,15 +61,19 @@ class ProductDetailsController extends GetxController {
         id: '1',
         name: "Chicken Burger",
         category: "Food",
-        imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500',
+        imageUrl:
+            'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500',
         rating: 4.8,
         price: 6.00,
         oldPrice: 10.00,
-        description: 'A delicious chicken burger served on a toasted bun with fresh lettuce, tomato slices, and mayonnaise.',
+        description:
+            'A delicious chicken burger served on a toasted bun with fresh lettuce, tomato slices, and mayonnaise.',
+        image: '',
+        title: '',
       );
       print('⚠️ Using Default Product Data');
     }
-    
+
     print('📦 Product Name: ${product.name}');
     print('💰 Price: ${product.price}');
     print('🖼️ Image: ${product.imageUrl}');
@@ -80,7 +83,7 @@ class ProductDetailsController extends GetxController {
 
   Future<void> toggleFavorite() async {
     print('⭐ Toggle Favorite called for: ${product.name}');
-    
+
     final item = FavoriteItem(
       id: product.id,
       title: product.name,
@@ -91,10 +94,10 @@ class ProductDetailsController extends GetxController {
     );
 
     final result = await favoriteService.toggleFavorite(
-      item, 
+      item,
       navigateToLikedScreen: false,
     );
-    
+
     isFavorite.value = result;
     print('⭐ Favorite toggled to: ${isFavorite.value}');
   }
@@ -106,7 +109,7 @@ class ProductDetailsController extends GetxController {
       quantity.value++;
     }
   }
-  
+
   void decrement() {
     if (quantity.value > 1) {
       quantity.value--;
@@ -147,7 +150,7 @@ class ProductDetailsController extends GetxController {
 
   void addToCart() {
     final addOns = getSelectedAddOns();
-    
+
     Get.snackbar(
       'Added to Cart',
       '${product.name} added to cart!${addOns.isNotEmpty ? ' with ${addOns.length} add-ons' : ''}',
