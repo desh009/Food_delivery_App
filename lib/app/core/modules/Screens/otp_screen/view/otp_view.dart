@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/otp_screen/view/otp_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/services.dart';
@@ -10,22 +12,24 @@ class VerificationScreen extends GetView<VerificationController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final controller = Get.put(VerificationController());
 
     return Scaffold(
-        backgroundColor: AppColors.tomato, 
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24.0.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 24.0.h),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 16.0.h),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                // Back Button
+                // ==================================================
+                // BACK BUTTON - 🔥 Dark Mode Support
+                // ==================================================
                 Align(
                   alignment: Alignment.centerLeft,
                   child: GestureDetector(
@@ -34,7 +38,7 @@ class VerificationScreen extends GetView<VerificationController> {
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? const Color(0xFF333333) : Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -44,14 +48,19 @@ class VerificationScreen extends GetView<VerificationController> {
                           )
                         ],
                       ),
-                      child: Icon(Icons.arrow_back, color: Colors.black87),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                     ),
                   ),
                 ),
-        
+
                 SizedBox(height: 24.h),
-        
-                // Title
+
+                // ==================================================
+                // TITLE - 🔥 Dark Mode Support
+                // ==================================================
                 Text(
                   "Verification",
                   style: TextStyle(
@@ -61,72 +70,111 @@ class VerificationScreen extends GetView<VerificationController> {
                     letterSpacing: 0.5,
                   ),
                 ),
-        
+
                 SizedBox(height: 16.h),
-        
-                // Subtitle
-              Obx(
-                    () => Column(
-                      children: [
-                        Text(
-                          "Code has been sent to",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
+
+                // ==================================================
+                // SUBTITLE - 🔥 Dark Mode Support
+                // ==================================================
+                Obx(
+                  () => Column(
+                    children: [
+                      Text(
+                        "Code has been sent to",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: isDark ? Colors.grey.shade400 : Colors.black87,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
                         ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          '${controller.countryCode.value} ${controller.phoneNumber.value}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: AppColors.tomato,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '${controller.countryCode.value} ${controller.phoneNumber.value}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.tomato,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
+
                 SizedBox(height: 36.h),
-        
-                // OTP Input Fields
+
+                // ==================================================
+                // OTP INPUT FIELDS - 🔥 Dark Mode Support
+                // ==================================================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildOtpBox(context, controller.txt1, controller.f1, controller.f2, controller),
-                    _buildOtpBox(context, controller.txt2, controller.f2, controller.f3, controller),
-                    _buildOtpBox(context, controller.txt3, controller.f3, controller.f4, controller),
-                    _buildOtpBox(context, controller.txt4, controller.f4, null, controller),
+                    _buildOtpBox(
+                      context,
+                      controller.txt1,
+                      controller.f1,
+                      controller.f2,
+                      controller,
+                      isDark,
+                    ),
+                    _buildOtpBox(
+                      context,
+                      controller.txt2,
+                      controller.f2,
+                      controller.f3,
+                      controller,
+                      isDark,
+                    ),
+                    _buildOtpBox(
+                      context,
+                      controller.txt3,
+                      controller.f3,
+                      controller.f4,
+                      controller,
+                      isDark,
+                    ),
+                    _buildOtpBox(
+                      context,
+                      controller.txt4,
+                      controller.f4,
+                      null,
+                      controller,
+                      isDark,
+                    ),
                   ],
                 ),
-        
+
                 SizedBox(height: 40.h),
-        
-                // Resend Timer Section
+
+                // ==================================================
+                // RESEND SECTION - 🔥 Dark Mode Support
+                // ==================================================
                 Text(
-                  "Didn’t receive code?",
+                  "Didn't receive code?",
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: isDark ? Colors.grey.shade400 : Colors.black87,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                
+
                 SizedBox(height: 16.h),
-        
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.access_time, color: Colors.black87, size: 20.sp),
+                    Icon(
+                      Icons.access_time,
+                      color: isDark ? Colors.grey.shade400 : Colors.black87,
+                      size: 20.sp,
+                    ),
                     SizedBox(width: 8.w),
                     Obx(
                       () => Text(
                         controller.formattedTime.value,
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: isDark ? Colors.grey.shade400 : Colors.black87,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
                         ),
@@ -134,9 +182,9 @@ class VerificationScreen extends GetView<VerificationController> {
                     ),
                   ],
                 ),
-        
+
                 SizedBox(height: 16.h),
-        
+
                 Obx(
                   () => GestureDetector(
                     onTap: controller.canResend.value
@@ -147,7 +195,7 @@ class VerificationScreen extends GetView<VerificationController> {
                       style: TextStyle(
                         color: controller.canResend.value
                             ? AppColors.tomato
-                            : Colors.black38,
+                            : (isDark ? Colors.grey.shade600 : Colors.black38),
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
@@ -155,14 +203,16 @@ class VerificationScreen extends GetView<VerificationController> {
                     ),
                   ),
                 ),
-        
-                Spacer(),
-        
-                // Verify Button (Dynamic Color)
+
+                SizedBox(height: 32.h),
+
+                // ==================================================
+                // VERIFY BUTTON - 🔥 Dark Mode Support
+                // ==================================================
                 Obx(
                   () => SizedBox(
                     width: double.infinity,
-                    height: 56.h,
+                    height: 52.h,
                     child: ElevatedButton(
                       onPressed: controller.isOtpComplete.value && !controller.isLoading.value
                           ? () => controller.verifyOTP()
@@ -170,10 +220,10 @@ class VerificationScreen extends GetView<VerificationController> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: controller.isOtpComplete.value
                             ? AppColors.tomato
-                            : Colors.white,
+                            : (isDark ? Colors.grey.shade800 : Colors.white),
                         foregroundColor: controller.isOtpComplete.value
                             ? Colors.white
-                            : Colors.black,
+                            : (isDark ? Colors.grey.shade400 : Colors.black),
                         elevation: controller.isOtpComplete.value ? 4 : 0,
                         shadowColor: controller.isOtpComplete.value
                             ? AppColors.tomato.withOpacity(0.4)
@@ -181,49 +231,54 @@ class VerificationScreen extends GetView<VerificationController> {
                         side: BorderSide(
                           color: controller.isOtpComplete.value
                               ? AppColors.tomato
-                              : Colors.black26,
+                              : (isDark ? Colors.grey.shade700 : Colors.black26),
                           width: 1.5.w,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28.0.r),
                         ),
+                        disabledBackgroundColor: isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade200,
                       ),
                       child: controller.isLoading.value
                           ? SizedBox(
-                              height: 24.h,
-                              width: 24.w,
+                              height: 22.h,
+                              width: 22.w,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.5.r,
                                 color: controller.isOtpComplete.value
                                     ? Colors.white
-                                    : Colors.black,
+                                    : (isDark ? Colors.grey.shade400 : Colors.black),
                               ),
                             )
                           : Text(
                               "Verify",
                               style: TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                                 color: controller.isOtpComplete.value
                                     ? Colors.white
-                                    : Colors.black,
+                                    : (isDark ? Colors.grey.shade400 : Colors.black),
                               ),
                             ),
                     ),
                   ),
                 ),
-        
-                SizedBox(height: 24.h),
-        
-                // Footer Text
+
+                SizedBox(height: 20.h),
+
+                // ==================================================
+                // FOOTER - 🔥 Dark Mode Support
+                // ==================================================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Back to ",
                       style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 15.sp,
+                        color: isDark ? Colors.grey.shade400 : Colors.black87,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -233,33 +288,44 @@ class VerificationScreen extends GetView<VerificationController> {
                         "Sign In",
                         style: TextStyle(
                           color: AppColors.tomato,
-                          fontSize: 15.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
+
+                SizedBox(height: 16.h),
               ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
+  // ============================================================
+  // OTP BOX - 🔥 Dark Mode Support
+  // ============================================================
   Widget _buildOtpBox(
     BuildContext context,
     TextEditingController textController,
     FocusNode currentFocus,
     FocusNode? nextFocus,
     VerificationController controller,
+    bool isDark,
   ) {
     return Container(
       width: 64.w,
       height: 72.h,
       decoration: BoxDecoration(
-        color: Color(0xFFF5F5F5),
+        color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade700 : Colors.transparent,
+          width: 1.w,
+        ),
       ),
       child: Center(
         child: TextField(
@@ -267,7 +333,7 @@ class VerificationScreen extends GetView<VerificationController> {
           focusNode: currentFocus,
           onChanged: (value) {
             controller.checkOtpComplete();
-            
+
             if (value.length == 1) {
               if (nextFocus != null) {
                 FocusScope.of(context).requestFocus(nextFocus);
@@ -279,7 +345,11 @@ class VerificationScreen extends GetView<VerificationController> {
               FocusScope.of(context).previousFocus();
             }
           },
-          style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+          style: TextStyle(
+            fontSize: 24.sp,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : Colors.black87,
+          ),
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           inputFormatters: [

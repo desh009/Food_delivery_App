@@ -1,186 +1,170 @@
-// register_controller.dart
+// lib/app/core/modules/Screens/Register_screen/controller/Register_controller.dart
+
 import 'package:flutter/material.dart';
-import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:get/get.dart';
+import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
+import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
 class RegisterController extends GetxController {
-  // Controllers
-  final phoneController = TextEditingController();
-  final emailController = TextEditingController();
-  final nameController = TextEditingController();
-  
-  // Observable variables
-  final isRememberMeChecked = false.obs;
-  final isLoading = false.obs;
-  final isRegisterMode = false.obs;
-  final completePhoneNumber = ''.obs;
-  final isValidPhone = false.obs;
+  // ============================================================
+  // 🔥 TEXT CONTROLLERS - lateinit ব্যবহার করুন
+  // ============================================================
+  late final TextEditingController nameController;
+  late final TextEditingController emailController;
+  late final TextEditingController phoneController;
+  late final TextEditingController passwordController;
 
+  // ============================================================
+  // 🔥 OBSERVABLE VARIABLES
+  // ============================================================
+  final RxBool isLoading = false.obs;
+  final RxBool isRememberMeChecked = false.obs;
+  final RxBool isPasswordHidden = true.obs;
+  final RxString completePhoneNumber = ''.obs;
+
+  // ============================================================
+  // 🔥 INIT - Controllers তৈরি করুন
+  // ============================================================
   @override
-  void onClose() {
-    phoneController.dispose();
-    emailController.dispose();
-    nameController.dispose();
-    super.onClose();
+  void onInit() {
+    super.onInit();
+    // এখানে Controllers Initialize করুন
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
   }
 
-  // Toggle Remember Me
+  // ============================================================
+  // 🔥 TOGGLE PASSWORD VISIBILITY
+  // ============================================================
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
+
+  // ============================================================
+  // 🔥 TOGGLE REMEMBER ME
+  // ============================================================
   void toggleRememberMe() {
-    isRememberMeChecked.toggle();
-    print('Remember Me: ${isRememberMeChecked.value}');
+    isRememberMeChecked.value = !isRememberMeChecked.value;
   }
 
-  // Validate Phone
-  void validatePhone(String phoneNumber) {
-    if (phoneNumber.length >= 10) {
-      isValidPhone.value = true;
-    } else {
-      isValidPhone.value = false;
-    }
-  }
+  // ============================================================
+  // 🔥 REGISTER
+  // ============================================================
+  void register() async {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final phone = phoneController.text.trim();
+    final password = passwordController.text.trim();
 
-  //  Check if button is active
-  bool get isButtonActive {
-    return isRememberMeChecked.value &&
-        phoneController.text.isNotEmpty &&
-        phoneController.text.length >= 10 &&
-        emailController.text.isNotEmpty &&
-        nameController.text.isNotEmpty;
-  }
-
-  void register() {
-    print('Register button pressed!');
-    print('Phone: ${phoneController.text}');
-    print('Email: ${emailController.text}');
-    print('Name: ${nameController.text}');
-    print('Remember Me: ${isRememberMeChecked.value}');
-
-    if (!isButtonActive) {
-      print('Button is not active!');
+    // Validation - Name
+    if (name.isEmpty) {
       Get.snackbar(
         'Error',
-        'Please fill all fields and check Remember Me',
+        'Please enter your full name',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
       return;
     }
 
-    // Phone validation
-    if (phoneController.text.isEmpty) {
+    if (name.length < 3) {
       Get.snackbar(
         'Error',
-        'Please enter your phone number',
+        'Name must be at least 3 characters',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
       return;
     }
 
-    if (phoneController.text.length < 10) {
+    // Validation - Email
+    if (email.isEmpty) {
       Get.snackbar(
         'Error',
-        'Phone number must be at least 10 digits',
+        'Please enter your email',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
       return;
     }
 
-    // Email validation
-    if (emailController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter your email address',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
-      return;
-    }
-
-    if (!emailController.text.contains('@') || !emailController.text.contains('.')) {
+    if (!GetUtils.isEmail(email)) {
       Get.snackbar(
         'Error',
         'Please enter a valid email address',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
       return;
     }
 
-    // Name validation
-    if (nameController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter your name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
-      return;
-    }
-
-    //  Show loading
-    isLoading.value = true;
-
-    // Simulate API call
-    Future.delayed(const Duration(seconds: 2), () {
-      isLoading.value = false;
-
-      //  Navigate to OTP Screen with data
-      Get.toNamed(
-        Routes.OTP,
-        arguments: {
-          'phone': phoneController.text,
-          'email': emailController.text,
-          'name': nameController.text,
-          'completePhoneNumber': completePhoneNumber.value,
-        },
-      );
-
-      // Success message
-      Get.snackbar(
-        'Success',
-        'Registration Successful!\nPhone: $completePhoneNumber\nEmail: ${emailController.text}\nName: ${nameController.text}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.8),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 3),
-      );
-    });
-  }
-
-  //  Sign In Method
-  void signIn() {
-    if (phoneController.text.isEmpty) {
+    // Validation - Phone
+    if (phone.isEmpty) {
       Get.snackbar(
         'Error',
         'Please enter your phone number',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
       return;
     }
 
-    if (phoneController.text.length < 10) {
+    if (phone.length < 10) {
       Get.snackbar(
         'Error',
-        'Phone number must be at least 10 digits',
+        'Please enter a valid phone number',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.8),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
+    // Validation - Password
+    if (password.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please create a password',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+      Get.snackbar(
+        'Error',
+        'Password must be at least 6 characters',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
+    // Check Terms
+    if (!isRememberMeChecked.value) {
+      Get.snackbar(
+        'Error',
+        'Please agree to the Terms & Conditions',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
@@ -189,17 +173,77 @@ class RegisterController extends GetxController {
 
     isLoading.value = true;
 
-    Future.delayed(const Duration(seconds: 2), () {
-      isLoading.value = false;
+    try {
+      // TODO: Implement actual registration API
+      await Future.delayed(const Duration(seconds: 2));
+
+      // ============================================================
+      // 🔥 REGISTRATION SUCCESS - TextField Clear করুন
+      // ============================================================
+      // Controllers এখনও active আছে, clear করুন
+      nameController.clear();
+      emailController.clear();
+      phoneController.clear();
+      passwordController.clear();
+      isRememberMeChecked.value = false;
+
+      // Navigate to OTP
+      Get.offAllNamed(Routes.OTP, arguments: {'email': email, 'phone': phone});
 
       Get.snackbar(
         'Success',
-        'Login Successful!\nPhone: $completePhoneNumber',
+        'Account created successfully! Please verify your OTP.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.withOpacity(0.8),
+        backgroundColor: Colors.green,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
       );
-    });
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Registration failed. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // ============================================================
+  // 🔥 NAVIGATE TO LOGIN
+  // ============================================================
+  void goToLogin() {
+    Get.toNamed(Routes.LOGIN);
+  }
+
+  // ============================================================
+  // 🔥 GO BACK
+  // ============================================================
+  void goBack() {
+    Get.back();
+  }
+
+  // ============================================================
+  // 🔥 DISPOSE - Controllers Dispose করুন
+  // ============================================================
+  @override
+  void onClose() {
+    // Controllers Dispose করার আগে check করুন
+    if (nameController != null) {
+      nameController.dispose();
+    }
+    if (emailController != null) {
+      emailController.dispose();
+    }
+    if (phoneController != null) {
+      phoneController.dispose();
+    }
+    if (passwordController != null) {
+      passwordController.dispose();
+    }
+    super.onClose();
   }
 }
