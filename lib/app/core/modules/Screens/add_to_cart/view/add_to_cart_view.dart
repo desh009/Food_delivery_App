@@ -84,13 +84,11 @@ class MyBasketScreen extends StatelessWidget {
                   _buildPaymentMethodTile(context, cartController, theme, isDark),
                   SizedBox(height: 10.h),
 
-                  _buildInfoTile(
-                    Icons.confirmation_number_rounded,
-                    "Promotions",
-                    "Select Your Discounts",
-                    theme,
-                    isDark,
-                  ),
+                  // ============================================================
+                  // 🔥 NEW: Order Summary (Promotions এর জায়গায়)
+                  // ============================================================
+                  _buildOrderSummaryInfoTile(cartController, theme, isDark),
+
                   SizedBox(height: 20.h),
 
                   Obx(() => _buildBillDetails(cartController, theme, isDark)),
@@ -99,6 +97,115 @@ class MyBasketScreen extends StatelessWidget {
               ),
             ),
             Obx(() => _buildPinnedBottomBar(cartController, context, theme, isDark)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // 🔥 NEW: ORDER SUMMARY INFO TILE (Promotions এর জায়গায়)
+  // ============================================================
+  Widget _buildOrderSummaryInfoTile(
+    CartController controller,
+    ThemeData theme,
+    bool isDark,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF242424) : Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(6.r),
+              decoration: BoxDecoration(
+                color: AppColors.tomato.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.summarize_rounded,
+                color: AppColors.tomato,
+                size: 18.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Order Summary",
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Obx(
+                    () => Row(
+                      children: [
+                        Text(
+                          "${controller.totalItems} items",
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: isDark ? Colors.grey.shade400 : Colors.black54,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "£ ${controller.total.toStringAsFixed(2)}",
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.tomato,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Discount info (যদি থাকে)
+                  Obx(
+                    () => controller.appliedVoucherDiscount.value > 0
+                        ? Row(
+                            children: [
+                              Icon(
+                                Icons.discount_rounded,
+                                size: 12.sp,
+                                color: Colors.green,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                "Discount: £${controller.appliedVoucherDiscount.value.toStringAsFixed(2)}",
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14.sp,
+              color: isDark ? Colors.grey.shade500 : Colors.black38,
+            ),
           ],
         ),
       ),
@@ -203,7 +310,7 @@ class MyBasketScreen extends StatelessWidget {
                   if (code.isEmpty) {
                     Get.snackbar(
                       'Error',
-                      'দয়া করে একটি ভাউচার কোড লিখুন!',
+                      'Please enter a voucher code!',
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.redAccent,
                       colorText: Colors.white,
@@ -217,7 +324,7 @@ class MyBasketScreen extends StatelessWidget {
                   if (voucher.isEmpty) {
                     Get.snackbar(
                       '❌ Invalid Code',
-                      'এই কোডটি বৈধ নয়! দয়া করে সঠিক কোড দিন।',
+                      'This code is not valid! Please enter a correct code.',
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.redAccent,
                       colorText: Colors.white,
@@ -228,7 +335,7 @@ class MyBasketScreen extends StatelessWidget {
                   if (voucherController.isVoucherUsed(code)) {
                     Get.snackbar(
                       'Already Used ❌',
-                      'এই ভাউচারটি ইতিমধ্যে ব্যবহার করা হয়েছে!',
+                      'This voucher code has already been used. Please try a different one.',
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.redAccent,
                       colorText: Colors.white,
@@ -264,14 +371,14 @@ class MyBasketScreen extends StatelessWidget {
                   voucherController.usedVouchers.add(code);
                   voucherController.saveUsedVouchers();
 
-                  Get.snackbar(
-                    '✅ Voucher Applied!',
-                    '$code সফলভাবে এপ্লাই করা হয়েছে!\nডিসকাউন্ট: £${discountAmount.toStringAsFixed(2)}',
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 3),
-                  );
+                  // Get.snackbar(
+                  //   '✅ Voucher Applied!',
+                  //   '$code সফলভাবে এপ্লাই করা হয়েছে!\nডিসকাউন্ট: £${discountAmount.toStringAsFixed(2)}',
+                  //   snackPosition: SnackPosition.BOTTOM,
+                  //   backgroundColor: Colors.green,
+                  //   colorText: Colors.white,
+                  //   duration: const Duration(seconds: 3),
+                  // );
 
                   codeController.clear();
                 },
@@ -299,7 +406,7 @@ class MyBasketScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 6.h),
             child: Text(
-              '💡 ভাউচার কোড ম্যানুয়ালি ইনপুট করুন (যেমন: WELCOME20, PERTO50)',
+              '💡 Enter Voucher Code Manually (e.g., WELCOME20, PERTO50)',
               style: TextStyle(
                 fontSize: 10.sp,
                 color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
@@ -327,7 +434,7 @@ class MyBasketScreen extends StatelessWidget {
             ),
             SizedBox(height: 16.h),
             Text(
-              "আপনার ঝুড়ি খালি!",
+              "Your Basket is Empty",
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
@@ -336,7 +443,7 @@ class MyBasketScreen extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              "কিছু সুস্বাদু আইটেম যোগ করুন",
+              "Add some delicious items to your basket",
               style: TextStyle(
                 fontSize: 14.sp,
                 color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,

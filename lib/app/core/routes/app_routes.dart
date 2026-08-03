@@ -26,7 +26,7 @@ abstract class Routes {
   static const REGISTER = _Paths.REGISTER;
   static const OTP = _Paths.OTP;
   static const PRODUCT_LIST = _Paths.PRODUCT_LIST;
-  static const PRODUCT_DETAILS_ = _Paths.PRODUCT_LIST;
+  static const PRODUCT_DETAILS = _Paths.PRODUCT_DETAILS;
   static const SPECIAL_OFFER = _Paths.SPECIAL_OFFER;
   static const CART_ITEM = _Paths.CART_ITEM;
   static const REVIEW_ITEM = _Paths.REVIEW_ITEM;
@@ -52,6 +52,8 @@ abstract class Routes {
     static const TERMS_AND_SERVICES = _Paths.TERMS_AND_SERVICES;
 
     static const PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
+    static const FORGET_PASSWORD = _Paths.FORGET_PASSWORD;
+    static const CODE_VERIFY = _Paths.CODE_VERIFY;
 
 }
 
@@ -106,6 +108,9 @@ abstract class _Paths {
   static const  TERMS_AND_SERVICES = '/terms-and-services';
 
   static const  PRIVACY_AND_POLICY = '/privacy-policy';
+    static const  FORGET_PASSWORD = '/forget-password';
+    static const  CODE_VERIFY = '/code-verify';
+
 
 
 

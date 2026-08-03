@@ -1,10 +1,16 @@
-
+import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Forget_Password_screen/Code_verify/binder/code_verify_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Forget_Password_screen/Code_verify/view/code_verify_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Forget_Password_screen/binder/forgot_password_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Forget_Password_screen/view/forget_password_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/binder/notification_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Notification_screen/view/notification_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/binder/order_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Order_screen/view/order_screen_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/Massage_Screen/binder/massage_screen_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/Massage_Screen/view/massage_screen_view.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/binder/product_details_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/view/product_details_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Profile_items_screens/About_app_screen/binder/about_app_binder.dart';
@@ -88,11 +94,7 @@ class AppPages {
       binding: OtpBinder(),
     ),
 
-    GetPage(
-      name: _Paths.HOME,
-      page: () => HomeScreen(),
-      binding: HomeBinder(),
-    ),
+    GetPage(name: _Paths.HOME, page: () => HomeScreen(), binding: HomeBinder()),
 
     GetPage(
       name: _Paths.PRODUCT_LIST,
@@ -102,8 +104,32 @@ class AppPages {
 
     GetPage(
       name: _Paths.PRODUCT_DETAILS,
-      page: () => const ProductListScreen(),
-      binding: ProductListBinding(),
+      page: () {
+        // product প্যারামিটার null দিয়ে দিচ্ছি (argument থেকে আসবে)
+        final args = Get.arguments;
+        ProductModel product;
+
+        if (args is Map<String, dynamic>) {
+          // 🔥 fromJson ব্যবহার করুন
+          product = ProductModel.fromJson(args);
+        } else if (args is ProductModel) {
+          product = args;
+        } else {
+          // Empty product তৈরি করুন
+          product = ProductModel(
+            id: '',
+            name: '',
+            category: '',
+            imageUrl: '',
+            rating: 0.0,
+            price: 0.0,
+            description: '', image: '', title: '',
+          );
+        }
+
+        return ProductDetailsScreen(product: product);
+      },
+      binding: ProductDetailsBinding(),
     ),
     GetPage(
       name: _Paths.SPECIAL_OFFER,
@@ -145,17 +171,17 @@ class AppPages {
       page: () => const YourProfileScreen(),
       binding: YourProfileBinding(),
     ),
-       GetPage(
+    GetPage(
       name: _Paths.NOTIFICATION,
       page: () => const NotificationScreen(),
       binding: NotificationBinding(),
     ),
-       GetPage(
+    GetPage(
       name: _Paths.TRACK_ORDER,
       page: () => const TrackOrderScreen(),
       binding: TrackOrderBinding(),
     ),
-      GetPage(
+    GetPage(
       name: _Paths.SECURITY,
       page: () => const SecurityScreen(),
       binding: SecurityBinding(),
@@ -173,33 +199,43 @@ class AppPages {
       transition: Transition.rightToLeft,
     ),
 
-       GetPage(
+    GetPage(
       name: Routes.INVITE_FRIENDS,
       page: () => const InviteFriendScreen(),
       binding: InviteFriendBinding(),
       transition: Transition.rightToLeft,
     ),
 
-
-       GetPage(
+    GetPage(
       name: Routes.MASSAGE,
       page: () => const MessageScreen(),
       binding: MessageBinding(),
       transition: Transition.rightToLeft,
     ),
 
-       GetPage(
+    GetPage(
       name: Routes.TERMS_AND_SERVICES,
       page: () => const TermsAndServicesScreen(),
       binding: TermsAndServicesBinding(),
       transition: Transition.rightToLeft,
     ),
 
-
-       GetPage(
+    GetPage(
       name: Routes.PRIVACY_AND_POLICY,
       page: () => const PrivacyPolicyScreen(),
       binding: PrivacyPolicyBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.FORGET_PASSWORD,
+      page: () => const ForgotPasswordScreen(),
+      binding: ForgotPasswordBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.CODE_VERIFY,
+      page: () => const ResetPasswordScreen(),
+      binding: ResetPasswordBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

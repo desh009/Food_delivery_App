@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/binder/product_details_binder.dart';
+import 'package:food_hjoiopk/app/core/modules/Screens/Product_details_screen/view/product_details_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder/product_list_binder.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
@@ -254,7 +257,9 @@ class HomeScreen extends GetView<HomeController> {
                             width: 48.w,
                             height: 48.w,
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF333333) : Colors.white,
+                              color: isDark
+                                  ? const Color(0xFF333333)
+                                  : Colors.white,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -421,7 +426,9 @@ class HomeScreen extends GetView<HomeController> {
                           decoration: BoxDecoration(
                             color: isActive
                                 ? AppColors.tomato
-                                : (isDark ? Colors.grey.shade700 : Colors.black12),
+                                : (isDark
+                                      ? Colors.grey.shade700
+                                      : Colors.black12),
                             borderRadius: BorderRadius.circular(3.r),
                           ),
                         );
@@ -439,7 +446,9 @@ class HomeScreen extends GetView<HomeController> {
                     child: Container(
                       constraints: BoxConstraints(minHeight: 58.h),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
+                        color: isDark
+                            ? const Color(0xFF333333)
+                            : const Color(0xFFF5F5F5),
                         borderRadius: BorderRadius.circular(16.r),
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -465,7 +474,9 @@ class HomeScreen extends GetView<HomeController> {
                                       ? 'Search with filters...'
                                       : 'Search products...',
                                   hintStyle: TextStyle(
-                                    color: isDark ? Colors.white54 : Colors.black38,
+                                    color: isDark
+                                        ? Colors.white54
+                                        : Colors.black38,
                                     fontSize: 16.sp,
                                   ),
                                   border: InputBorder.none,
@@ -478,7 +489,9 @@ class HomeScreen extends GetView<HomeController> {
                                           },
                                           icon: Icon(
                                             Icons.clear,
-                                            color: isDark ? Colors.white54 : Colors.black38,
+                                            color: isDark
+                                                ? Colors.white54
+                                                : Colors.black38,
                                             size: 20.sp,
                                           ),
                                         )
@@ -494,7 +507,9 @@ class HomeScreen extends GetView<HomeController> {
                                 width: 42.w,
                                 height: 42.w,
                                 decoration: BoxDecoration(
-                                  color: isDark ? const Color(0xFF444444) : Colors.grey[200],
+                                  color: isDark
+                                      ? const Color(0xFF444444)
+                                      : Colors.grey[200],
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
                                 child: IconButton(
@@ -512,7 +527,9 @@ class HomeScreen extends GetView<HomeController> {
                                       color:
                                           homeController.isFilterApplied.value
                                           ? AppColors.tomato
-                                          : (isDark ? Colors.white54 : Colors.black54),
+                                          : (isDark
+                                                ? Colors.white54
+                                                : Colors.black54),
                                       size: 22.sp,
                                     ),
                                   ),
@@ -645,7 +662,9 @@ class HomeScreen extends GetView<HomeController> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+                              color: isDark
+                                  ? const Color(0xFF2A2A2A)
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(16.r),
                               boxShadow: [
                                 BoxShadow(
@@ -675,7 +694,9 @@ class HomeScreen extends GetView<HomeController> {
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: isDark ? Colors.white : Colors.black87,
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black87,
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -758,13 +779,17 @@ class HomeScreen extends GetView<HomeController> {
                                 Icon(
                                   Icons.search_off,
                                   size: 64.sp,
-                                  color: isDark ? Colors.grey.shade600 : Colors.black26,
+                                  color: isDark
+                                      ? Colors.grey.shade600
+                                      : Colors.black26,
                                 ),
                                 SizedBox(height: 16.h),
                                 Text(
                                   'No offers found!',
                                   style: TextStyle(
-                                    color: isDark ? Colors.grey.shade400 : Colors.black45,
+                                    color: isDark
+                                        ? Colors.grey.shade400
+                                        : Colors.black45,
                                     fontSize: 16.sp,
                                   ),
                                 ),
@@ -772,7 +797,9 @@ class HomeScreen extends GetView<HomeController> {
                                 Text(
                                   'Try adjusting your filters',
                                   style: TextStyle(
-                                    color: isDark ? Colors.grey.shade500 : Colors.black38,
+                                    color: isDark
+                                        ? Colors.grey.shade500
+                                        : Colors.black38,
                                     fontSize: 14.sp,
                                   ),
                                 ),
@@ -789,7 +816,9 @@ class HomeScreen extends GetView<HomeController> {
                             child: Text(
                               'No special offers available',
                               style: TextStyle(
-                                color: isDark ? Colors.grey.shade400 : Colors.black45,
+                                color: isDark
+                                    ? Colors.grey.shade400
+                                    : Colors.black45,
                                 fontSize: 16.sp,
                               ),
                             ),
@@ -870,148 +899,181 @@ class HomeScreen extends GetView<HomeController> {
     return Obx(() {
       final isFavorite = favoriteService.isFavorite(id);
 
-      return Container(
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10.r,
-              offset: Offset(0, 4.h),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // IMAGE
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20.r),
-                      ),
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: isDark ? Colors.grey[800] : Colors.grey[200],
-                            child: Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                size: 35.sp,
-                                color: isDark ? Colors.grey.shade600 : Colors.black26,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // DISCOUNT
-                  Positioned(
-                    top: 10.h,
-                    left: 10.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.tomato,
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        discount,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // FAVORITE
-                  Positioned(
-                    top: 10.h,
-                    right: 10.w,
-                    child: AnimatedFavoriteButton(
-                      isFavorite: isFavorite,
-                      size: 18.sp,
-                      navigateOnAdd: false,
-                      onTap: (newValue) async {
-                        final item = FavoriteItem(
-                          id: id,
-                          title: title,
-                          image: imageUrl,
-                          rating: ratingValue,
-                          price: priceValue,
-                        );
-                        if (newValue) {
-                          await favoriteService.addFavorite(
-                            item,
-                            navigateToLikedScreen: false,
-                          );
-                        } else {
-                          await favoriteService.removeFavorite(id);
-                        }
-                      },
-                    ),
-                  ),
-                ],
+      return GestureDetector(
+        onTap: () {
+          Get.to(
+            () => ProductDetailsScreen(
+              product: ProductModel(
+                isFavorite: isFavorite,
+                id: id,
+                image: imageUrl,
+                title: title,
+                rating: ratingValue,
+                price: priceValue,
+                name: '',
+                category: '',
+                imageUrl: imageUrl,
               ),
             ),
-            // DETAILS - 🔥 Dark Mode Support
-            Padding(
-              padding: EdgeInsets.all(12.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.sp,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 14.sp),
-                      SizedBox(width: 2.w),
-                      Text(
-                        rating,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: isDark ? Colors.grey.shade400 : Colors.black54,
+            binding: ProductDetailsBinding(),
+            arguments: {
+              'id': id,
+              'image': imageUrl,
+              'title': title,
+              'rating': ratingValue,
+              'price': priceValue,
+            },
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10.r,
+                offset: Offset(0, 4.h),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // IMAGE
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20.r),
+                        ),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: isDark
+                                  ? Colors.grey[800]
+                                  : Colors.grey[200],
+                              child: Center(
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  size: 35.sp,
+                                  color: isDark
+                                      ? Colors.grey.shade600
+                                      : Colors.black26,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                      const Spacer(),
-                      Flexible(
+                    ),
+                    // DISCOUNT
+                    Positioned(
+                      top: 10.h,
+                      left: 10.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.tomato,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                         child: Text(
-                          price,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          discount,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            color: Colors.white,
+                            fontSize: 10.sp,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.tomato,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    // FAVORITE
+                    Positioned(
+                      top: 10.h,
+                      right: 10.w,
+                      child: AnimatedFavoriteButton(
+                        isFavorite: isFavorite,
+                        size: 18.sp,
+                        navigateOnAdd: false,
+                        onTap: (newValue) async {
+                          final item = FavoriteItem(
+                            id: id,
+                            title: title,
+                            image: imageUrl,
+                            rating: ratingValue,
+                            price: priceValue,
+                          );
+                          if (newValue) {
+                            await favoriteService.addFavorite(
+                              item,
+                              navigateToLikedScreen: false,
+                            );
+                          } else {
+                            await favoriteService.removeFavorite(id);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              // DETAILS - 🔥 Dark Mode Support
+              Padding(
+                padding: EdgeInsets.all(12.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 14.sp),
+                        SizedBox(width: 2.w),
+                        Text(
+                          rating,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.black54,
+                          ),
+                        ),
+                        const Spacer(),
+                        Flexible(
+                          child: Text(
+                            price,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.tomato,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       );
     });

@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/Register_screen/view/register_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Register_screen/controller/Register_controller.dart';
@@ -12,324 +14,595 @@ class RegisterScreen extends GetView<RegisterController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-        backgroundColor: Color(0xFF1E1E1E),
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24.0.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 24.0.h),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 16.0.h),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                Spacer(flex: 2),
-      
-      
+                // ==================================================
+                // TOP SPACER
+                // ==================================================
+                SizedBox(height: 20.h),
+
+                // ==================================================
+                // LOGO
+                // ==================================================
+                Container(
+                  width: 80.w,
+                  height: 80.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.tomato.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.restaurant,
+                    size: 40.sp,
+                    color: AppColors.tomato,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                // ==================================================
+                // TITLE
+                // ==================================================
                 Text(
-                  "Register",
+                  "Create Account",
                   style: TextStyle(
                     color: AppColors.tomato,
-                    fontSize: 32.sp,
+                    fontSize: 28.sp,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
                 ),
-      
+
+                SizedBox(height: 8.h),
+
+                Text(
+                  "Register to get started",
+                  style: TextStyle(
+                    color: isDark ? Colors.grey.shade400 : Colors.black54,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+
                 SizedBox(height: 32.h),
-                // intl_phone_field
-                IntlPhoneField(
-                  controller: controller.phoneController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter phone number',
-                    hintStyle: TextStyle(
-                      color: Colors.black26,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    filled: true,
-                    fillColor: Color(0xFFF5F5F5),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: BorderSide(
-                        color: AppColors.tomato,
-                        width: 1.5.w,
+
+                // ==================================================
+                // 🔥 NAME FIELD
+                // ==================================================
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Full Name",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 16.h,
+                    SizedBox(height: 8.h),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: isDark ? Colors.grey.shade800 : Colors.transparent,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: TextField(
+                          controller: controller.nameController,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "Enter your full name",
+                            hintStyle: TextStyle(
+                              color: isDark ? Colors.grey.shade600 : Colors.black38,
+                              fontSize: 14.sp,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.person_outline,
+                              color: isDark ? Colors.grey.shade500 : Colors.black38,
+                              size: 20.sp,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 14.h,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  initialCountryCode: 'GB',
-                  onChanged: (phone) {
-                    controller.completePhoneNumber.value = phone.completeNumber;
-                  },
-                  dropdownIconPosition: IconPosition.trailing,
-                  dropdownIcon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.black87,
-                  ),
-                  flagsButtonPadding: EdgeInsets.only(left: 8.w),
-                  style: TextStyle(fontSize: 16.sp, color: Colors.black87),
+                  ],
                 ),
-      
-                SizedBox(height: 24.h),
-                CustomTextField(
-                  controller: controller.emailController,
-                  hintText: '.Email',
-      
-                  prefixIcon: Icons.email,
-                  textInputAction: TextInputAction.next,
-                  keybordType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!value.contains('@') || !value.contains('.')) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
+
+                SizedBox(height: 16.h),
+
+                // ==================================================
+                // 🔥 EMAIL FIELD
+                // ==================================================
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Email Address",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: isDark ? Colors.grey.shade800 : Colors.transparent,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: TextField(
+                          controller: controller.emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "Enter your email",
+                            hintStyle: TextStyle(
+                              color: isDark ? Colors.grey.shade600 : Colors.black38,
+                              fontSize: 14.sp,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.email_outlined,
+                              color: isDark ? Colors.grey.shade500 : Colors.black38,
+                              size: 20.sp,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 14.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 24.h),
-                CustomTextField(
-                  controller: controller.nameController,
-                  hintText: 'Name',
-                  prefixIcon: Icons.person,
-                  textInputAction: TextInputAction.next,
-                  keybordType: TextInputType.name,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    return null;
-                  },
+
+                SizedBox(height: 16.h),
+
+                // ==================================================
+                // 🔥 PHONE FIELD
+                // ==================================================
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Phone Number",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: IntlPhoneField(
+                        controller: controller.phoneController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter phone number',
+                          hintStyle: TextStyle(
+                            color: isDark ? Colors.grey.shade600 : Colors.black26,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          filled: true,
+                          fillColor: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(
+                              color: AppColors.tomato,
+                              width: 1.5.w,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 14.h,
+                          ),
+                        ),
+                        initialCountryCode: 'BD',
+                        onChanged: (phone) {
+                          controller.completePhoneNumber.value =
+                              phone.completeNumber;
+                        },
+                        dropdownIconPosition: IconPosition.trailing,
+                        dropdownIcon: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: isDark ? Colors.white : Colors.black87,
+                          size: 20.sp,
+                        ),
+                        flagsButtonPadding: EdgeInsets.only(left: 8.w),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-      
-                // Remember Me Checkbox Row
-                SizedBox(height: 24.h),
+
+                SizedBox(height: 16.h),
+
+                // ==================================================
+                // 🔥 PASSWORD FIELD
+                // ==================================================
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Password",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: isDark ? Colors.grey.shade800 : Colors.transparent,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: Obx(
+                          () => TextField(
+                            controller: controller.passwordController,
+                            obscureText: controller.isPasswordHidden.value,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: "Create a password",
+                              hintStyle: TextStyle(
+                                color: isDark ? Colors.grey.shade600 : Colors.black38,
+                                fontSize: 14.sp,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: isDark ? Colors.grey.shade500 : Colors.black38,
+                                size: 20.sp,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.isPasswordHidden.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: isDark ? Colors.grey.shade500 : Colors.black38,
+                                  size: 20.sp,
+                                ),
+                                onPressed: controller.togglePasswordVisibility,
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 14.h,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 20.h),
+
+                // ==================================================
+                // REMEMBER ME CHECKBOX
+                // ==================================================
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () => controller.toggleRememberMe(),
                       child: Obx(
                         () => Container(
-                          width: 22.w,
-                          height: 22.h,
+                          width: 20.w,
+                          height: 20.h,
                           decoration: BoxDecoration(
                             color: controller.isRememberMeChecked.value
                                 ? AppColors.tomato
-                                : Colors.white,
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(
                               color: controller.isRememberMeChecked.value
                                   ? AppColors.tomato
-                                  : Colors.black26,
+                                  : (isDark ? Colors.grey.shade600 : Colors.black26),
                               width: 1.5.w,
                             ),
                           ),
                           child: controller.isRememberMeChecked.value
                               ? Icon(
                                   Icons.check,
-                                  size: 16.sp,
+                                  size: 14.sp,
                                   color: Colors.white,
                                 )
                               : null,
                         ),
                       ),
                     ),
-                    SizedBox(width: 20.w),
+                    SizedBox(width: 10.w),
                     Text(
-                      "Remember me",
+                      "I agree to the Terms & Conditions",
                       style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16.sp,
+                        color: isDark ? Colors.white : Colors.black87,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 24.h),
-      
-                Spacer(flex: 5),
-      
-                // Sign In Button
+
+                SizedBox(height: 32.h),
+
+                // ==================================================
+                // REGISTER BUTTON
+                // ==================================================
                 Obx(
                   () => SizedBox(
                     width: double.infinity,
-                    height: 56.h,
+                    height: 52.h,
                     child: ElevatedButton(
-                      onPressed:
-                          controller.isRememberMeChecked.value &&
-                              !controller.isLoading.value
-                          ? () => controller.register()
-                          : null, 
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => controller.register(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: controller.isRememberMeChecked.value
-                            ? AppColors.tomato
-                            : Colors.white,
-                        foregroundColor: controller.isRememberMeChecked.value
-                            ? Colors.white
-                            : Colors.black,
-                        elevation: controller.isRememberMeChecked.value ? 4 : 0,
-                        shadowColor: controller.isRememberMeChecked.value
-                            ? AppColors.tomato.withOpacity(0.4)
-                            : Colors.transparent,
-                        side: BorderSide(
-                          color: controller.isRememberMeChecked.value
-                              ? AppColors.tomato
-                              : Colors.black26,
-                          width: 1.5.w,
-                        ),
+                        backgroundColor: AppColors.tomato,
+                        foregroundColor: Colors.white,
+                        elevation: 4,
+                        shadowColor: AppColors.tomato.withOpacity(0.4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28.0.r),
                         ),
+                        disabledBackgroundColor: isDark
+                            ? Colors.grey.shade700
+                            : AppColors.tomato.withOpacity(0.5),
                       ),
                       child: controller.isLoading.value
                           ? SizedBox(
-                              height: 24.h,
-                              width: 24.w,
+                              height: 22.h,
+                              width: 22.w,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.5.r,
-                                color: controller.isRememberMeChecked.value
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Colors.white,
                               ),
                             )
                           : Text(
-                              "Register",
+                              "Create Account",
                               style: TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
-                                color: controller.isRememberMeChecked.value
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                     ),
                   ),
                 ),
-      
-                SizedBox(height: 24.h),
-      
+
+                SizedBox(height: 20.h),
+
+                // ==================================================
+                // OR DIVIDER
+                // ==================================================
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: Colors.black12, thickness: 1.r),
+                      child: Divider(
+                        color: isDark ? Colors.grey.shade800 : Colors.black12,
+                        thickness: 1.r,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0.w),
                       child: Text(
-                        "Or sign in with",
+                        "Or sign up with",
                         style: TextStyle(
-                          color: Colors.black38,
-                          fontSize: 14.sp,
+                          color: isDark ? Colors.grey.shade500 : Colors.black38,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: Colors.black12, thickness: 1.r),
+                      child: Divider(
+                        color: isDark ? Colors.grey.shade800 : Colors.black12,
+                        thickness: 1.r,
+                      ),
                     ),
                   ],
                 ),
-      
-                SizedBox(height: 24.h),
-      
-                // Social Media Buttons
+
+                SizedBox(height: 20.h),
+
+                // ==================================================
+                // SOCIAL MEDIA BUTTONS
+                // ==================================================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildSocialButton(
                       fallbackIcon: Icons.g_mobiledata,
                       iconColor: Colors.red,
+                      label: 'Google',
+                      isDark: isDark,
                       onTap: () {
-                        Get.snackbar('Info', 'Google Sign-in coming soon!');
+                        Get.snackbar(
+                          'Info',
+                          'Google Sign-in coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.tomato,
+                          colorText: Colors.white,
+                        );
                       },
                     ),
                     SizedBox(width: 16.w),
                     _buildSocialButton(
                       fallbackIcon: Icons.facebook,
-                      iconColor: Colors.blue,
+                      iconColor: Colors.blue.shade700,
+                      label: 'Facebook',
+                      isDark: isDark,
                       onTap: () {
-                        Get.snackbar('Info', 'Facebook Sign-in coming soon!');
+                        Get.snackbar(
+                          'Info',
+                          'Facebook Sign-in coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.tomato,
+                          colorText: Colors.white,
+                        );
                       },
                     ),
                     SizedBox(width: 16.w),
                     _buildSocialButton(
                       fallbackIcon: Icons.apple,
-                      iconColor: Colors.black,
+                      iconColor: isDark ? Colors.white : Colors.black,
+                      label: 'Apple',
+                      isDark: isDark,
                       onTap: () {
-                        Get.snackbar('Info', 'Apple Sign-in coming soon!');
+                        Get.snackbar(
+                          'Info',
+                          'Apple Sign-in coming soon!',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.tomato,
+                          colorText: Colors.white,
+                        );
                       },
                     ),
                   ],
                 ),
-      
-                SizedBox(height: 28.h),
-      
-                // Footer Text
+
+                SizedBox(height: 24.h),
+
+                // ==================================================
+                // FOOTER
+                // ==================================================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don’t have an account? ",
+                      "Already have an account? ",
                       style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 15.sp,
+                        color: isDark ? Colors.grey.shade400 : Colors.black87,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Get.toNamed(Routes.OTP);
+                        Get.toNamed(Routes.LOGIN);
                       },
                       child: Text(
-                        "Register",
+                        "Sign In",
                         style: TextStyle(
                           color: AppColors.tomato,
-                          fontSize: 15.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
+
+                SizedBox(height: 16.h),
               ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
+  // ============================================================
+  // SOCIAL BUTTON - 🔥 Dark Mode Support
+  // ============================================================
   Widget _buildSocialButton({
     required IconData fallbackIcon,
     required Color iconColor,
+    required String label,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        width: 52.w,
-        height: 52.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.black12, width: 1.w),
-        ),
-        child: Center(child: Icon(fallbackIcon, size: 28.sp, color: iconColor)),
+      child: Column(
+        children: [
+          Container(
+            width: 48.w,
+            height: 48.h,
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF333333) : Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isDark ? Colors.grey.shade800 : Colors.black12,
+                width: 1.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 8.r,
+                  offset: Offset(0, 2.h),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Icon(
+                fallbackIcon,
+                size: 24.sp,
+                color: iconColor,
+              ),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: isDark ? Colors.grey.shade400 : Colors.black54,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

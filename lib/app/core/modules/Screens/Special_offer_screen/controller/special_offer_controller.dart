@@ -285,7 +285,7 @@ class SpecialOffersController extends GetxController {
         rating: double.tryParse(productData['rating']?.toString() ?? '0') ?? 0.0,
         price: (productData['newPrice'] as num?)?.toDouble() ?? 0.0,
         oldPrice: (productData['oldPrice'] as num?)?.toDouble(),
-        description: productData['description']?.toString() ?? '',
+        description: productData['description']?.toString() ?? '', isFavorite: null, image: '', title: '',
       );
 
       // ✅ Navigate with ProductModel

@@ -1,3 +1,5 @@
+// lib/app/core/modules/Screens/Special_offer_screen/view/special_offer_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Special_offer_screen/controller/special_offer_controller.dart';
@@ -10,8 +12,12 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Theme
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : const Color(0xFFFAFAFA),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0.w),
@@ -20,7 +26,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
             children: [
               SizedBox(height: 10.h),
 
-              // ========== অ্যাপ বার ==========
+              // ========== অ্যাপ বার - 🔥 Dark Mode Support ==========
               Row(
                 children: [
                   GestureDetector(
@@ -28,11 +34,11 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                     child: Container(
                       padding: EdgeInsets.all(10.r),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? const Color(0xFF333333) : Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black12,
+                            color: isDark ? Colors.black54 : Colors.black12,
                             blurRadius: 8,
                             offset: Offset(0, 2),
                           ),
@@ -40,7 +46,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                       ),
                       child: Icon(
                         Icons.arrow_back,
-                        color: Colors.black87,
+                        color: isDark ? Colors.white : Colors.black87,
                         size: 20.sp,
                       ),
                     ),
@@ -52,7 +58,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                     ),
@@ -63,28 +69,33 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
 
               SizedBox(height: 20.h),
 
-              // ========== সার্চ বার (Filter সহ) ==========
+              // ========== সার্চ বার - 🔥 Dark Mode Support ==========
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFF3F3F4),
+                  color: isDark ? const Color(0xFF333333) : const Color(0xFFF3F3F4),
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: TextField(
                   onChanged: controller.updateSearch,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                   decoration: InputDecoration(
                     hintText: "Search",
                     hintStyle: TextStyle(
-                      color: Colors.black38,
+                      color: isDark ? Colors.grey.shade500 : Colors.black38,
                       fontSize: 14.sp,
                     ),
                     prefixIcon: Icon(
                       Icons.search,
-                      color: Colors.black38,
+                      color: isDark ? Colors.grey.shade500 : Colors.black38,
                       size: 20.sp,
                     ),
-                    // ✅ Filter Icon - BottomSheet Call করবে
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.tune, color: Colors.black87),
+                      icon: Icon(
+                        Icons.tune,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                       onPressed: controller.onFilterTap,
                     ),
                     border: InputBorder.none,
@@ -95,13 +106,15 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
 
               SizedBox(height: 20.h),
 
-              // ========== Products Grid ==========
+              // ========== Products Grid - 🔥 Dark Mode Support ==========
               Expanded(
                 child: Obx(() {
                   // 🔥 Loading State
                   if (controller.isLoading.value) {
                     return Center(
-                      child: CircularProgressIndicator(color: AppColors.tomato),
+                      child: CircularProgressIndicator(
+                        color: AppColors.tomato,
+                      ),
                     );
                   }
 
@@ -114,7 +127,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                           Icon(
                             Icons.error_outline,
                             size: 60.sp,
-                            color: Colors.red,
+                            color: isDark ? Colors.red.shade300 : Colors.red,
                           ),
                           SizedBox(height: 12.h),
                           Text(
@@ -122,7 +135,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16.sp,
-                              color: Colors.red,
+                              color: isDark ? Colors.red.shade300 : Colors.red,
                             ),
                           ),
                           SizedBox(height: 16.h),
@@ -146,7 +159,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
 
                   final products = controller.filteredProducts;
 
-                  // 🔥 Empty State
+                  // 🔥 Empty State - Dark Mode Support
                   if (products.isEmpty) {
                     return Center(
                       child: Column(
@@ -155,14 +168,14 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                           Icon(
                             Icons.search_off,
                             size: 60.sp,
-                            color: Colors.black26,
+                            color: isDark ? Colors.grey.shade600 : Colors.black26,
                           ),
                           SizedBox(height: 12.h),
                           Text(
                             'No products found',
                             style: TextStyle(
                               fontSize: 16.sp,
-                              color: Colors.black38,
+                              color: isDark ? Colors.grey.shade400 : Colors.black38,
                             ),
                           ),
                         ],
@@ -172,26 +185,25 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
 
                   // 🔥 Products Grid
                   return GridView.builder(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: products.length,
-                    gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.68,
-                          crossAxisSpacing: 10.w,
-                          mainAxisSpacing: 10.h,
-                        ),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.68,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return GestureDetector(
                         onTap: () => controller.goToProductDetails(product),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: isDark ? const Color(0xFF242424) : Colors.white,
                             borderRadius: BorderRadius.circular(14.r),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
+                                color: isDark ? Colors.black54 : Colors.black.withOpacity(0.03),
                                 blurRadius: 10,
                                 offset: Offset(0, 5),
                               ),
@@ -214,15 +226,15 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                       fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) {
-                                            return Container(
-                                              height: 85.h,
-                                              color: Colors.grey[200],
-                                              child: Icon(
-                                                Icons.broken_image,
-                                                color: Colors.grey,
-                                              ),
-                                            );
-                                          },
+                                        return Container(
+                                          height: 85.h,
+                                          color: isDark ? Colors.grey[800] : Colors.grey[200],
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            color: isDark ? Colors.grey[600] : Colors.grey,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                   Positioned(
@@ -251,7 +263,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                 ],
                               ),
 
-                              // ===== Product Info =====
+                              // ===== Product Info - Dark Mode Support =====
                               Padding(
                                 padding: EdgeInsets.all(8.0.r),
                                 child: Column(
@@ -262,7 +274,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                       style: TextStyle(
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
+                                        color: isDark ? Colors.white : Colors.black87,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -282,7 +294,7 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                           product['rating'] ?? '0.0',
                                           style: TextStyle(
                                             fontSize: 10.sp,
-                                            color: Colors.black54,
+                                            color: isDark ? Colors.grey.shade400 : Colors.black54,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -297,9 +309,8 @@ class SpecialOffersScreen extends GetView<SpecialOffersController> {
                                           "£ ${(product['oldPrice'] ?? 0.0).toStringAsFixed(2)}",
                                           style: TextStyle(
                                             fontSize: 10.sp,
-                                            color: Colors.black38,
-                                            decoration:
-                                                TextDecoration.lineThrough,
+                                            color: isDark ? Colors.grey.shade500 : Colors.black38,
+                                            decoration: TextDecoration.lineThrough,
                                           ),
                                         ),
                                         SizedBox(width: 5.w),
