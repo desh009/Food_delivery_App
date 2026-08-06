@@ -63,15 +63,20 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get dynamic colors based on theme
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final textColor = isDark ? AppColors.darkText : AppColors.lightText;
+    final cardColor = isDark ? AppColors.darkCard : AppColors.lightCard;
+    final ashColor = isDark ? AppColors.darkAsh : AppColors.lightAsh;
+
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: backgroundColor,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
-          // ✅ borderRadius সরিয়ে দিন Full Screen এর জন্য
-          // borderRadius: BorderRadius.circular(24.r),  // ❌ Remove this
+          color: cardColor,
         ),
         child: SafeArea(
           child: Padding(
@@ -97,6 +102,8 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                       return _buildPage(
                         context: context,
                         index: index,
+                        textColor: textColor,
+                        isDark: isDark,
                       );
                     },
                   ),
@@ -137,9 +144,9 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                 // BOTTOM BUTTONS
                 // =========================
                 if (_currentPage != _pages.length - 1)
-                  _buildNextSection()
+                  _buildNextSection(isDark: isDark)
                 else
-                  _buildFinalSection(),
+                  _buildFinalSection(isDark: isDark),
               ],
             ),
           ),
@@ -155,6 +162,8 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
   Widget _buildPage({
     required BuildContext context,
     required int index,
+    required Color textColor,
+    required bool isDark,
   }) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -195,7 +204,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
                     _pages[index]["desc"]!,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: AppColors.tomato.withOpacity(0.7),
+                      color: isDark ? Colors.white70 : AppColors.lightText.withOpacity(0.7),
                       fontSize: 16.sp,
                     ),
                   ),
@@ -242,7 +251,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
   // NEXT / GET STARTED SECTION
   // ============================================================
 
-  Widget _buildNextSection() {
+  Widget _buildNextSection({required bool isDark}) {
     return Padding(
       padding: EdgeInsets.only(top: 8.h),
       child: Column(
@@ -282,7 +291,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
             child: Text(
               "Skip",
               style: TextStyle(
-                color: Colors.black38,
+                color: isDark ? Colors.white54 : Colors.black38,
                 fontSize: 16.sp,
               ),
             ),
@@ -296,7 +305,7 @@ class _IntroduceStepOneScreenState extends State<IntroduceStepOneScreen> {
   // FINAL PAGE SECTION
   // ============================================================
 
-  Widget _buildFinalSection() {
+  Widget _buildFinalSection({required bool isDark}) {
     return Column(
       children: [
         SizedBox(

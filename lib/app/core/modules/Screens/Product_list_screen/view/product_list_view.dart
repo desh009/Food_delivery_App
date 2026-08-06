@@ -9,13 +9,17 @@ import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
 
 class ProductListScreen extends GetView<ProductListController> {
-  const ProductListScreen({super.key, });
+  const ProductListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     // 🔥 Theme
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final String category = Get.arguments?['category'] ?? '';
+    final String name = Get.arguments?['name'] ?? category;
+    final String icon = Get.arguments?['icon'] ?? '🍽️';
+    final bool isVoiceSearch = Get.arguments?['isVoiceSearch'] ?? false;
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
@@ -87,7 +91,9 @@ class ProductListScreen extends GetView<ProductListController> {
               padding: EdgeInsets.symmetric(horizontal: 20.0.w),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF333333) : const Color(0xFFF5F5F5),
+                  color: isDark
+                      ? const Color(0xFF333333)
+                      : const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -123,7 +129,9 @@ class ProductListScreen extends GetView<ProductListController> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF444444) : Colors.grey[200],
+                              color: isDark
+                                  ? const Color(0xFF444444)
+                                  : Colors.grey[200],
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: IconButton(
@@ -132,7 +140,8 @@ class ProductListScreen extends GetView<ProductListController> {
                                 color: isDark ? Colors.white54 : Colors.black54,
                                 size: 24.sp,
                               ),
-                              onPressed: () => _showFilterBottomSheet(context, isDark),
+                              onPressed: () =>
+                                  _showFilterBottomSheet(context, isDark),
                             ),
                           ),
                           if (filterCount > 0)
@@ -174,7 +183,8 @@ class ProductListScreen extends GetView<ProductListController> {
             // ACTIVE FILTERS CHIPS - 🔥 Dark Mode Support
             // ============================================================
             Obx(() {
-              if (controller.activeFilters.isEmpty) return const SizedBox.shrink();
+              if (controller.activeFilters.isEmpty)
+                return const SizedBox.shrink();
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                 child: SingleChildScrollView(
@@ -233,14 +243,18 @@ class ProductListScreen extends GetView<ProductListController> {
                         Text(
                           "No products found!",
                           style: TextStyle(
-                            color: isDark ? Colors.grey.shade400 : Colors.black45,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.black45,
                             fontSize: 16.sp,
                           ),
                         ),
                         Text(
                           "Try adjusting your filters",
                           style: TextStyle(
-                            color: isDark ? Colors.grey.shade500 : Colors.black38,
+                            color: isDark
+                                ? Colors.grey.shade500
+                                : Colors.black38,
                             fontSize: 14.sp,
                           ),
                         ),
@@ -584,7 +598,9 @@ class ProductListScreen extends GetView<ProductListController> {
       label: Text(
         label,
         style: TextStyle(
-          color: isSelected ? Colors.white : (isDark ? Colors.white : Colors.black87),
+          color: isSelected
+              ? Colors.white
+              : (isDark ? Colors.white : Colors.black87),
           fontSize: 13.sp,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
@@ -706,7 +722,9 @@ class ProductListScreen extends GetView<ProductListController> {
                           "£ ${item.oldPrice!.toStringAsFixed(2)}",
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: isDark ? Colors.grey.shade600 : Colors.black38,
+                            color: isDark
+                                ? Colors.grey.shade600
+                                : Colors.black38,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),

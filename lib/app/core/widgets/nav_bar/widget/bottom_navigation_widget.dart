@@ -39,7 +39,6 @@ class BottomNavigationWidget extends StatelessWidget {
             ],
           ),
           child: Obx(() {
-            // 🔥 Get ProfileController inside Obx
             final ProfileController profileController =
                 Get.find<ProfileController>();
 
@@ -79,11 +78,11 @@ class BottomNavigationWidget extends StatelessWidget {
                     controller.navigateToScreen(2, context);
                   },
                 ),
-                // 3. Notifications
+                // 🔥 3. Cart (was Notifications)
                 _buildNavItem(
                   index: 3,
-                  icon: Icons.notifications_none_rounded,
-                  label: 'Notifications',
+                  icon: Icons.shopping_cart_outlined,  // ✅ Cart Icon
+                  label: 'Cart',                      // ✅ Cart Label
                   isActive: controller.currentIndex.value == 3,
                   onTap: () {
                     controller.changeIndex(3);
@@ -211,12 +210,8 @@ class BottomNavigationWidget extends StatelessWidget {
                       ),
                       child: ClipOval(
                         child: Obx(() {
-                          // 🔥 Get image path from controller
                           final String imagePath =
                               profileController.profileImagePath.value;
-                          print(
-                            '📸 Active State - Image Path: $imagePath',
-                          ); // Debug
 
                           if (imagePath.isNotEmpty &&
                               File(imagePath).existsSync()) {
@@ -224,7 +219,6 @@ class BottomNavigationWidget extends StatelessWidget {
                               File(imagePath),
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
-                                print('❌ Error loading image: $error');
                                 return _buildDefaultAvatar();
                               },
                             );
@@ -247,12 +241,10 @@ class BottomNavigationWidget extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              // 🔥 Inactive State - Always show updated image
               Center(
                 child: Obx(() {
                   final String imagePath =
                       profileController.profileImagePath.value;
-                  print('📸 Inactive State - Image Path: $imagePath'); // Debug
 
                   if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
                     return Container(

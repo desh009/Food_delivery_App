@@ -21,7 +21,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
     }
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: SafeArea(
         bottom: false,
         child: Obx(
@@ -63,7 +63,9 @@ class AboutAppScreen extends GetView<AboutAppController> {
               // ==================================================
               if (controller.isLoading.value)
                 Container(
-                  color: Colors.black.withOpacity(0.3),
+                  color: isDark 
+                      ? Colors.black.withOpacity(0.7) 
+                      : Colors.black.withOpacity(0.3),
                   child: Center(
                     child: CircularProgressIndicator(
                       color: AppColors.tomato,
@@ -92,13 +94,13 @@ class AboutAppScreen extends GetView<AboutAppController> {
               width: 38.w,
               height: 38.h,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF333333) : AppColors.ashLight.withOpacity(0.3),
+                color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 18.sp,
-                color: isDark ? Colors.white : AppColors.darkBackground,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
@@ -109,7 +111,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.darkBackground,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
@@ -127,7 +129,9 @@ class AboutAppScreen extends GetView<AboutAppController> {
       width: 90.w,
       height: 90.h,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.tomato.withOpacity(0.2) : AppColors.tomato.withOpacity(0.1),
+        color: isDark 
+            ? AppColors.tomato.withOpacity(0.2) 
+            : AppColors.tomato.withOpacity(0.1),
         shape: BoxShape.circle,
         border: Border.all(
           color: AppColors.tomato.withOpacity(0.3),
@@ -152,7 +156,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
         style: TextStyle(
           fontSize: 22.sp,
           fontWeight: FontWeight.bold,
-          color: isDark ? Colors.white : AppColors.darkBackground,
+          color: isDark ? AppColors.darkText : AppColors.darkBackground,
         ),
       ),
     );
@@ -166,7 +170,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
       () => Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         decoration: BoxDecoration(
-          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.3),
+          color: isDark ? Colors.grey.shade800 : AppColors.lightAsh.withOpacity(0.3),
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Text(
@@ -189,10 +193,10 @@ class AboutAppScreen extends GetView<AboutAppController> {
       width: double.infinity,
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF242424) : AppColors.ashLight.withOpacity(0.15),
+        color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.15),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.5),
+          color: isDark ? Colors.grey.shade800 : AppColors.lightAsh.withOpacity(0.5),
         ),
       ),
       child: Column(
@@ -203,7 +207,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : AppColors.darkBackground,
+              color: isDark ? AppColors.darkText : AppColors.darkBackground,
             ),
           ),
           SizedBox(height: 8.h),
@@ -248,12 +252,12 @@ class AboutAppScreen extends GetView<AboutAppController> {
         height: 40.h,
         margin: EdgeInsets.symmetric(horizontal: 6.w),
         decoration: BoxDecoration(
-          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.3),
+          color: isDark ? Colors.grey.shade800 : AppColors.lightAsh.withOpacity(0.3),
           shape: BoxShape.circle,
         ),
         child: Icon(
           icon,
-          color: isDark ? Colors.white : AppColors.darkBackground,
+          color: isDark ? AppColors.darkText : AppColors.darkBackground,
           size: 20.sp,
         ),
       ),
@@ -268,7 +272,7 @@ class AboutAppScreen extends GetView<AboutAppController> {
       '© 2026 Perto Eats. All rights reserved.',
       style: TextStyle(
         fontSize: 11.sp,
-        color: isDark ? Colors.grey.shade600 : AppColors.ashLight,
+        color: isDark ? Colors.grey.shade600 : AppColors.lightAsh,
       ),
     );
   }

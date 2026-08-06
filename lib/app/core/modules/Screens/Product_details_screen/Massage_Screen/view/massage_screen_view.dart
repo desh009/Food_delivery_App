@@ -19,9 +19,9 @@ class _MessageScreenState extends State<MessageScreen>
 
   // 🔥 Dark Mode Helpers
   bool get isDark => Get.theme.brightness == Brightness.dark;
-  Color get textColor => isDark ? Colors.white : AppColors.darkBackground;
-  Color get bgColor => isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF9FAFB);
-  Color get cardColor => isDark ? const Color(0xFF242424) : Colors.white;
+  Color get textColor => isDark ? AppColors.darkText : AppColors.darkBackground;
+  Color get bgColor => isDark ? AppColors.darkBackground : const Color(0xFFF9FAFB);
+  Color get cardColor => isDark ? AppColors.darkCard : AppColors.lightBackground;
   Color get hintColor => isDark ? Colors.grey.shade600 : Colors.grey.shade400;
   Color get subtitleColor => isDark ? Colors.grey.shade400 : Colors.grey.shade600;
 
@@ -79,7 +79,9 @@ class _MessageScreenState extends State<MessageScreen>
         color: cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: isDark 
+                ? Colors.black.withOpacity(0.3) 
+                : Colors.black.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -93,7 +95,9 @@ class _MessageScreenState extends State<MessageScreen>
               width: 38.r,
               height: 38.r,
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.25),
+                color: isDark 
+                    ? AppColors.darkCard 
+                    : AppColors.lightAsh.withOpacity(0.25),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -129,7 +133,10 @@ class _MessageScreenState extends State<MessageScreen>
                   decoration: BoxDecoration(
                     color: Colors.green,
                     shape: BoxShape.circle,
-                    border: Border.all(color: isDark ? const Color(0xFF1A1A1A) : Colors.white, width: 2.w),
+                    border: Border.all(
+                      color: isDark ? AppColors.darkBackground : AppColors.lightBackground, 
+                      width: 2.w,
+                    ),
                   ),
                 ),
               ),
@@ -205,7 +212,9 @@ class _MessageScreenState extends State<MessageScreen>
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
           constraints: BoxConstraints(maxWidth: 0.78.sw),
           decoration: BoxDecoration(
-            color: isMe ? AppColors.tomato : cardColor,
+            color: isMe 
+                ? AppColors.tomato 
+                : (isDark ? AppColors.darkCard.withOpacity(0.8) : AppColors.lightBackground),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(18.r),
               topRight: Radius.circular(18.r),
@@ -216,7 +225,9 @@ class _MessageScreenState extends State<MessageScreen>
               BoxShadow(
                 color: isMe
                     ? AppColors.tomato.withOpacity(0.25)
-                    : Colors.black.withOpacity(0.04),
+                    : (isDark 
+                        ? Colors.black.withOpacity(0.2) 
+                        : Colors.black.withOpacity(0.04)),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -232,7 +243,9 @@ class _MessageScreenState extends State<MessageScreen>
                   style: TextStyle(
                     fontSize: 14.sp,
                     height: 1.35,
-                    color: isMe ? Colors.white : textColor,
+                    color: isMe 
+                        ? Colors.white 
+                        : textColor,
                   ),
                 )
               else
@@ -296,12 +309,16 @@ class _MessageScreenState extends State<MessageScreen>
                 decoration: BoxDecoration(
                   color: isMe
                       ? Colors.white.withOpacity(0.25)
-                      : (isDark ? Colors.grey.shade800 : AppColors.tomato.withOpacity(0.12)),
+                      : (isDark 
+                          ? AppColors.darkCard 
+                          : AppColors.tomato.withOpacity(0.12)),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                  color: isMe ? Colors.white : AppColors.tomato,
+                  color: isMe 
+                      ? Colors.white 
+                      : AppColors.tomato,
                   size: 22.r,
                 ),
               ),
@@ -321,7 +338,9 @@ class _MessageScreenState extends State<MessageScreen>
                       : 0.0,
                   backgroundColor: isMe
                       ? Colors.white.withOpacity(0.3)
-                      : (isDark ? Colors.grey.shade700 : AppColors.ashLight.withOpacity(0.5)),
+                      : (isDark 
+                          ? Colors.grey.shade700 
+                          : AppColors.lightAsh.withOpacity(0.5)),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     isMe ? Colors.white : AppColors.tomato,
                   ),
@@ -357,7 +376,9 @@ class _MessageScreenState extends State<MessageScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: isDark 
+                ? Colors.black.withOpacity(0.3) 
+                : Colors.black.withOpacity(0.05),
             blurRadius: 15,
             offset: const Offset(0, -5),
           ),
@@ -375,7 +396,9 @@ class _MessageScreenState extends State<MessageScreen>
                 decoration: BoxDecoration(
                   color: controller.isRecording.value
                       ? AppColors.tomato.withOpacity(0.08)
-                      : (isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.25)),
+                      : (isDark 
+                          ? AppColors.darkCard 
+                          : AppColors.lightAsh.withOpacity(0.25)),
                   borderRadius: BorderRadius.circular(24.r),
                   border: Border.all(
                     color: controller.isRecording.value
@@ -514,6 +537,14 @@ class _MessageScreenState extends State<MessageScreen>
             decoration: BoxDecoration(
               color: cardColor,
               shape: BoxShape.circle,
+              boxShadow: isDark
+                  ? [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 8,
+                      )
+                    ]
+                  : null,
             ),
             child: Icon(
               Icons.delete_outline_rounded,
