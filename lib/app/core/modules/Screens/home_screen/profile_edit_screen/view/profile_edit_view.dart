@@ -14,7 +14,6 @@ class YourProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔥 Theme
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -25,14 +24,11 @@ class YourProfileScreen extends StatelessWidget {
     final controller = Get.find<YourProfileController>();
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: SafeArea(
         bottom: false,
         child: Stack(
           children: [
-            // ==================================================
-            // MAIN CONTENT
-            // ==================================================
             Column(
               children: [
                 _buildHeader(controller, theme, isDark),
@@ -63,9 +59,6 @@ class YourProfileScreen extends StatelessWidget {
               ],
             ),
 
-            // ==================================================
-            // BOTTOM NAVIGATION
-            // ==================================================
             Positioned(
               bottom: 0,
               left: 0,
@@ -78,9 +71,6 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ============================================================
-  // HEADER - 🔥 Dark Mode Support
-  // ============================================================
   Widget _buildHeader(
     YourProfileController controller,
     ThemeData theme,
@@ -93,40 +83,37 @@ class YourProfileScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Back Button
           GestureDetector(
             onTap: controller.goBack,
             child: Container(
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF333333) : Colors.grey.shade100,
+                color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 20.sp,
-                color: isDark ? Colors.white : Colors.black87,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
           
           SizedBox(width: 8.w),
           
-          // Title
           Expanded(
             child: Text(
-              'Edit Profile',
+              'Edit Profile Stage',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
           
-          // Save Button in Header
           Obx(
             () => controller.isFormValid.value
                 ? GestureDetector(
@@ -159,9 +146,6 @@ class YourProfileScreen extends StatelessWidget {
     );
   }
 
-  // ============================================================
-  // PROFILE AVATAR - 🔥 Dark Mode Support
-  // ============================================================
   Widget _buildProfileAvatar(YourProfileController controller, bool isDark) {
     return Center(
       child: Stack(
@@ -194,7 +178,7 @@ class YourProfileScreen extends StatelessWidget {
                   color: AppColors.tomato,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+                    color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
                     width: 2.w,
                   ),
                 ),
@@ -238,7 +222,7 @@ class YourProfileScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w500,
-              color: isDark ? Colors.white : Colors.black87,
+              color: isDark ? AppColors.darkText : AppColors.darkBackground,
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -289,7 +273,7 @@ class YourProfileScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: isDark ? AppColors.darkText : AppColors.darkBackground,
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -355,15 +339,15 @@ class YourProfileScreen extends StatelessWidget {
                 isDense: true,
                 icon: Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: isDark ? AppColors.darkText : AppColors.darkBackground,
                   size: 20.sp,
                 ),
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: isDark ? AppColors.darkText : AppColors.darkBackground,
                 ),
-                dropdownColor: isDark ? const Color(0xFF333333) : Colors.white,
+                dropdownColor: isDark ? AppColors.darkCard : AppColors.lightBackground,
                 onChanged: controller.updateGender,
                 items: controller.genderOptions.map((String value) {
                   return DropdownMenuItem<String>(
@@ -372,7 +356,7 @@ class YourProfileScreen extends StatelessWidget {
                       value,
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: isDark ? AppColors.darkText : AppColors.darkBackground,
                       ),
                     ),
                   );
@@ -448,7 +432,7 @@ class YourProfileScreen extends StatelessWidget {
         vertical: 12.h,
       ),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2A2A2A) : (AppColors.ashLight ?? Colors.grey.shade50),
+        color: isDark ? AppColors.darkCard.withOpacity(0.8) : AppColors.lightAsh.withOpacity(0.15),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: isDark ? Colors.grey.shade800 : Colors.transparent,

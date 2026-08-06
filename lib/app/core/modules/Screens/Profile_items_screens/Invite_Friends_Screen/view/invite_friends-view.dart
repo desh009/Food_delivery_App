@@ -17,7 +17,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -62,13 +62,13 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF333333) : AppColors.ashLight.withOpacity(0.3),
+                color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 20.r,
-                color: isDark ? Colors.white : AppColors.darkBackground,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
@@ -79,7 +79,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.darkBackground,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
@@ -184,10 +184,10 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF242424) : AppColors.ashLight.withOpacity(0.12),
+        color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.12),
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.5),
+          color: isDark ? Colors.grey.shade800 : AppColors.lightAsh.withOpacity(0.5),
         ),
       ),
       child: Column(
@@ -213,7 +213,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      color: isDark ? Colors.white : AppColors.darkBackground,
+                      color: isDark ? AppColors.darkText : AppColors.darkBackground,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -352,7 +352,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : AppColors.darkBackground,
+              color: isDark ? AppColors.darkText : AppColors.darkBackground,
             ),
           ),
         ),
@@ -400,7 +400,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               width: 42.r,
               height: 42.r,
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.25),
+                color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.25),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: AppColors.tomato.withOpacity(0.3),
@@ -417,7 +417,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
               Container(
                 width: 2.w,
                 height: 36.h,
-                color: isDark ? Colors.grey.shade700 : AppColors.ashLight.withOpacity(0.5),
+                color: isDark ? Colors.grey.shade700 : AppColors.lightAsh.withOpacity(0.5),
               ),
           ],
         ),
@@ -433,7 +433,7 @@ class InviteFriendScreen extends GetView<InviteFriendController> {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.darkBackground,
+                    color: isDark ? AppColors.darkText : AppColors.darkBackground,
                   ),
                 ),
                 SizedBox(height: 4.h),

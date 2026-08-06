@@ -1,3 +1,5 @@
+// lib/app/core/controllers/home_controller.dart
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -8,7 +10,7 @@ class HomeController extends GetxController {
   // 🔥 pageController এখানে ডিফাইন করুন (শুধু একবার)
   final PageController pageController = PageController(initialPage: 0);
   final RxInt currentBannerIndex = 0.obs;
-  
+
   // ============ SEARCH AND FILTER PROPERTIES ============
   final RxString searchText = ''.obs;
   final RxString selectedCategory = 'All'.obs;
@@ -16,20 +18,21 @@ class HomeController extends GetxController {
   final RxDouble minPrice = 0.0.obs;
   final RxDouble maxPrice = 100.0.obs;
   final RxBool isFilterApplied = false.obs;
-  
+
   // 🔥 Filtered offers list
-  final RxList<Map<String, dynamic>> filteredOffers = <Map<String, dynamic>>[].obs;
-  
+  final RxList<Map<String, dynamic>> filteredOffers =
+      <Map<String, dynamic>>[].obs;
+
   // 🔥 Original offers data
   List<Map<String, dynamic>> allSpecialOffers = [];
-  
+
   Timer? _bannerTimer;
-  
+
   @override
   void onInit() {
     super.onInit();
     _startBannerTimer();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
         BottomNavController.to.changeIndex(0);
@@ -37,25 +40,25 @@ class HomeController extends GetxController {
         // Ignore
       }
     });
-    
+
     // 🔥 Listen to search changes
     ever(searchText, (_) => applyFilters());
   }
-  
+
   @override
   void onClose() {
     _bannerTimer?.cancel();
     pageController.dispose();
     super.onClose();
   }
-  
+
   // ============ BANNER METHODS ============
-  
+
   void onBannerPageChanged(int index) {
     currentBannerIndex.value = index;
     _resetBannerTimer();
   }
-  
+
   void _startBannerTimer() {
     _bannerTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (pageController.hasClients) {
@@ -68,37 +71,35 @@ class HomeController extends GetxController {
       }
     });
   }
-  
+
   void _resetBannerTimer() {
     _bannerTimer?.cancel();
     _startBannerTimer();
   }
-  
+
   // ============ FILTER METHODS ============
-  
+
   // 🔥 Set special offers data from view
   void setSpecialOffers(List<Map<String, dynamic>> offers) {
     allSpecialOffers = offers;
     applyFilters();
   }
-  
+
   // 🔥 Apply all filters
   void applyFilters() {
     if (allSpecialOffers.isEmpty) return;
-    
+
     List<Map<String, dynamic>> result = List.from(allSpecialOffers);
-    
+
     // 🔥 Filter by category (if not 'All')
     if (selectedCategory.value != 'All') {
       result = result.where((offer) {
         // Check if title contains the category
-        return offer['title']
-            .toString()
-            .toLowerCase()
-            .contains(selectedCategory.value.toLowerCase());
+        return offer['category'].toString().toLowerCase() ==
+            selectedCategory.value.toLowerCase();
       }).toList();
     }
-    
+
     // 🔥 Filter by search text
     if (searchText.value.isNotEmpty) {
       final query = searchText.value.toLowerCase();
@@ -108,27 +109,35 @@ class HomeController extends GetxController {
         return title.contains(query) || category.contains(query);
       }).toList();
     }
-    
+
     // 🔥 Filter by price range
     result = result.where((offer) {
       final priceString = offer['price'].toString().replaceAll('\$', '');
       final price = double.tryParse(priceString) ?? 0.0;
       return price >= minPrice.value && price <= maxPrice.value;
     }).toList();
-    
+
     // 🔥 Apply sorting
     switch (selectedSortBy.value) {
       case 'Price: Low-High':
         result.sort((a, b) {
-          final priceA = double.tryParse(a['price'].toString().replaceAll('\$', '')) ?? 0.0;
-          final priceB = double.tryParse(b['price'].toString().replaceAll('\$', '')) ?? 0.0;
+          final priceA =
+              double.tryParse(a['price'].toString().replaceAll('\$', '')) ??
+              0.0;
+          final priceB =
+              double.tryParse(b['price'].toString().replaceAll('\$', '')) ??
+              0.0;
           return priceA.compareTo(priceB);
         });
         break;
       case 'Price: High-Low':
         result.sort((a, b) {
-          final priceA = double.tryParse(a['price'].toString().replaceAll('\$', '')) ?? 0.0;
-          final priceB = double.tryParse(b['price'].toString().replaceAll('\$', '')) ?? 0.0;
+          final priceA =
+              double.tryParse(a['price'].toString().replaceAll('\$', '')) ??
+              0.0;
+          final priceB =
+              double.tryParse(b['price'].toString().replaceAll('\$', '')) ??
+              0.0;
           return priceB.compareTo(priceA);
         });
         break;
@@ -143,23 +152,23 @@ class HomeController extends GetxController {
         // Keep original order
         break;
     }
-    
+
     filteredOffers.value = result;
     checkFilterStatus();
   }
-  
+
   // 🔥 Update search
   void updateSearch(String value) {
     searchText.value = value;
-    applyFilters();
+    // applyFilters();
   }
-  
+
   // 🔥 Clear search
   void clearSearch() {
     searchText.value = '';
     applyFilters();
   }
-  
+
   // 🔥 Check if any filter is active
   void checkFilterStatus() {
     bool hasFilter = false;
@@ -169,7 +178,7 @@ class HomeController extends GetxController {
     if (searchText.value.isNotEmpty) hasFilter = true;
     isFilterApplied.value = hasFilter;
   }
-  
+
   // 🔥 Reset all filters
   void resetFilter() {
     selectedCategory.value = 'All';
@@ -179,7 +188,7 @@ class HomeController extends GetxController {
     searchText.value = '';
     applyFilters();
   }
-  
+
   // 🔥 Clear a specific filter
   void clearFilter(String filterType) {
     switch (filterType) {
@@ -199,9 +208,9 @@ class HomeController extends GetxController {
     }
     applyFilters();
   }
-  
+
   // ============ FILTER BOTTOM SHEET ============
-  
+
   void showFilterBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -215,9 +224,7 @@ class HomeController extends GetxController {
           return Container(
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
             child: Column(
               children: [
@@ -272,14 +279,22 @@ class HomeController extends GetxController {
                         _buildFilterSection(
                           title: "Category",
                           child: Obx(() {
-                            final categories = ['All', 'Burger', 'Pizza', 'Salad', 'Tacos', 'Drinks'];
+                            final categories = [
+                              'All',
+                              'Burger',
+                              'Pizza',
+                              'Salad',
+                              'Tacos',
+                              'Drinks',
+                            ];
                             return Wrap(
                               spacing: 8,
                               runSpacing: 8,
                               children: categories.map((category) {
                                 return _buildFilterChip(
                                   label: category,
-                                  isSelected: selectedCategory.value == category,
+                                  isSelected:
+                                      selectedCategory.value == category,
                                   onSelected: () {
                                     selectedCategory.value = category;
                                     applyFilters();
@@ -289,14 +304,19 @@ class HomeController extends GetxController {
                             );
                           }),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // ========== Sort By Filter ==========
                         _buildFilterSection(
                           title: "Sort By",
                           child: Obx(() {
-                            final sortOptions = ['Popular', 'Price: Low-High', 'Price: High-Low', 'Rating'];
+                            final sortOptions = [
+                              'Popular',
+                              'Price: Low-High',
+                              'Price: High-Low',
+                              'Rating',
+                            ];
                             return Wrap(
                               spacing: 8,
                               runSpacing: 8,
@@ -313,9 +333,9 @@ class HomeController extends GetxController {
                             );
                           }),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // ========== Price Range Filter ==========
                         _buildFilterSection(
                           title: "Price Range",
@@ -324,7 +344,10 @@ class HomeController extends GetxController {
                               children: [
                                 // Price Range Slider
                                 RangeSlider(
-                                  values: RangeValues(minPrice.value, maxPrice.value),
+                                  values: RangeValues(
+                                    minPrice.value,
+                                    maxPrice.value,
+                                  ),
                                   min: 0,
                                   max: 100,
                                   divisions: 20,
@@ -337,7 +360,8 @@ class HomeController extends GetxController {
                                   },
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       '£${minPrice.value.toInt()}',
@@ -359,9 +383,9 @@ class HomeController extends GetxController {
                             );
                           }),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // ========== Quick Price Filters ==========
                         _buildFilterSection(
                           title: "Quick Price Filters",
@@ -372,7 +396,9 @@ class HomeController extends GetxController {
                               children: [
                                 _buildFilterChip(
                                   label: "All",
-                                  isSelected: minPrice.value == 0 && maxPrice.value == 100,
+                                  isSelected:
+                                      minPrice.value == 0 &&
+                                      maxPrice.value == 100,
                                   onSelected: () {
                                     minPrice.value = 0;
                                     maxPrice.value = 100;
@@ -381,7 +407,9 @@ class HomeController extends GetxController {
                                 ),
                                 _buildFilterChip(
                                   label: "Under £10",
-                                  isSelected: minPrice.value == 0 && maxPrice.value == 10,
+                                  isSelected:
+                                      minPrice.value == 0 &&
+                                      maxPrice.value == 10,
                                   onSelected: () {
                                     minPrice.value = 0;
                                     maxPrice.value = 10;
@@ -390,7 +418,9 @@ class HomeController extends GetxController {
                                 ),
                                 _buildFilterChip(
                                   label: "£10 - £25",
-                                  isSelected: minPrice.value == 10 && maxPrice.value == 25,
+                                  isSelected:
+                                      minPrice.value == 10 &&
+                                      maxPrice.value == 25,
                                   onSelected: () {
                                     minPrice.value = 10;
                                     maxPrice.value = 25;
@@ -399,7 +429,9 @@ class HomeController extends GetxController {
                                 ),
                                 _buildFilterChip(
                                   label: "Over £25",
-                                  isSelected: minPrice.value == 25 && maxPrice.value == 100,
+                                  isSelected:
+                                      minPrice.value == 25 &&
+                                      maxPrice.value == 100,
                                   onSelected: () {
                                     minPrice.value = 25;
                                     maxPrice.value = 100;
@@ -410,9 +442,9 @@ class HomeController extends GetxController {
                             );
                           }),
                         ),
-                        
+
                         const SizedBox(height: 30),
-                        
+
                         // Apply Button
                         SizedBox(
                           width: double.infinity,
@@ -448,13 +480,10 @@ class HomeController extends GetxController {
       ),
     );
   }
-  
+
   // ============ HELPER WIDGETS ============
-  
-  Widget _buildFilterSection({
-    required String title,
-    required Widget child,
-  }) {
+
+  Widget _buildFilterSection({required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -471,7 +500,7 @@ class HomeController extends GetxController {
       ],
     );
   }
-  
+
   Widget _buildFilterChip({
     required String label,
     required bool isSelected,
@@ -490,13 +519,76 @@ class HomeController extends GetxController {
       onSelected: (_) => onSelected(),
       backgroundColor: Colors.grey[100],
       selectedColor: AppColors.tomato,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       side: BorderSide(
         color: isSelected ? AppColors.tomato : Colors.transparent,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
     );
+  }
+
+  // ============ VOICE ASSISTANT METHODS ============
+
+  // 🔥 Voice Assistant এর জন্য সার্চ
+  void voiceSearch(String query) {
+    if (query.isNotEmpty) {
+      searchText.value = query;
+      applyFilters();
+      Get.snackbar(
+        '🔍 Voice Search',
+        'Searching for "$query"',
+        snackPosition: SnackPosition.TOP,
+        duration: Duration(seconds: 2),
+      );
+    }
+  }
+
+  // 🔥 Voice Assistant এর জন্য ক্যাটাগরি
+  void voiceNavigateToCategory(String category) {
+    selectedCategory.value = category;
+    applyFilters();
+    Get.snackbar(
+      '📂 Category',
+      'Showing $category items',
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 2),
+    );
+  }
+
+  // 🔥 Voice Assistant এর জন্য কার্ট যোগ
+  void voiceAddToCart(String itemName, int quantity) {
+    Get.snackbar(
+      '🛒 Added to Cart',
+      '$quantity x $itemName added!',
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 2),
+    );
+  }
+
+  // 🔥 Voice Assistant এর জন্য অর্ডার
+  void voicePlaceOrder() {
+    Get.snackbar(
+      '✅ Order Placed',
+      'Your order has been placed successfully!',
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 3),
+    );
+  }
+
+  // 🔥 Voice Assistant এর জন্য নেভিগেট
+  void voiceNavigateTo(String screen) {
+    switch (screen) {
+      case '/cart':
+        Get.toNamed('/cart');
+        break;
+      case '/profile':
+        Get.toNamed('/profile-edit');
+        break;
+      case '/home':
+        Get.offAllNamed('/home');
+        break;
+      default:
+        Get.offAllNamed('/home');
+    }
   }
 }

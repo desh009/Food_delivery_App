@@ -29,9 +29,9 @@ class BottomNavController extends GetxController {
       route: '/liked-screen',
     ),
     BottomNavItem(
-      icon: Icons.notifications_none_rounded,
-      label: 'Notification',
-      route: '/notification',
+      icon: Icons.shopping_cart_outlined,
+      label: 'Add To Cart',
+      route: '/cart-item',
     ),
     BottomNavItem(
       icon: Icons.person_outline,
@@ -88,9 +88,9 @@ class BottomNavController extends GetxController {
           Get.toNamed('/liked-screen');
         }
         break;
-      case 3: // Notification
-        if (Get.currentRoute != '/notification') {
-          Get.toNamed('/notification');
+      case 3: // Add To Cart
+        if (Get.currentRoute != '/cart-item') {
+          Get.toNamed('/cart-item');
         }
         break;
       case 4: // Profile
@@ -116,14 +116,14 @@ class BottomNavController extends GetxController {
       case '/liked-screen':
         currentIndex.value = 2;
         break;
-      case '/notification':
+      case '/cart-item':
         currentIndex.value = 3;
         break;
       case '/my-account':
         currentIndex.value = 4;
         break;
       default:
-        currentIndex.value = 0;
+        // currentIndex.value = 0;
         break;
     }
     print('📌 Updated Index: ${currentIndex.value}');

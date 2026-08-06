@@ -21,7 +21,6 @@ abstract class Routes {
   static const EMAIL_VALIDATION = _Paths.EMAIL_VALIDATION;
   static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
-
   static const LOGIN = _Paths.LOGIN;
   static const REGISTER = _Paths.REGISTER;
   static const OTP = _Paths.OTP;
@@ -31,30 +30,21 @@ abstract class Routes {
   static const CART_ITEM = _Paths.CART_ITEM;
   static const REVIEW_ITEM = _Paths.REVIEW_ITEM;
   static const PAYMENT_METHOD = _Paths.PAYMENT_METHOD;
-
   static const HELP_CENTER = _Paths.HELP_CENTER;
-
   static const ORDER_DETAILS = _Paths.ORDER_DETAILS;
-
   static const LIKED_SCREEN = _Paths.LIKED_SCREEN;
   static const PROFILE_EDIT = _Paths.PROFILE_EDIT;
-
   static const TRACK_ORDER = _Paths.TRACK_ORDER;
-  static const SECURITY = _Paths.TRACK_ORDER;
-
+  static const SECURITY = _Paths.SECURITY;  // ✅ সংশোধন করা হয়েছে
   static const ABOUT_APP = _Paths.ABOUT_APP;
-
   static const ADD_TO_CART_LIST_ITEM = _Paths.ADD_TO_CART_LIST_ITEM;
   static const VOUCHER = _Paths.VOUCHER;
   static const INVITE_FRIENDS = _Paths.INVITE_FRIENDS;
-    static const MASSAGE = _Paths.MASSAGE;
-    
-    static const TERMS_AND_SERVICES = _Paths.TERMS_AND_SERVICES;
-
-    static const PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
-    static const FORGET_PASSWORD = _Paths.FORGET_PASSWORD;
-    static const CODE_VERIFY = _Paths.CODE_VERIFY;
-
+  static const MESSAGE = _Paths.MESSAGE;  // ✅ নাম ঠিক করা হয়েছে
+  static const TERMS_AND_SERVICES = _Paths.TERMS_AND_SERVICES;
+  static const PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
+  static const FORGET_PASSWORD = _Paths.FORGET_PASSWORD;
+  static const CODE_VERIFY = _Paths.CODE_VERIFY;
 }
 
 abstract class _Paths {
@@ -82,36 +72,23 @@ abstract class _Paths {
   static const OTP = '/otp';
   static const PRODUCT_LIST = '/product-list';
   static const PRODUCT_DETAILS = '/product_details';
-
   static const SPECIAL_OFFER = '/special_offer';
   static const CART_ITEM = '/cart-item';
-
   static const REVIEW_ITEM = '/review-item';
   static const PAYMENT_METHOD = '/payment-method';
-
   static const HELP_CENTER = '/help-center';
-
   static const ORDER_DETAILS = '/order-details';
   static const LIKED_SCREEN = '/liked-screen';
-
   static const PROFILE_EDIT = '/profile-edit';
-
   static const TRACK_ORDER = '/track-order';
-  static const SECURITY = '/security';
-
+  static const SECURITY = '/security';  // ✅ যোগ করা হয়েছে
   static const ABOUT_APP = '/about-app';
   static const VOUCHER = '/voucher';
-
   static const ADD_TO_CART_LIST_ITEM = '/add-to-cart-list-item';
   static const INVITE_FRIENDS = '/invite_friends';
-    static const  MASSAGE = '/message'; // Add this line
-  static const  TERMS_AND_SERVICES = '/terms-and-services';
-
-  static const  PRIVACY_AND_POLICY = '/privacy-policy';
-    static const  FORGET_PASSWORD = '/forget-password';
-    static const  CODE_VERIFY = '/code-verify';
-
-
-
-
+  static const MESSAGE = '/message';  // ✅ নাম ঠিক করা হয়েছে
+  static const TERMS_AND_SERVICES = '/terms-and-services';
+  static const PRIVACY_AND_POLICY = '/privacy-policy';
+  static const FORGET_PASSWORD = '/forget-password';
+  static const CODE_VERIFY = '/code-verify';
 }

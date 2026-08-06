@@ -21,7 +21,7 @@ class VoucherScreen extends GetView<VoucherController> {
     }
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -48,7 +48,7 @@ class VoucherScreen extends GetView<VoucherController> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : AppColors.darkBackground,
+                            color: isDark ? AppColors.darkText : AppColors.darkBackground,
                           ),
                         ),
                         Obx(
@@ -66,8 +66,7 @@ class VoucherScreen extends GetView<VoucherController> {
 
                     // Available Vouchers List
                     Obx(() {
-                      final availableVouchers = controller
-                          .getAvailableVouchers();
+                      final availableVouchers = controller.getAvailableVouchers();
                       if (availableVouchers.isEmpty) {
                         return Center(
                           child: Padding(
@@ -107,8 +106,7 @@ class VoucherScreen extends GetView<VoucherController> {
                         itemBuilder: (context, index) {
                           final voucher = availableVouchers[index];
                           final code = voucher['code']!;
-                          final isSelected =
-                              controller.selectedVoucher.value == code;
+                          final isSelected = controller.selectedVoucher.value == code;
                           return _buildVoucherCard(voucher, index, isSelected, theme, isDark);
                         },
                       );
@@ -149,8 +147,7 @@ class VoucherScreen extends GetView<VoucherController> {
                           ),
                           SizedBox(height: 10.h),
                           ...usedVouchers.map(
-                            (voucher) =>
-                                _buildUsedVoucherCard(voucher['code']!, isDark),
+                            (voucher) => _buildUsedVoucherCard(voucher['code']!, isDark),
                           ),
                         ],
                       );
@@ -209,13 +206,13 @@ class VoucherScreen extends GetView<VoucherController> {
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF333333) : AppColors.ashLight.withOpacity(0.3),
+                color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.arrow_back,
                 size: 20.r,
-                color: isDark ? Colors.white : AppColors.darkBackground,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
@@ -226,7 +223,7 @@ class VoucherScreen extends GetView<VoucherController> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.darkBackground,
+                color: isDark ? AppColors.darkText : AppColors.darkBackground,
               ),
             ),
           ),
@@ -263,7 +260,7 @@ class VoucherScreen extends GetView<VoucherController> {
       () => Container(
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF242424) : AppColors.ashLight.withOpacity(0.15),
+          color: isDark ? AppColors.darkCard : AppColors.lightAsh.withOpacity(0.15),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
@@ -321,7 +318,7 @@ class VoucherScreen extends GetView<VoucherController> {
       margin: EdgeInsets.only(bottom: 8.h),
       padding: EdgeInsets.all(10.r),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2A2A2A) : Colors.grey.shade50,
+        color: isDark ? AppColors.darkCard.withOpacity(0.7) : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(
           color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -378,12 +375,16 @@ class VoucherScreen extends GetView<VoucherController> {
         margin: EdgeInsets.only(bottom: 14.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? Colors.green.shade900.withOpacity(0.2) : Colors.green.shade50)
-              : (isDark ? const Color(0xFF242424) : Colors.white),
+              ? (isDark 
+                  ? Colors.green.shade900.withOpacity(0.25) 
+                  : Colors.green.shade50)
+              : (isDark ? AppColors.darkCard : AppColors.lightBackground),
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: isDark 
+                  ? Colors.black.withOpacity(0.3) 
+                  : Colors.black.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -391,7 +392,7 @@ class VoucherScreen extends GetView<VoucherController> {
           border: Border.all(
             color: isSelected
                 ? Colors.green
-                : (isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.4)),
+                : (isDark ? Colors.grey.shade800 : AppColors.lightAsh.withOpacity(0.4)),
             width: isSelected ? 2.w : 1.w,
           ),
         ),
@@ -447,7 +448,7 @@ class VoucherScreen extends GetView<VoucherController> {
 
                 Container(
                   width: 1,
-                  color: isDark ? Colors.grey.shade800 : AppColors.ashLight.withOpacity(0.5),
+                  color: isDark ? Colors.grey.shade800 : AppColors.lightAsh.withOpacity(0.5),
                 ),
 
                 // Right Info
@@ -467,7 +468,7 @@ class VoucherScreen extends GetView<VoucherController> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: isDark ? Colors.white : AppColors.darkBackground,
+                                  color: isDark ? AppColors.darkText : AppColors.darkBackground,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -483,7 +484,7 @@ class VoucherScreen extends GetView<VoucherController> {
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.grey.shade800
-                                      : AppColors.ashLight.withOpacity(0.3),
+                                      : AppColors.lightAsh.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
                                 child: Text(

@@ -207,7 +207,7 @@ class AppPages {
     ),
 
     GetPage(
-      name: Routes.MASSAGE,
+      name: Routes.MESSAGE,
       page: () => const MessageScreen(),
       binding: MessageBinding(),
       transition: Transition.rightToLeft,
