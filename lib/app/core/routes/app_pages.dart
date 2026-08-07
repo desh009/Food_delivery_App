@@ -105,17 +105,14 @@ class AppPages {
     GetPage(
       name: _Paths.PRODUCT_DETAILS,
       page: () {
-        // product প্যারামিটার null দিয়ে দিচ্ছি (argument থেকে আসবে)
         final args = Get.arguments;
         ProductModel product;
 
         if (args is Map<String, dynamic>) {
-          // 🔥 fromJson ব্যবহার করুন
           product = ProductModel.fromJson(args);
         } else if (args is ProductModel) {
           product = args;
         } else {
-          // Empty product তৈরি করুন
           product = ProductModel(
             id: '',
             name: '',

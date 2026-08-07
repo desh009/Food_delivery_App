@@ -7,16 +7,9 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const INTRO = _Paths.INTRO;
   static const AUTH = _Paths.AUTH;
-  static const MAIN_LAYOUT = _Paths.MAIN_LAYOUT;
   static const NOTIFICATION = _Paths.NOTIFICATION;
-  static const HISTORY = _Paths.HISTORY;
   static const SETTINGS = _Paths.SETTINGS;
   static const MY_ACCOUNT = _Paths.MY_ACCOUNT;
-  static const CAR_BOOKING = _Paths.CAR_BOOKING;
-  static const CAR_RENTAL = _Paths.CAR_RENTAL;
-  static const ROUND_TRIP = _Paths.ROUND_TRIP;
-  static const HELICOPTER_BOOKING = _Paths.HELICOPTER_BOOKING;
-  static const BOOKING_SYSTEM = _Paths.BOOKING_SYSTEM;
   static const TRIP_DETAILS = _Paths.TRIP_DETAILS;
   static const EMAIL_VALIDATION = _Paths.EMAIL_VALIDATION;
   static const FORGOT_PASSWORD = _Paths.FORGOT_PASSWORD;
@@ -53,7 +46,6 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const INTRO = '/intro';
   static const AUTH = '/auth';
-  static const MAIN_LAYOUT = '/main-layout';
   static const NOTIFICATION = '/notification';
   static const HISTORY = '/history';
   static const SETTINGS = '/settings';
