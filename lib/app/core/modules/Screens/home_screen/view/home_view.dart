@@ -9,7 +9,8 @@ import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/binder
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/view/product_list_view.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/home_screen/controller/home_controller.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
-import 'package:food_hjoiopk/app/core/widgets/Voice_controller/voice_controller.dart';
+// ❌ VoiceController ইম্পোর্ট সরান (কারণ এখন গ্লোবাল)
+// import 'package:food_hjoiopk/app/core/widgets/Voice_controller/voice_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/favourite_service/favourite_screen_service.dart';
 import 'package:food_hjoiopk/app/core/widgets/location/location_selection/location_selection.dart';
@@ -159,7 +160,9 @@ class HomeScreen extends GetView<HomeController> {
       Get.put<FavoriteService>(FavoriteService(), permanent: true);
     }
 
-    final voiceController = Get.find<VoiceActionController>();
+    // ❌ VoiceController সরান (গ্লোবালি ব্যবহার করছে)
+    // final voiceController = Get.find<VoiceActionController>();
+    
     final homeController = Get.find<HomeController>();
     final favoriteService = Get.find<FavoriteService>();
 
@@ -721,6 +724,9 @@ class HomeScreen extends GetView<HomeController> {
               child: const BottomNavigationWidget(),
             ),
 
+            // ❌❌❌ এই পুরো Voice Button অংশটি ডিলিট করুন ❌❌❌
+            // কারণ এটি এখন গ্লোবালি সব স্ক্রিনে দেখাচ্ছে
+            /*
             // Voice Button
             Positioned(
               bottom: 100.h,
@@ -787,6 +793,7 @@ class HomeScreen extends GetView<HomeController> {
                 ),
               ),
             ),
+            */
           ],
         ),
       ),

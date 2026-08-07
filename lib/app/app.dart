@@ -7,6 +7,8 @@ import 'package:food_hjoiopk/app/app_bindings/app_bindings.dart';
 import 'package:food_hjoiopk/app/core/routes/app_pages.dart';
 import 'package:food_hjoiopk/app/core/theme/app_theme.dart';
 import 'package:food_hjoiopk/app/core/theme/theme_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/Voice_controller/voice_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/Voice_controller/voice_overlay/voice_overlay.dart';
 import 'package:food_hjoiopk/l10n/Local_Controller/local_controller.dart';
 import 'package:food_hjoiopk/l10n/app_localizations.dart';
 import 'package:get/get.dart';
@@ -24,6 +26,11 @@ class MyApp extends StatelessWidget {
     // 🔥 LocaleController Initialize (যদি না থাকে)
     if (!Get.isRegistered<LocaleController>()) {
       Get.put(LocaleController(), permanent: true);
+    }
+
+    // 🔥🔥🔥 VoiceActionController Initialize (সব স্ক্রিনের জন্য)
+    if (!Get.isRegistered<VoiceActionController>()) {
+      Get.put(VoiceActionController(), permanent: true);
     }
 
     final Locale currentLocale = LocaleController.to.currentLocale.value;
@@ -60,6 +67,13 @@ class MyApp extends StatelessWidget {
               Locale('en'),
               Locale('bn'),
             ],
+            
+            // 🔥🔥🔥 গ্লোবাল ভয়েস ওভারলে - সব স্ক্রিনে ভয়েস বাটন দেখাবে
+            builder: (context, child) {
+              return VoiceOverlay(
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
             
             unknownRoute: GetPage(
               name: '/not-found',

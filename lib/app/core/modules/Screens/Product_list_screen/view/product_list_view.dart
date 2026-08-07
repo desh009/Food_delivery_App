@@ -23,6 +23,9 @@ class ProductListScreen extends GetView<ProductListController> {
     final bool isVoiceSearch = Get.arguments?['isVoiceSearch'] ?? false;
     final String searchQuery = Get.arguments?['searchQuery'] ?? '';
 
+    // ✅ ভয়েস কন্ট্রোলার
+    final VoiceActionController voiceController = Get.find<VoiceActionController>();
+
     // ✅ ভয়েস সার্চ হলে স্বয়ংক্রিয়ভাবে সার্চ করুন
     if (isVoiceSearch && searchQuery.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,7 +42,7 @@ class ProductListScreen extends GetView<ProductListController> {
             SizedBox(height: 16.h),
 
             // ============================================================
-            // HEADER SECTION - 🔥 Dark Mode Support
+            // HEADER SECTION
             // ============================================================
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0.w),
@@ -95,7 +98,7 @@ class ProductListScreen extends GetView<ProductListController> {
             SizedBox(height: 20.h),
 
             // ============================================================
-            // SEARCH BAR - 🔥 Dark Mode Support
+            // SEARCH BAR - শুধু সার্চ বার, ভয়েস বাটন ছাড়া
             // ============================================================
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0.w),
@@ -137,7 +140,7 @@ class ProductListScreen extends GetView<ProductListController> {
                         ),
                       ),
                     ),
-                    // ভয়েস সার্চ ইন্ডিকেটর
+                    // ✅ ভয়েস সার্চ ইন্ডিকেটর (শুধু আইকন, বাটন না)
                     if (isVoiceSearch)
                       Container(
                         margin: EdgeInsets.only(right: 8.w),
@@ -205,7 +208,60 @@ class ProductListScreen extends GetView<ProductListController> {
             SizedBox(height: 10.h),
 
             // ============================================================
-            // ACTIVE FILTERS CHIPS - 🔥 Dark Mode Support
+            // 🎤 VOICE SPEECH TEXT DISPLAY (শুধু টেক্সট দেখাবে)
+            // ============================================================
+            Obx(() {
+              if (voiceController.userSpeechText.value.isEmpty) 
+                return const SizedBox.shrink();
+              
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF333333) : Colors.grey[100],
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: AppColors.tomato.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.volume_up,
+                        color: AppColors.tomato,
+                        size: 18.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          voiceController.userSpeechText.value,
+                          style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black87,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      if (voiceController.isListening.value)
+                        SizedBox(
+                          width: 16.w,
+                          height: 16.w,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.tomato,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+
+            SizedBox(height: 10.h),
+
+            // ============================================================
+            // ACTIVE FILTERS CHIPS
             // ============================================================
             Obx(() {
               if (controller.activeFilters.isEmpty)
@@ -248,7 +304,7 @@ class ProductListScreen extends GetView<ProductListController> {
             SizedBox(height: 10.h),
 
             // ============================================================
-            // PRODUCTS GRID - 🔥 Dark Mode Support
+            // PRODUCTS GRID
             // ============================================================
             Expanded(
               child: Obx(() {
@@ -289,8 +345,8 @@ class ProductListScreen extends GetView<ProductListController> {
                           SizedBox(height: 12.h),
                           ElevatedButton.icon(
                             onPressed: () {
-                              // ভয়েস সার্চ আবার শুরু করুন
-                              Get.find<VoiceActionController>().startListening();
+                              // গ্লোবাল ভয়েস বাটন ব্যবহার করুন
+                              voiceController.startListening();
                             },
                             icon: Icon(Icons.mic, color: Colors.white),
                             label: Text(
@@ -305,6 +361,43 @@ class ProductListScreen extends GetView<ProductListController> {
                             ),
                           ),
                         ],
+                        // ভয়েস কমান্ডের পরামর্শ
+                        SizedBox(height: 16.h),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 8.w,
+                          runSpacing: 8.h,
+                          children: [
+                            _buildVoiceSuggestionChip(
+                              label: "Filter by price",
+                              icon: Icons.attach_money,
+                              onTap: () {
+                                voiceController.speak("Opening price filter");
+                                _showFilterBottomSheet(context, isDark);
+                              },
+                              isDark: isDark,
+                            ),
+                            _buildVoiceSuggestionChip(
+                              label: "Sort by rating",
+                              icon: Icons.star,
+                              onTap: () {
+                                voiceController.speak("Sorting by rating");
+                                controller.setSort('rating');
+                                controller.applyFilters();
+                              },
+                              isDark: isDark,
+                            ),
+                            _buildVoiceSuggestionChip(
+                              label: "Clear filters",
+                              icon: Icons.clear_all,
+                              onTap: () {
+                                voiceController.speak("Clearing all filters");
+                                controller.clearAllFilters();
+                              },
+                              isDark: isDark,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   );
@@ -336,7 +429,51 @@ class ProductListScreen extends GetView<ProductListController> {
   }
 
   // ============================================================
-  // FILTER BOTTOM SHEET - 🔥 Dark Mode Support
+  // 🎤 VOICE SUGGESTION CHIP
+  // ============================================================
+  Widget _buildVoiceSuggestionChip({
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF333333) : Colors.grey[100],
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: isDark ? Colors.grey.shade700 : Colors.grey[300]!,
+            width: 1.w,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 14.sp,
+              color: AppColors.tomato,
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: isDark ? Colors.white : Colors.black87,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // FILTER BOTTOM SHEET
   // ============================================================
   void _showFilterBottomSheet(BuildContext context, bool isDark) {
     showModalBottomSheet(
@@ -355,7 +492,6 @@ class ProductListScreen extends GetView<ProductListController> {
             ),
             child: Column(
               children: [
-                // Handle
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 12.h),
                   width: 40.w,
@@ -402,72 +538,49 @@ class ProductListScreen extends GetView<ProductListController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Price Range Filter
                         _buildFilterSection(
                           title: "Price Range",
                           isDark: isDark,
                           child: Obx(() {
-                            return Column(
+                            return Wrap(
+                              spacing: 8.w,
+                              runSpacing: 8,
                               children: [
-                                Wrap(
-                                  spacing: 8.w,
-                                  runSpacing: 8,
-                                  children: [
-                                    _buildFilterChip(
-                                      label: "All",
-                                      isSelected:
-                                          controller.selectedPriceRange.value ==
-                                          'all',
-                                      onSelected: () =>
-                                          controller.setPriceRange('all'),
-                                      isDark: isDark,
-                                    ),
-                                    _buildFilterChip(
-                                      label: "Under £10",
-                                      isSelected:
-                                          controller.selectedPriceRange.value ==
-                                          'under10',
-                                      onSelected: () =>
-                                          controller.setPriceRange('under10'),
-                                      isDark: isDark,
-                                    ),
-                                    _buildFilterChip(
-                                      label: "£10-£25",
-                                      isSelected:
-                                          controller.selectedPriceRange.value ==
-                                          '10to25',
-                                      onSelected: () =>
-                                          controller.setPriceRange('10to25'),
-                                      isDark: isDark,
-                                    ),
-                                    _buildFilterChip(
-                                      label: "£25-£50",
-                                      isSelected:
-                                          controller.selectedPriceRange.value ==
-                                          '25to50',
-                                      onSelected: () =>
-                                          controller.setPriceRange('25to50'),
-                                      isDark: isDark,
-                                    ),
-                                    _buildFilterChip(
-                                      label: "Over £50",
-                                      isSelected:
-                                          controller.selectedPriceRange.value ==
-                                          'over50',
-                                      onSelected: () =>
-                                          controller.setPriceRange('over50'),
-                                      isDark: isDark,
-                                    ),
-                                  ],
+                                _buildFilterChip(
+                                  label: "All",
+                                  isSelected: controller.selectedPriceRange.value == 'all',
+                                  onSelected: () => controller.setPriceRange('all'),
+                                  isDark: isDark,
+                                ),
+                                _buildFilterChip(
+                                  label: "Under £10",
+                                  isSelected: controller.selectedPriceRange.value == 'under10',
+                                  onSelected: () => controller.setPriceRange('under10'),
+                                  isDark: isDark,
+                                ),
+                                _buildFilterChip(
+                                  label: "£10-£25",
+                                  isSelected: controller.selectedPriceRange.value == '10to25',
+                                  onSelected: () => controller.setPriceRange('10to25'),
+                                  isDark: isDark,
+                                ),
+                                _buildFilterChip(
+                                  label: "£25-£50",
+                                  isSelected: controller.selectedPriceRange.value == '25to50',
+                                  onSelected: () => controller.setPriceRange('25to50'),
+                                  isDark: isDark,
+                                ),
+                                _buildFilterChip(
+                                  label: "Over £50",
+                                  isSelected: controller.selectedPriceRange.value == 'over50',
+                                  onSelected: () => controller.setPriceRange('over50'),
+                                  isDark: isDark,
                                 ),
                               ],
                             );
                           }),
                         ),
-
                         SizedBox(height: 24.h),
-
-                        // Rating Filter
                         _buildFilterSection(
                           title: "Rating",
                           isDark: isDark,
@@ -478,43 +591,37 @@ class ProductListScreen extends GetView<ProductListController> {
                               children: [
                                 _buildFilterChip(
                                   label: "All",
-                                  isSelected:
-                                      controller.selectedRating.value == 0,
+                                  isSelected: controller.selectedRating.value == 0,
                                   onSelected: () => controller.setRating(0),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "3+ ⭐",
-                                  isSelected:
-                                      controller.selectedRating.value == 3,
+                                  isSelected: controller.selectedRating.value == 3,
                                   onSelected: () => controller.setRating(3),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "3.5+ ⭐",
-                                  isSelected:
-                                      controller.selectedRating.value == 3.5,
+                                  isSelected: controller.selectedRating.value == 3.5,
                                   onSelected: () => controller.setRating(3.5),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "4+ ⭐",
-                                  isSelected:
-                                      controller.selectedRating.value == 4,
+                                  isSelected: controller.selectedRating.value == 4,
                                   onSelected: () => controller.setRating(4),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "4.5+ ⭐",
-                                  isSelected:
-                                      controller.selectedRating.value == 4.5,
+                                  isSelected: controller.selectedRating.value == 4.5,
                                   onSelected: () => controller.setRating(4.5),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "5 ⭐",
-                                  isSelected:
-                                      controller.selectedRating.value == 5,
+                                  isSelected: controller.selectedRating.value == 5,
                                   onSelected: () => controller.setRating(5),
                                   isDark: isDark,
                                 ),
@@ -522,10 +629,7 @@ class ProductListScreen extends GetView<ProductListController> {
                             );
                           }),
                         ),
-
                         SizedBox(height: 24.h),
-
-                        // Sort Options
                         _buildFilterSection(
                           title: "Sort By",
                           isDark: isDark,
@@ -536,47 +640,33 @@ class ProductListScreen extends GetView<ProductListController> {
                               children: [
                                 _buildFilterChip(
                                   label: "Popular",
-                                  isSelected:
-                                      controller.selectedSort.value ==
-                                      'popular',
-                                  onSelected: () =>
-                                      controller.setSort('popular'),
+                                  isSelected: controller.selectedSort.value == 'popular',
+                                  onSelected: () => controller.setSort('popular'),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "Price: Low-High",
-                                  isSelected:
-                                      controller.selectedSort.value ==
-                                      'priceAsc',
-                                  onSelected: () =>
-                                      controller.setSort('priceAsc'),
+                                  isSelected: controller.selectedSort.value == 'priceAsc',
+                                  onSelected: () => controller.setSort('priceAsc'),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "Price: High-Low",
-                                  isSelected:
-                                      controller.selectedSort.value ==
-                                      'priceDesc',
-                                  onSelected: () =>
-                                      controller.setSort('priceDesc'),
+                                  isSelected: controller.selectedSort.value == 'priceDesc',
+                                  onSelected: () => controller.setSort('priceDesc'),
                                   isDark: isDark,
                                 ),
                                 _buildFilterChip(
                                   label: "Rating",
-                                  isSelected:
-                                      controller.selectedSort.value == 'rating',
-                                  onSelected: () =>
-                                      controller.setSort('rating'),
+                                  isSelected: controller.selectedSort.value == 'rating',
+                                  onSelected: () => controller.setSort('rating'),
                                   isDark: isDark,
                                 ),
                               ],
                             );
                           }),
                         ),
-
                         SizedBox(height: 24.h),
-
-                        // Apply Button
                         SizedBox(
                           width: double.infinity,
                           height: 50.h,
@@ -645,9 +735,7 @@ class ProductListScreen extends GetView<ProductListController> {
       label: Text(
         label,
         style: TextStyle(
-          color: isSelected
-              ? Colors.white
-              : (isDark ? Colors.white : Colors.black87),
+          color: isSelected ? Colors.white : (isDark ? Colors.white : Colors.black87),
           fontSize: 13.sp,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
@@ -664,7 +752,6 @@ class ProductListScreen extends GetView<ProductListController> {
     );
   }
 
-  // Helper method to get filter label
   String _getFilterLabel(String key) {
     switch (key) {
       case 'priceRange':
@@ -679,7 +766,7 @@ class ProductListScreen extends GetView<ProductListController> {
   }
 
   // ============================================================
-  // PRODUCT CARD - 🔥 Dark Mode Support
+  // PRODUCT CARD
   // ============================================================
   Widget _buildProductCard(ProductModel item, bool isDark) {
     return GestureDetector(
@@ -769,9 +856,7 @@ class ProductListScreen extends GetView<ProductListController> {
                           "£ ${item.oldPrice!.toStringAsFixed(2)}",
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: isDark
-                                ? Colors.grey.shade600
-                                : Colors.black38,
+                            color: isDark ? Colors.grey.shade600 : Colors.black38,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
