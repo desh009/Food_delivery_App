@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_hjoiopk/app/core/models/product%20model/product_model.dart';
 import 'package:food_hjoiopk/app/core/modules/Screens/Product_list_screen/controller/product_list_controller.dart';
+import 'package:food_hjoiopk/app/core/widgets/Voice_controller/voice_controller.dart';
 import 'package:food_hjoiopk/app/core/widgets/animated_favourite_button/animated_favourite_button.dart';
 import 'package:get/get.dart';
 import 'package:food_hjoiopk/app/core/remote/theme/app_colors.dart';
@@ -20,6 +21,15 @@ class ProductListScreen extends GetView<ProductListController> {
     final String name = Get.arguments?['name'] ?? category;
     final String icon = Get.arguments?['icon'] ?? '🍽️';
     final bool isVoiceSearch = Get.arguments?['isVoiceSearch'] ?? false;
+    final String searchQuery = Get.arguments?['searchQuery'] ?? '';
+
+    // ✅ ভয়েস সার্চ হলে স্বয়ংক্রিয়ভাবে সার্চ করুন
+    if (isVoiceSearch && searchQuery.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.searchQuery.value = searchQuery;
+        controller.filterProductsBySearch(searchQuery);
+      });
+    }
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.white,
@@ -107,8 +117,13 @@ class ProductListScreen extends GetView<ProductListController> {
                     SizedBox(width: 12.w),
                     Expanded(
                       child: TextField(
-                        onChanged: (value) =>
-                            controller.searchQuery.value = value,
+                        onChanged: (value) {
+                          controller.searchQuery.value = value;
+                          controller.filterProductsBySearch(value);
+                        },
+                        controller: TextEditingController(
+                          text: isVoiceSearch ? searchQuery : '',
+                        ),
                         style: TextStyle(
                           color: isDark ? Colors.white : Colors.black87,
                         ),
@@ -122,6 +137,16 @@ class ProductListScreen extends GetView<ProductListController> {
                         ),
                       ),
                     ),
+                    // ভয়েস সার্চ ইন্ডিকেটর
+                    if (isVoiceSearch)
+                      Container(
+                        margin: EdgeInsets.only(right: 8.w),
+                        child: Icon(
+                          Icons.mic,
+                          color: AppColors.tomato,
+                          size: 22.sp,
+                        ),
+                      ),
                     // Filter Button with Badge
                     Obx(() {
                       final filterCount = controller.getActiveFilterCount();
@@ -250,7 +275,9 @@ class ProductListScreen extends GetView<ProductListController> {
                           ),
                         ),
                         Text(
-                          "Try adjusting your filters",
+                          isVoiceSearch
+                              ? "Try saying a different product name"
+                              : "Try adjusting your filters",
                           style: TextStyle(
                             color: isDark
                                 ? Colors.grey.shade500
@@ -258,6 +285,26 @@ class ProductListScreen extends GetView<ProductListController> {
                             fontSize: 14.sp,
                           ),
                         ),
+                        if (isVoiceSearch) ...[
+                          SizedBox(height: 12.h),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              // ভয়েস সার্চ আবার শুরু করুন
+                              Get.find<VoiceActionController>().startListening();
+                            },
+                            icon: Icon(Icons.mic, color: Colors.white),
+                            label: Text(
+                              "Try Voice Search Again",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.tomato,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   );

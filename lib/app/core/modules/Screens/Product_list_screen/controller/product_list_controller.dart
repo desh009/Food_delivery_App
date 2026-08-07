@@ -19,6 +19,9 @@ class ProductListController extends GetxController {
   final selectedSort = 'popular'.obs;
   final activeFilters = <String, String>{}.obs;
   final filteredProducts = <ProductModel>[].obs;
+  
+  // ✅ ভয়েস সার্চের জন্য ফ্ল্যাগ
+  var isVoiceSearch = false.obs;
 
   @override
   void onInit() {
@@ -32,6 +35,9 @@ class ProductListController extends GetxController {
       // 'category' বা 'name' থেকে ভ্যালু নিন
       String? rawCategory = args['category'] ?? args['name'];
       
+      // ✅ ভয়েস সার্চ চেক করুন
+      isVoiceSearch.value = args['isVoiceSearch'] ?? false;
+      
       if (rawCategory != null && rawCategory.isNotEmpty) {
         // ক্যাটাগরি নাম normalize করুন
         categoryName = _normalizeCategoryName(rawCategory);
@@ -43,6 +49,14 @@ class ProductListController extends GetxController {
       
       print('✅ Normalized Category: $categoryName');
       print('✅ Category Icon: $categoryIcon');
+      print('✅ Is Voice Search: ${isVoiceSearch.value}');
+      
+      // ✅ ভয়েস সার্চ কুয়েরি থাকলে সেট করুন
+      if (isVoiceSearch.value && args['searchQuery'] != null) {
+        String query = args['searchQuery'] as String;
+        searchQuery.value = query;
+        print('✅ Voice Search Query: $query');
+      }
       
     } else {
       categoryName = 'Burger';
@@ -206,6 +220,41 @@ class ProductListController extends GetxController {
     }
   }
 
+  // ✅✅✅ ভয়েস সার্চের জন্য নতুন মেথড
+  void filterProductsBySearch(String query) {
+    print('🔍🔍🔍 filterProductsBySearch called with: "$query"');
+    
+    if (query.isEmpty) {
+      // যদি সার্চ খালি হয়, তাহলে ক্যাটাগরি অনুযায়ী ফিল্টার করুন
+      applyFilters();
+      return;
+    }
+
+    final searchLower = query.toLowerCase().trim();
+    
+    // 🔥 প্রথমে ক্যাটাগরি অনুযায়ী ফিল্টার করুন
+    final categoryProducts = allProducts.where((product) {
+      return product.category.toLowerCase() == categoryName.toLowerCase();
+    }).toList();
+    
+    // 🔥 তারপর সার্চ কুয়েরি অনুযায়ী ফিল্টার করুন
+    final searchedProducts = categoryProducts.where((product) {
+      return product.name.toLowerCase().contains(searchLower) ||
+          product.description.toLowerCase().contains(searchLower);
+    }).toList();
+    
+    print('📊 Category Products: ${categoryProducts.length}, Searched Products: ${searchedProducts.length}');
+    
+    // 🔥 ফিল্টার অ্যাপ্লাই করুন
+    filteredProducts.value = _filterProducts(searchedProducts);
+    
+    // 🔥 যদি কোনো প্রোডাক্ট না পাওয়া যায় এবং ভয়েস সার্চ হয়
+    if (filteredProducts.isEmpty && isVoiceSearch.value) {
+      print('⚠️ No products found for voice search: "$query"');
+      // এখানে চাইলে ইউজারকে নোটিফাই করতে পারেন
+    }
+  }
+
   // 🔥🔥🔥 মেইন ফিল্টার ফাংশন
   void applyFilters() {
     print('🔍🔍🔍 Applying filters for category: "$categoryName"');
@@ -226,16 +275,26 @@ class ProductListController extends GetxController {
     
     print('📊 Category Products found: ${categoryProducts.length}');
     
+    // 🔥 সার্চ কুয়েরি থাকলে সেটাও অ্যাপ্লাই করুন
+    List<ProductModel> productsToFilter = categoryProducts;
+    
+    if (searchQuery.value.isNotEmpty) {
+      final query = searchQuery.value.toLowerCase();
+      productsToFilter = categoryProducts.where((p) => 
+        p.name.toLowerCase().contains(query) ||
+        p.description.toLowerCase().contains(query)
+      ).toList();
+      print('📊 After Search Filter: ${productsToFilter.length}');
+    }
+    
     // 🔥 অন্যান্য ফিল্টার প্রয়োগ করুন
-    filteredProducts.value = _filterProducts(categoryProducts);
+    filteredProducts.value = _filterProducts(productsToFilter);
     
     print('📊 Final Filtered Products: ${filteredProducts.length}');
     
-    // 🔥 যদি কোনো প্রোডাক্ট না পাওয়া যায়, তাহলে সব প্রোডাক্ট দেখান (optional)
-    if (filteredProducts.isEmpty && categoryProducts.isEmpty) {
+    // 🔥 যদি কোনো প্রোডাক্ট না পাওয়া যায়
+    if (filteredProducts.isEmpty) {
       print('⚠️ No products found for category: $categoryName');
-      // চাইলে এখানে সব প্রোডাক্ট দেখাতে পারেন
-      // filteredProducts.value = allProducts;
     }
   }
 
@@ -261,15 +320,6 @@ class ProductListController extends GetxController {
     // Rating Filter
     if (selectedRating.value > 0) {
       result = result.where((p) => p.rating >= selectedRating.value).toList();
-    }
-
-    // Search Query Filter
-    if (searchQuery.value.isNotEmpty) {
-      final query = searchQuery.value.toLowerCase();
-      result = result.where((p) => 
-        p.name.toLowerCase().contains(query) ||
-        p.description.toLowerCase().contains(query)
-      ).toList();
     }
 
     // Sort
